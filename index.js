@@ -13,7 +13,6 @@
   var dashTransform = Prefix.dash('transform');
   var prefixTransform = Prefix.prefix('transform');
   var dashOrigin = Prefix.dash('transformOrigin');
-  var prefixOrigin = Prefix.prefix('transformOrigin');
 
   function SimpleForeignObject(params) {
     params = params || {};
@@ -23,7 +22,7 @@
   /**
    * dom节点转换为html代码
    */
-  SimpleForeignObject.prototype.toHtml = function ($node, isRoot) {
+  SimpleForeignObject.prototype.toHtml = function ($node) {
     //解析子元素
     var childs = $node.childNodes;
     var inner = '';
@@ -52,13 +51,6 @@
           }
         }
       }
-
-      //根节点通过放大来处理设备像素比
-      if (isRoot && this.devicePixelRatio > 1) {
-        var originTransform = css.getPropertyValue(dashTransform);
-        style += prefixTransform + ':' + 'scale(' + this.devicePixelRatio + ')';
-      }
-
       $clone.style = style;
       html = new XMLSerializer().serializeToString($clone);
       var no = html.indexOf(end);
@@ -77,11 +69,11 @@
     var rect = $node.getBoundingClientRect($node);
     var width = rect.width * this.devicePixelRatio;
     var height = rect.height * this.devicePixelRatio;
-    var html = this.toHtml($node);
+    var html = this.toHtml($node, true);
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + width +
       '" height="' + height + '">' +
       '<foreignObject width="100%" height="100%">' +
-      '<div style="' + dashTransform + ':scale(' + this.devicePixelRatio + ');' + dashOrigin + ':0 0;">' +
+      '<div xmlns="http://www.w3.org/1999/xhtml" style="transform:scale(' + this.devicePixelRatio + ');transform-origin:0 0;">' + //额外加入容器并通过放大解决设备像素比问题
       html +
       '</div>' +
       '</foreignObject>' +
