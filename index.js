@@ -65,8 +65,6 @@
       var end = '</' + tagName + '>';
       var no = html.indexOf(end);
       html = html.substring(0, no) + inner + html.substring(no, html.length);
-
-
     } else if (nodeType == Node.TEXT_NODE) { //文字
       html = $node.wholeText;
     }
