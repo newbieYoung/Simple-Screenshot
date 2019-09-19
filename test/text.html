@@ -13,12 +13,23 @@
       color: #000;
       background-color: gray;
     }
+
+    .demo2 {
+      font-size: 20px;
+      color: #000;
+      background-color: pink;
+      margin-top: 10px;
+    }
   </style>
 </head>
 
 <body>
-  <p class="demo1">hello world</p>
+  <p class="demo1">demo1</p>
   <img id="demo1" src="" alt="">
+
+  <p class="demo2">demo2</p>
+  <img id="demo2" src="" alt="">
+
   <script src="../lib/dom-to-image.js"></script>
   <script src="../lib/prefix-umd.js"></script>
   <script src="../index.js"></script>
@@ -28,21 +39,26 @@
         devicePixelRatio: window.devicePixelRatio
       });
 
-      var $demo1 = document.querySelector('.demo1');
-      simpleFO.toCanvas($demo1, function (canvas) {
-        var rect = $demo1.getBoundingClientRect();
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
-        document.body.appendChild(canvas)
-      });
-
-      domtoimage.toPng($demo1)
-        .then(function (png) {
-          var $img = document.querySelector('#demo1');
-          $img.src = png;
-        }).catch(function (error) {
-          console.error('oops, something went wrong!', error);
+      //截图
+      function screenshot(selector) {
+        var $demo = document.querySelector('.' + selector);
+        simpleFO.toCanvas($demo, function (canvas) {
+          var rect = $demo.getBoundingClientRect();
+          canvas.style.width = rect.width + 'px';
+          canvas.style.height = rect.height + 'px';
+          document.body.appendChild(canvas)
         });
+        domtoimage.toPng($demo)
+          .then(function (png) {
+            var $img = document.querySelector('#' + selector);
+            $img.src = png;
+          }).catch(function (error) {
+            console.error('oops, something went wrong!', error);
+          });
+      }
+
+      screenshot('demo1');
+      screenshot('demo2');
     }
   </script>
 </body>

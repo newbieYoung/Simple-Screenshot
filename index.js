@@ -22,7 +22,7 @@
   /**
    * dom节点转换为html代码
    */
-  SimpleForeignObject.prototype.toHtml = function ($node) {
+  SimpleForeignObject.prototype.toHtml = function ($node, isRoot) {
     //解析子元素
     var childs = $node.childNodes;
     var inner = '';
@@ -42,7 +42,9 @@
       for (var i = 0; i < css.length; i++) {
         var name = css[i];
         if (/^[\d]+/.exec(name) == null) { //排除数字属性
-          if (name == 'font-family') {
+          if (isRoot && this.isMargin(name)) {
+            style += name + ': 0;' //最外层元素的 margin 必须为0，否则会因为偏移导致错位
+          } else if (name == 'font-family') {
             //字体单独处理
           } else if (name == '-webkit-locale') {
             //部分属性不处理
@@ -100,6 +102,16 @@
         func(canvas)
       }
     }
+  }
+
+  /**
+   * 判断是否是外间距
+   */
+  SimpleForeignObject.prototype.isMargin = function (name) {
+    if (name == 'margin' || name == 'margin-bottom' || name == 'margin-top' || name == 'margin-right' || name == 'margin-left') {
+      return true;
+    }
+    return false;
   }
 
   /**
