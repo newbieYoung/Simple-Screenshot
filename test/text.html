@@ -11,7 +11,7 @@
     .demo1 {
       font-size: 20px;
       color: #000;
-      transform: scale(1.2)
+      background-color: gray;
     }
   </style>
 </head>
@@ -23,13 +23,13 @@
   <script>
     window.onload = function () {
       var simpleFO = new window.SimpleForeignObject({
-        devicePixelRatio:window.devicePixelRatio
+        devicePixelRatio: window.devicePixelRatio
       });
 
-
       var $demo1 = document.querySelector('.demo1');
-      var html = simpleFO.toHtml($demo1,true);
-      console.log(html);
+      simpleFO.toCanvas($demo1, function (canvas) {
+        document.body.appendChild(canvas)
+      });
     }
   </script>
 </body>
