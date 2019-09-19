@@ -20,6 +20,17 @@
       background-color: pink;
       margin-top: 10px;
     }
+
+    .demo3 {
+      font-size: 20px;
+      background-image: -webkit-linear-gradient(top, blue, red);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: rgb(194, 4, 2);
+      font-weight: 700;
+      border: 1px solid #000;
+    }
   </style>
 </head>
 
@@ -29,6 +40,9 @@
 
   <p class="demo2">demo2</p>
   <img id="demo2" src="" alt="">
+
+  <p class="demo3">demo3</p>
+  <img id="demo3" src="" alt="">
 
   <script src="../lib/dom-to-image.js"></script>
   <script src="../lib/prefix-umd.js"></script>
@@ -57,8 +71,9 @@
           });
       }
 
-      screenshot('demo1');
-      screenshot('demo2');
+      //screenshot('demo1');
+      //screenshot('demo2');
+      screenshot('demo3');
     }
   </script>
 </body>
