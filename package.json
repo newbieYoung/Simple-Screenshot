@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/newbieYoung/Simple-ForeignObject#readme",
   "dependencies": {
+    "dom-to-image": "^2.6.0",
     "prefix-umd": "^1.0.0"
   }
 }
