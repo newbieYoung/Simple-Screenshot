@@ -8,6 +8,11 @@
   <title>文字</title>
   <link rel="stylesheet" href="../css/reset.css">
   <style>
+    @font-face {
+      font-family: TTTGB-Medium;
+      src: url(../font/TTTGB-Medium.ttf);
+    }
+
     .demo1 {
       font-size: 20px;
       color: #000;
@@ -27,8 +32,13 @@
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      color: rgb(194, 4, 2);
       font-weight: 700;
+      border: 1px solid #000;
+    }
+
+    .demo4 {
+      font-size: 20px;
+      font-family: TTTGB-Medium;
       border: 1px solid #000;
     }
   </style>
@@ -44,13 +54,22 @@
   <p class="demo3">demo3</p>
   <img id="demo3" src="" alt="">
 
+  <p class="demo4">demo4</p>
+  <img id="demo4" src="" alt="">
+
   <script src="../lib/dom-to-image.js"></script>
   <script src="../lib/prefix-umd.js"></script>
   <script src="../index.js"></script>
   <script>
     window.onload = function () {
       var simpleFO = new window.SimpleForeignObject({
-        devicePixelRatio: window.devicePixelRatio
+        devicePixelRatio: window.devicePixelRatio,
+        ready: function () {
+          //screenshot('demo1');
+          //screenshot('demo2');
+          //screenshot('demo3');
+          screenshot('demo4');
+        }
       });
 
       //截图
@@ -70,10 +89,6 @@
             console.error('oops, something went wrong!', error);
           });
       }
-
-      screenshot('demo1');
-      screenshot('demo2');
-      screenshot('demo3');
     }
   </script>
 </body>

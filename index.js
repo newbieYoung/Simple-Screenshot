@@ -10,13 +10,16 @@
     window.SimpleForeignObject = factory(window.Prefix);
   }
 }(function (Prefix) {
+
   var dashTransform = Prefix.dash('transform');
-  var prefixTransform = Prefix.prefix('transform');
   var dashOrigin = Prefix.dash('transformOrigin');
+  var URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
 
   function SimpleForeignObject(params) {
     params = params || {};
     this.devicePixelRatio = params.devicePixelRatio || 1; //设备像素比
+    this.ready = params.ready || function () {}; //准备完成回调
+
     /**
      * 忽略部分属性，比如：
      * -webkit-locale 会导致生成图片异常
@@ -24,6 +27,7 @@
      * 还要考虑部分属性对子元素有影响，但是并不会被子元素继承
      */
     this.ignoreProperty = ['-webkit-locale', 'font-family'];
+    this.parseStyleSheets();
   }
 
   /**
@@ -45,6 +49,7 @@
       var css = window.getComputedStyle($node);
       var tagName = $clone.tagName.toLowerCase();
       var style = '';
+      var inlineCssText = '';
       for (var i = 0; i < css.length; i++) {
         var name = css[i];
         if (/^[\d]+/.exec(name) == null) { //排除数字属性
@@ -52,6 +57,8 @@
             style += name + ': 0;' //最外层元素的 margin 必须为0，否则会因为偏移导致错位
           } else if (name == 'font-family') {
             //字体单独处理
+            var font = css.getPropertyValue('font-family');
+            inlineCssText = this.inlineFont(font, inlineCssText);
           } else if (this.ignoreProperty.includes(name)) {
             //部分属性不处理
           } else {
@@ -59,17 +66,163 @@
           }
         }
       }
+      // if (inlineCssText != '') {
+      //   var inlineStyle = document.createElement('style');
+      //   inlineStyle.appendChild(document.createTextNode(inlineCssText));
+      //   $clone.appendChild(inlineStyle);
+      // }
       $clone.style = style;
       html = new XMLSerializer().serializeToString($clone);
       html = this.forcePrefix(html, css, $clone);
       var end = '</' + tagName + '>';
       var no = html.indexOf(end);
-      html = html.substring(0, no) + inner + html.substring(no, html.length);
+      if (inlineCssText != '') {
+        html = html.substring(0, no) + inner + '<style>' + inlineCssText + '</style>' + html.substring(no, html.length);
+      } else {
+        html = html.substring(0, no) + inner + html.substring(no, html.length);
+      }
     } else if (nodeType == Node.TEXT_NODE) { //文字
       html = $node.wholeText;
     }
 
     return html;
+  }
+
+  /**
+   * 内联字体资源
+   */
+  SimpleForeignObject.prototype.inlineFont = function (font, inlineCssText) {
+    if (this.fontResource) {
+      for (var i = 0; i < this.fontResource.length; i++) {
+        var fontItem = this.fontResource[i];
+        if (font.indexOf(fontItem.fontFamily) != -1) {
+          inlineCssText += '@font-face { font-family:' + fontItem.fontFamily + ' ; src:' + fontItem.src + ';}';
+        }
+      }
+    }
+
+    return inlineCssText;
+  }
+
+  /**
+   * 解析 url 后缀
+   */
+  SimpleForeignObject.prototype.parseExtension = function (url) {
+    var match = /\.([^\.\/]*?)$/g.exec(url);
+    return match[1] || '';
+  }
+
+  /**
+   * 根据后缀获取格式
+   */
+  SimpleForeignObject.prototype.mimeType = function (extension) {
+    /*
+     * Only WOFF and EOT mime types for fonts are 'real'
+     * see http://www.iana.org/assignments/media-types/media-types.xhtml
+     */
+    var WOFF = 'application/font-woff';
+    var JPEG = 'image/jpeg';
+
+    var map = {
+      'woff': WOFF,
+      'woff2': WOFF,
+      'ttf': 'application/font-truetype',
+      'eot': 'application/vnd.ms-fontobject',
+      'png': 'image/png',
+      'jpg': JPEG,
+      'jpeg': JPEG,
+      'gif': 'image/gif',
+      'tiff': 'image/tiff',
+      'svg': 'image/svg+xml'
+    }
+
+    return map[extension] || '';
+  }
+
+  /**
+   * 加载外部资源
+   */
+  SimpleForeignObject.prototype.loadResource = function (url, func) {
+    var self = this;
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.timeout = 30000;
+    xhr.open('GET', url, true);
+    xhr.onerror = function () {
+      console.log('load ' + url + ' error'); //异常
+    };
+    xhr.ontimeout = function () {
+      console.log('load ' + url + ' timeout'); //超时
+    }
+    xhr.onload = function () {
+      console.log('load ' + url + ' success');
+      var reader = new FileReader();
+      reader.onload = function () {
+        //整理格式
+        var content = reader.result.split(/,/)[1]; //只取内容
+        var result = 'data:' + self.mimeType(self.parseExtension(url)) + ';base64,' + content;
+        func(result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.send();
+  }
+
+  /**
+   * 解析 styleSheets
+   */
+  SimpleForeignObject.prototype.parseStyleSheets = function () {
+    var self = this;
+    var count = 0;
+    var finished = 0;
+    var cssRules = self.getAllCssRules();
+    self.fontResource = [];
+    for (var i = 0; i < cssRules.length; i++) {
+      var rule = cssRules[i];
+      if (rule.type == CSSRule.FONT_FACE_RULE) { //字体样式
+        var fontFamily = rule.style.getPropertyValue('font-family');
+        var src = rule.style.getPropertyValue('src');
+        var matches = URL_REGEX.exec(src); //匹配url值
+        if (matches != null) {
+          var url = matches[1];
+          if (url.search(/^(data:)/) == -1) { //非 dataurl
+            count++;
+            self.loadResource(url, function (dataurl) {
+              finished++;
+              self.fontResource.push({
+                fontFamily: fontFamily,
+                src: 'url("' + dataurl + '")',
+                url: url
+              })
+              if (finished == count) {
+                console.log('--- simple-foreignobject ready ---');
+                self.ready();
+              }
+            })
+          } else {
+            self.fontResource.push({
+              fontFamily: fontFamily,
+              src: src
+            })
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * 从 document.styleSheets 中获取全部 cssRule
+   */
+  SimpleForeignObject.prototype.getAllCssRules = function () {
+    var styleSheets = document.styleSheets;
+    var cssRules = [];
+    for (var i = 0; i < styleSheets.length; i++) {
+      var list = styleSheets[i].cssRules;
+      for (var j = 0; j < list.length; j++) {
+        cssRules.push(list[j]);
+      }
+    }
+    return cssRules;
   }
 
   /**
@@ -83,7 +236,7 @@
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + width +
       '" height="' + height + '">' +
       '<foreignObject width="100%" height="100%">' +
-      '<div xmlns="http://www.w3.org/1999/xhtml" style="transform:scale(' + this.devicePixelRatio + ');transform-origin:0 0;">' + //额外加入容器并通过放大解决设备像素比问题
+      '<div xmlns="http://www.w3.org/1999/xhtml" style="' + dashTransform + ':scale(' + this.devicePixelRatio + ');' + dashOrigin + ':0 0;">' + //额外加入容器并通过放大解决设备像素比问题
       html +
       '</div>' +
       '</foreignObject>' +
