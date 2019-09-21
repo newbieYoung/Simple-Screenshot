@@ -31,6 +31,7 @@
      * 还要考虑部分属性对子元素有影响，但是并不会被子元素继承
      */
     this.ignoreProperty = ['-webkit-locale', 'font-family'];
+    this.resource = []; //资源列表
     this.parseStyleSheets();
   }
 
@@ -59,11 +60,12 @@
         if (/^[\d]+/.exec(name) == null) { //排除数字属性
           if (isRoot && this.isMargin(name)) {
             style += name + ': 0;' //最外层元素的 margin 必须为0，否则会因为偏移导致错位
-          } else if (name == 'font-family') {
-            //字体单独处理
+          } else if (name == 'font-family') { //处理字体资源
             var font = css.getPropertyValue('font-family');
             inlineCssText = this.inlineFont(font, inlineCssText);
             style += name + ':' + css.getPropertyValue(name) + ';'
+          } else if (name == 'background-image') { //处理图片资源
+
           } else if (this.ignoreProperty.includes(name)) {
             //部分属性不处理
           } else {
@@ -90,14 +92,29 @@
   }
 
   /**
+   * 根据关键字获取资源
+   */
+  SimpleForeignObject.prototype.getResource = function (key) {
+    if (this.resource != null) {
+      for (var i = 0; i < this.resource.length; i++) {
+        var item = this.resource[i];
+        if (key == item.key) {
+          return item.src;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
    * 内联字体资源
    */
   SimpleForeignObject.prototype.inlineFont = function (font, inlineCssText) {
-    if (this.fontResource) {
-      for (var i = 0; i < this.fontResource.length; i++) {
-        var fontItem = this.fontResource[i];
-        if (font.indexOf(fontItem.fontFamily) != -1) {
-          inlineCssText += '@font-face { font-family:' + fontItem.fontFamily + ' ; src:' + fontItem.src + ';}';
+    if (this.resource != null) {
+      for (var i = 0; i < this.resource.length; i++) {
+        var item = this.resource[i];
+        if (font.indexOf(item.key) != -1) {
+          inlineCssText += '@font-face { font-family:' + item.key + ' ; src:' + item.src + ';}';
         }
       }
     }
@@ -138,8 +155,8 @@
     var self = this;
     var count = 0;
     var finished = 0;
+    self.resource = [];
     var cssRules = self.getAllCssRules();
-    self.fontResource = [];
     for (var i = 0; i < cssRules.length; i++) {
       var rule = cssRules[i];
       if (rule.type == CSSRule.FONT_FACE_RULE) { //字体样式
@@ -152,10 +169,9 @@
             count++;
             self.loadResource(url, function (dataurl) {
               finished++;
-              self.fontResource.push({
-                fontFamily: fontFamily,
+              self.resource.push({
+                key: fontFamily,
                 src: 'url("' + dataurl + '")',
-                url: url
               })
               if (finished == count) {
                 console.log('--- simple-foreignobject ready ---');
@@ -163,10 +179,33 @@
               }
             })
           } else {
-            self.fontResource.push({
-              fontFamily: fontFamily,
+            self.resource.push({
+              key: fontFamily,
               src: src
             })
+          }
+        }
+      } else {
+        var cssText = rule.cssText;
+        var matches = cssText.match(URL_REGEX); //匹配url值
+        if (matches != null) {
+          for (var j = 0; j < matches.length; j++) {
+            var url = matches[j];
+            var value = URL_REGEX.exec(url)[1]; //匹配url值
+            if (value.search(/^(data:)/) == -1) { //非 dataurl
+              count++;
+              self.loadResource(value, function (dataurl) {
+                finished++;
+                self.resource.push({
+                  key: value.trim(),
+                  src: 'url("' + dataurl + '")',
+                })
+                if (finished == count) {
+                  console.log('--- simple-foreignobject ready ---');
+                  self.ready();
+                }
+              })
+            }
           }
         }
       }
