@@ -18,7 +18,11 @@
   function SimpleForeignObject(params) {
     params = params || {};
     this.devicePixelRatio = params.devicePixelRatio || 1; //设备像素比
-    this.ready = params.ready || function () {}; //准备完成回调
+    this.ready = function () {
+      setTimeout(function () { //默认加入延迟
+        params.ready()
+      })
+    } || function () {}; //准备完成回调
 
     /**
      * 忽略部分属性，比如：
@@ -166,6 +170,10 @@
           }
         }
       }
+    }
+
+    if (count <= 0) {
+      self.ready();
     }
   }
 
