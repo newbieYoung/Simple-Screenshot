@@ -59,6 +59,7 @@
             //字体单独处理
             var font = css.getPropertyValue('font-family');
             inlineCssText = this.inlineFont(font, inlineCssText);
+            style += name + ':' + css.getPropertyValue(name) + ';'
           } else if (this.ignoreProperty.includes(name)) {
             //部分属性不处理
           } else {
@@ -66,21 +67,17 @@
           }
         }
       }
-      // if (inlineCssText != '') {
-      //   var inlineStyle = document.createElement('style');
-      //   inlineStyle.appendChild(document.createTextNode(inlineCssText));
-      //   $clone.appendChild(inlineStyle);
-      // }
+      if (inlineCssText != '') {
+        var inlineStyle = document.createElement('style');
+        inlineStyle.appendChild(document.createTextNode(inlineCssText));
+        $clone.appendChild(inlineStyle);
+      }
       $clone.style = style;
       html = new XMLSerializer().serializeToString($clone);
       html = this.forcePrefix(html, css, $clone);
       var end = '</' + tagName + '>';
       var no = html.indexOf(end);
-      if (inlineCssText != '') {
-        html = html.substring(0, no) + inner + '<style>' + inlineCssText + '</style>' + html.substring(no, html.length);
-      } else {
-        html = html.substring(0, no) + inner + html.substring(no, html.length);
-      }
+      html = html.substring(0, no) + inner + html.substring(no, html.length);
     } else if (nodeType == Node.TEXT_NODE) { //文字
       html = $node.wholeText;
     }
@@ -105,41 +102,6 @@
   }
 
   /**
-   * 解析 url 后缀
-   */
-  SimpleForeignObject.prototype.parseExtension = function (url) {
-    var match = /\.([^\.\/]*?)$/g.exec(url);
-    return match[1] || '';
-  }
-
-  /**
-   * 根据后缀获取格式
-   */
-  SimpleForeignObject.prototype.mimeType = function (extension) {
-    /*
-     * Only WOFF and EOT mime types for fonts are 'real'
-     * see http://www.iana.org/assignments/media-types/media-types.xhtml
-     */
-    var WOFF = 'application/font-woff';
-    var JPEG = 'image/jpeg';
-
-    var map = {
-      'woff': WOFF,
-      'woff2': WOFF,
-      'ttf': 'application/font-truetype',
-      'eot': 'application/vnd.ms-fontobject',
-      'png': 'image/png',
-      'jpg': JPEG,
-      'jpeg': JPEG,
-      'gif': 'image/gif',
-      'tiff': 'image/tiff',
-      'svg': 'image/svg+xml'
-    }
-
-    return map[extension] || '';
-  }
-
-  /**
    * 加载外部资源
    */
   SimpleForeignObject.prototype.loadResource = function (url, func) {
@@ -158,10 +120,7 @@
       console.log('load ' + url + ' success');
       var reader = new FileReader();
       reader.onload = function () {
-        //整理格式
-        var content = reader.result.split(/,/)[1]; //只取内容
-        var result = 'data:' + self.mimeType(self.parseExtension(url)) + ';base64,' + content;
-        func(result);
+        func(reader.result);
       };
       reader.readAsDataURL(xhr.response);
     };
