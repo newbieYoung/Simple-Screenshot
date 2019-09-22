@@ -336,7 +336,7 @@
     svg += '>';
     svg += '<foreignObject width="100%" height="100%">';
     svg += '<div xmlns="http://www.w3.org/1999/xhtml" style="';
-    if (css.getPropertyValue('display') == 'inline-block') { //行内元素
+    if (css.getPropertyValue('display') == 'inline-block') { //防止行内元素的布局被空白字符挤乱
       svg += 'font-size : 0 ;';
     }
     svg += dashTransform + ':scale(' + this.devicePixelRatio + ');'; //额外加入容器并通过放大解决设备像素比问题
