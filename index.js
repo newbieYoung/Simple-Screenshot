@@ -327,6 +327,7 @@
     var width = rect.width * this.devicePixelRatio
     var height = rect.height * this.devicePixelRatio
     var html = this.toHtml($node, true)
+    var css = window.getComputedStyle($node);
 
     var svg = '';
     svg += '<svg xmlns="http://www.w3.org/2000/svg"';
@@ -335,6 +336,9 @@
     svg += '>';
     svg += '<foreignObject width="100%" height="100%">';
     svg += '<div xmlns="http://www.w3.org/1999/xhtml" style="';
+    if (css.getPropertyValue('display') == 'inline-block') { //行内元素
+      svg += 'font-size : 0 ;';
+    }
     svg += dashTransform + ':scale(' + this.devicePixelRatio + ');'; //额外加入容器并通过放大解决设备像素比问题
     svg += dashOrigin + ':0 0;">'
     svg += html;
