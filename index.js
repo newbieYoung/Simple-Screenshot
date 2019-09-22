@@ -17,6 +17,8 @@
 
   function SimpleForeignObject(params) {
     params = params || {};
+
+    this.debug = params.debug || false; //调试模式
     this.devicePixelRatio = params.devicePixelRatio || 1; //设备像素比
     this.ready = function () {
       setTimeout(function () { //默认加入延迟
@@ -28,9 +30,10 @@
      * 忽略部分属性，比如：
      * -webkit-locale 会导致生成图片异常
      * font-family 外部资源需要单独处理
+     * background-image 外部资源需要单独处理
      * 还要考虑部分属性对子元素有影响，但是并不会被子元素继承
      */
-    this.ignoreProperty = ['-webkit-locale', 'font-family'];
+    this.ignoreProperty = ['-webkit-locale', 'font-family', 'background-image'];
     this.resource = []; //资源列表
     this.parseStyleSheets();
   }
@@ -60,11 +63,26 @@
         if (/^[\d]+/.exec(name) == null) { //排除数字属性
           if (isRoot && this.isMargin(name)) {
             style += name + ': 0;' //最外层元素的 margin 必须为0，否则会因为偏移导致错位
+
           } else if (name == 'font-family') { //处理字体资源
             var font = css.getPropertyValue('font-family');
             inlineCssText = this.inlineFont(font, inlineCssText);
             style += name + ':' + css.getPropertyValue(name) + ';'
+
           } else if (name == 'background-image') { //处理图片资源
+            var img = css.getPropertyValue(name);
+            URL_REGEX.lastIndex = 0; //重置正则对象
+            var matches = URL_REGEX.exec(img); //匹配url值
+            if (matches != null) {
+              var url = matches[1];
+              var host = window.location.host;
+              var no = url.indexOf(host);
+              if (no != -1) {
+                url = url.substring(no + host.length, url.length);
+              }
+              img = this.getResource(url);
+            }
+            style += name + ':' + img + ';'
 
           } else if (this.ignoreProperty.includes(name)) {
             //部分属性不处理
@@ -98,7 +116,7 @@
     if (this.resource != null) {
       for (var i = 0; i < this.resource.length; i++) {
         var item = this.resource[i];
-        if (key == item.key) {
+        if (item.key.indexOf(key) != -1) {
           return item.src;
         }
       }
@@ -162,6 +180,8 @@
       if (rule.type == CSSRule.FONT_FACE_RULE) { //字体样式
         var fontFamily = rule.style.getPropertyValue('font-family');
         var src = rule.style.getPropertyValue('src');
+        src = 'url("../font/TTTGB-Medium.ttf")';
+        URL_REGEX.lastIndex = 0; //重置正则对象
         var matches = URL_REGEX.exec(src); //匹配url值
         if (matches != null) {
           var url = matches[1];
@@ -191,6 +211,7 @@
         if (matches != null) {
           for (var j = 0; j < matches.length; j++) {
             var url = matches[j];
+            URL_REGEX.lastIndex = 0;
             var value = URL_REGEX.exec(url)[1]; //匹配url值
             if (value.search(/^(data:)/) == -1) { //非 dataurl
               count++;
@@ -248,7 +269,9 @@
       '</foreignObject>' +
       '</svg>';
 
-    console.log(svg);
+    if (this.debug) {
+      console.log(svg);
+    }
     return svg;
   }
 
