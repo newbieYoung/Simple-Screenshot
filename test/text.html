@@ -44,6 +44,37 @@
       position: absolute;
       bottom: 0;
     }
+
+    .demo5 {
+      position: relative;
+      width: 91px;
+      height: 25px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .demo5:before {
+      content: '活动规则';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      font-size: 19px;
+      color: rgb(31, 44, 56);
+      line-height: 25px;
+      z-index: 5;
+    }
+
+    .demo5:after {
+      content: '';
+      height: 10px;
+      background-color: rgb(255, 200, 33);
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
   </style>
 </head>
 
@@ -60,18 +91,23 @@
   <p class="demo4">demo4</p>
   <img id="demo4" src="" alt="">
 
+  <p class="demo5"></p>
+  <img id="demo5" src="" alt="">
+
   <script src="../lib/dom-to-image.js"></script>
   <script src="../lib/prefix-umd.js"></script>
   <script src="../index.js"></script>
   <script>
     window.onload = function () {
       var simpleFO = new window.SimpleForeignObject({
+        debug: true,
         devicePixelRatio: window.devicePixelRatio,
         ready: function () {
-          screenshot('demo1');
-          screenshot('demo2');
-          screenshot('demo3');
-          screenshot('demo4');
+          //screenshot('demo1');
+          //screenshot('demo2');
+          //screenshot('demo3');
+          //screenshot('demo4');
+          screenshot('demo5');
         }
       });
 

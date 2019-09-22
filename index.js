@@ -50,15 +50,38 @@
   }
 
   /**
+   * 处理元素伪类
+   */
+  SimpleForeignObject.prototype.pseudoClass = function ($node, type) {
+    var $dom = document.createElement('div');
+    $dom.style.display = 'none';
+    if ([':before', '::before', ':after', '::after'].includes(type)) {
+      var css = window.getComputedStyle($node, type);
+      if (css.getPropertyValue('content') != 'none') {
+        var $dom = document.createElement('div');
+        $dom.style = css.cssText;
+      }
+    }
+    return new XMLSerializer().serializeToString($dom);
+  }
+
+  /**
    * dom节点转换为html代码
    */
   SimpleForeignObject.prototype.toHtml = function ($node, isRoot) {
+    var inner = ''
+
+    //处理before伪类
+    inner += this.pseudoClass($node, ':before');
+
     //解析子元素
     var childs = $node.childNodes
-    var inner = ''
     for (var i = 0; i < childs.length; i++) {
       inner += this.toHtml(childs[i], false)
     }
+
+    //处理after伪类
+    inner += this.pseudoClass($node, ':after');
 
     //解析自身
     var html = ''
@@ -235,6 +258,7 @@
     var finished = 0
     self.resource = []
     var cssRules = self.getAllCssRules()
+    console.log(cssRules);
     for (var i = 0; i < cssRules.length; i++) {
       var rule = cssRules[i]
       if (rule.type == CSSRule.FONT_FACE_RULE) {
