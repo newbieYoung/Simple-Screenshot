@@ -327,24 +327,20 @@
     var width = rect.width * this.devicePixelRatio
     var height = rect.height * this.devicePixelRatio
     var html = this.toHtml($node, true)
-    var svg =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="' +
-      width +
-      '" height="' +
-      height +
-      '">' +
-      '<foreignObject width="100%" height="100%">' +
-      '<div xmlns="http://www.w3.org/1999/xhtml" style="' +
-      dashTransform +
-      ':scale(' +
-      this.devicePixelRatio +
-      ');' +
-      dashOrigin +
-      ':0 0;">' + //额外加入容器并通过放大解决设备像素比问题
-      html +
-      '</div>' +
-      '</foreignObject>' +
-      '</svg>'
+
+    var svg = '';
+    svg += '<svg xmlns="http://www.w3.org/2000/svg"';
+    svg += ' width="' + width + '"';
+    svg += ' height="' + height + '"';
+    svg += '>';
+    svg += '<foreignObject width="100%" height="100%">';
+    svg += '<div xmlns="http://www.w3.org/1999/xhtml" style="';
+    svg += dashTransform + ':scale(' + this.devicePixelRatio + ');'; //额外加入容器并通过放大解决设备像素比问题
+    svg += dashOrigin + ':0 0;">'
+    svg += html;
+    svg += '</div>';
+    svg += '</foreignObject>';
+    svg += '</svg>';
 
     if (this.debug) {
       console.log(svg)
