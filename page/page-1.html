@@ -154,6 +154,25 @@
       <p class="md-message">一个用户仅能优惠购买一次哦~</p>
     </div>
   </div>
+
+  <script src="../lib/dom-to-image.js"></script>
+  <script src="../lib/prefix-umd.js"></script>
+  <script src="../index.js"></script>
+  <script>
+    window.onload = function () {
+      var simpleFO = new window.SimpleForeignObject({
+        devicePixelRatio: window.devicePixelRatio,
+        debug: true,
+        ready: function () {
+          document.addEventListener('click', function (e) {
+            simpleFO.toCanvas(e.target, function (canvas) {
+              simpleFO.downloadCanvasPng(canvas, new Date().getTime());
+            });
+          });
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>
