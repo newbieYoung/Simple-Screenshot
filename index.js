@@ -77,7 +77,7 @@
 
           } else if (name == 'font-family') {
             //处理字体资源
-            var font = css.getPropertyValue('font-family')
+            var font = css.getPropertyValue(name)
             inlineCssText = this.inlineFont(font, inlineCssText)
             style += name + ':' + css.getPropertyValue(name) + ';'
 
