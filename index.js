@@ -77,6 +77,9 @@
           if (isRoot && this.isMargin(name)) {
             style += name + ': 0;' //最外层元素的 margin 必须为0，否则会因为偏移导致错位
 
+          } else if (isRoot && this.isPosition(css) && (['top', 'bottom', 'left', 'right'].includes(name))) {
+            style += name + ': 0;' //最外层元素为绝对定位或者固定定位时，top、bottom、left、right 必须为0，否则会因为定位偏移导致错位
+
           } else if (name == 'font-family') {
             //处理字体资源
             var font = css.getPropertyValue(name)
@@ -382,6 +385,17 @@
       return true
     }
     return false
+  }
+
+  /**
+   * 判断是否是绝对或者固定定位
+   */
+  SimpleForeignObject.prototype.isPosition = function (css) {
+    var position = css.getPropertyValue('position');
+    if (position == 'absolute' || position == 'fixed') {
+      return true;
+    }
+    return false;
   }
 
   /**
