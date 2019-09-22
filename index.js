@@ -29,9 +29,11 @@
         }
         setTimeout(function () {
           //默认加入延迟
-          params.ready()
+          if (params.ready != null) {
+            params.ready()
+          }
         })
-      } || function () {} //准备完成回调
+      } //准备完成回调
 
     /**
      * 忽略部分属性，比如：
