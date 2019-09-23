@@ -169,12 +169,6 @@
         inlineStyle.appendChild(document.createTextNode(inlineCssText))
         $clone.appendChild(inlineStyle)
       }
-
-      /**
-       * 部分元素对子元素有影响，但是并不会被子元素继承，比如：
-       * opacity、transform、filter
-       */
-
       $clone.style = style
       html = new XMLSerializer().serializeToString($clone)
       html = this.forcePrefix(html, css, $clone)
@@ -382,6 +376,52 @@
   }
 
   /**
+   * 父元素的部分属性对子元素有影响，但是并不会被子元素继承，比如：
+   * opacity、transform、filter
+   * 
+   */
+  SimpleForeignObject.prototype.calcParentProperty = function ($node) {
+    var list = [{
+      name: 'opacity',
+      value: 1,
+    }, {
+      name: dashTransform,
+      value: '',
+    }, {
+      name: 'filter',
+      value: '',
+    }];
+
+    var $target = $node.parentElement;
+
+    while ($target != null) {
+      var css = window.getComputedStyle($target);
+
+      for (var i = 0; i < list.length; i++) {
+        var property = list[i];
+        var value = css.getPropertyValue(property.name);
+        switch (property.name) {
+          case 'opacity':
+            value = value == null ? 1 : parseFloat(value);
+            property.value *= value;
+            break;
+          case 'filter':
+          case dashTransform:
+            value = (value == null || value == 'none') ? '' : (' ' + value);
+            property.value += value;
+            break;
+          default:
+            break;
+        }
+      }
+
+      $target = $target.parentElement;
+    }
+
+    return list;
+  }
+
+  /**
    * dom节点转换为svg
    */
   SimpleForeignObject.prototype.toSvg = function ($node) {
@@ -390,6 +430,7 @@
     var height = rect.height * this.devicePixelRatio
     var html = this.toHtml($node, true)
     var css = window.getComputedStyle($node);
+    var parentCss = this.calcParentProperty($node);
 
     var svg = '';
     svg += '<svg xmlns="http://www.w3.org/2000/svg"';
@@ -400,6 +441,13 @@
     svg += '<div xmlns="http://www.w3.org/1999/xhtml" style="';
     if (css.getPropertyValue('display') == 'inline-block') { //防止行内元素的布局被空白字符挤乱
       svg += 'font-size : 0 ;';
+    }
+    for (var i = 0; i < parentCss.length; i++) {
+      var property = parentCss[i];
+      property.value = property.value == null ? '' : (property.value + '').trim();
+      if (property.value != '') {
+        svg += property.name + ' : ' + property.value + ' ;';
+      }
     }
     svg += dashTransform + ':scale(' + this.devicePixelRatio + ');'; //额外加入容器并通过放大解决设备像素比问题
     svg += dashOrigin + ':0 0;">'
