@@ -44,6 +44,24 @@
       position: absolute;
       bottom: 0;
     }
+
+    .demo5 {
+      font-size: 20px;
+      color: blue;
+      background-color: lightgreen;
+    }
+
+    .demo5-3 {
+      filter: grayscale(1)
+    }
+
+    .demo5-2 {
+      transform: scale(.885);
+    }
+
+    .demo5-1 {
+      opacity: .5;
+    }
   </style>
 </head>
 
@@ -60,6 +78,11 @@
   <p class="demo4">demo4</p>
   <img id="demo4" src="" alt="">
 
+  <div class="demo5-1">
+    <p class="demo5">demo5</p>
+  </div>
+  <img id="demo5" src="" alt="">
+
   <script src="../lib/dom-to-image.js"></script>
   <script src="../lib/prefix-umd.js"></script>
   <script src="../index.js"></script>
@@ -69,10 +92,11 @@
         debug: true,
         devicePixelRatio: window.devicePixelRatio,
         ready: function () {
-          screenshot('demo1');
-          screenshot('demo2');
-          screenshot('demo3');
-          screenshot('demo4');
+          //screenshot('demo1');
+          //screenshot('demo2');
+          //screenshot('demo3');
+          //screenshot('demo4');
+          screenshot('demo5');
         }
       });
 

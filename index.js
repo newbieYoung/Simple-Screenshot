@@ -40,9 +40,6 @@
      * -webkit-locale 会导致生成图片异常
      * font-family 外部资源需要单独处理
      * background-image 外部资源需要单独处理
-     * -- 待处理 --
-     * 部分属性对子元素有影响，但是并不会被子元素继承
-     * 伪类元素
      */
     this.ignoreProperty = ['-webkit-locale', 'font-family', 'background-image']
     this.resource = [] //资源列表
@@ -172,6 +169,12 @@
         inlineStyle.appendChild(document.createTextNode(inlineCssText))
         $clone.appendChild(inlineStyle)
       }
+
+      /**
+       * 部分元素对子元素有影响，但是并不会被子元素继承，比如：
+       * opacity、transform、filter
+       */
+
       $clone.style = style
       html = new XMLSerializer().serializeToString($clone)
       html = this.forcePrefix(html, css, $clone)
