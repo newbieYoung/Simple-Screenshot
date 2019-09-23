@@ -53,15 +53,15 @@
    * 处理元素伪类
    */
   SimpleForeignObject.prototype.pseudoClass = function ($node, type) {
+    var html = '';
     var nodeType = $node.nodeType;
-    var $dom = document.createElement('div');
+    var $dom = document.createElement('span');
     $dom.style.display = 'none';
     if ([':before', '::before', ':after', '::after'].includes(type) && nodeType == Node.ELEMENT_NODE) {
       var css = window.getComputedStyle($node, type);
       var content = css.getPropertyValue('content');
       if (content != 'none') {
-        var $dom = document.createElement('span');
-        var obj = this.parseCss(css,false);
+        var obj = this.parseCss(css, false);
 
         var style = obj.style;
         var inlineCssText = obj.inlineCssText;
@@ -72,17 +72,22 @@
           $dom.appendChild(inlineStyle)
         }
         $dom.style = style;
-        $dom.style.display = 'block';
         $dom.innerText = content.substring(1, content.length - 1); //去掉首页默认双引号字符
+
+        html += new XMLSerializer().serializeToString($dom);
+        html = this.forcePrefix(html, css, $dom)
+
+        return html
       }
     }
+
     return new XMLSerializer().serializeToString($dom);
   }
 
   /**
    * 解析 Css
    */
-  SimpleForeignObject.prototype.parseCss = function(css,isRoot){
+  SimpleForeignObject.prototype.parseCss = function (css, isRoot) {
     var style = ''
     var inlineCssText = ''
     for (var i = 0; i < css.length; i++) {
@@ -126,8 +131,8 @@
     }
 
     return {
-      style:style,
-      inlineCssText:inlineCssText
+      style: style,
+      inlineCssText: inlineCssText
     }
   }
 
@@ -157,7 +162,7 @@
       //元素
       var tagName = $clone.tagName.toLowerCase()
       var css = window.getComputedStyle($node)
-      var obj = this.parseCss(css,isRoot);
+      var obj = this.parseCss(css, isRoot);
 
       var style = obj.style;
       var inlineCssText = obj.inlineCssText;
