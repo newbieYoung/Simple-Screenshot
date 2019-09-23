@@ -61,12 +61,74 @@
       var content = css.getPropertyValue('content');
       if (content != 'none') {
         var $dom = document.createElement('span');
+        var obj = this.parseCss(css,false);
+
+        var style = obj.style;
+        var inlineCssText = obj.inlineCssText;
+
+        if (inlineCssText != '') {
+          var inlineStyle = document.createElement('style')
+          inlineStyle.appendChild(document.createTextNode(inlineCssText))
+          $dom.appendChild(inlineStyle)
+        }
+        $dom.style = style;
         $dom.style.display = 'block';
         $dom.innerText = content.substring(1, content.length - 1); //去掉首页默认双引号字符
-        $dom.style = css.cssText;
       }
     }
     return new XMLSerializer().serializeToString($dom);
+  }
+
+  /**
+   * 解析 Css
+   */
+  SimpleForeignObject.prototype.parseCss = function(css,isRoot){
+    var style = ''
+    var inlineCssText = ''
+    for (var i = 0; i < css.length; i++) {
+      var name = css[i]
+      if (/^[\d]+/.exec(name) == null) {
+        //排除数字属性
+        if (isRoot && this.isMargin(name)) {
+          style += name + ': 0;' //最外层元素的 margin 必须为0，否则会因为偏移导致错位
+
+        } else if (isRoot && this.isPosition(css) && (['top', 'bottom', 'left', 'right'].includes(name))) {
+          style += name + ': 0;' //最外层元素为绝对定位或者固定定位时，top、bottom、left、right 必须为0，否则会因为定位偏移导致错位
+
+        } else if (name == 'font-family') {
+          //处理字体资源
+          var font = css.getPropertyValue(name)
+          inlineCssText = this.inlineFont(font, inlineCssText)
+          style += name + ':' + css.getPropertyValue(name) + ';'
+
+        } else if (name == 'background-image') {
+          //处理图片资源
+          var img = css.getPropertyValue(name)
+          URL_REGEX.lastIndex = 0 //重置正则对象
+          var matches = URL_REGEX.exec(img) //匹配url值
+          if (matches != null) {
+            var url = matches[1]
+            var origin = window.location.origin
+            var no = url.indexOf(origin)
+            if (no != -1) {
+              url = url.substring(no + origin.length, url.length)
+            }
+            img = this.getResource(url)
+          }
+          style += name + ':' + img + ';'
+
+        } else if (this.ignoreProperty.includes(name)) {
+          //部分属性不处理
+        } else {
+          style += name + ':' + css.getPropertyValue(name) + ';'
+        }
+      }
+    }
+
+    return {
+      style:style,
+      inlineCssText:inlineCssText
+    }
   }
 
   /**
@@ -93,49 +155,13 @@
     var nodeType = $clone.nodeType
     if (nodeType == Node.ELEMENT_NODE) {
       //元素
-      var css = window.getComputedStyle($node)
       var tagName = $clone.tagName.toLowerCase()
-      var style = ''
-      var inlineCssText = ''
-      for (var i = 0; i < css.length; i++) {
-        var name = css[i]
-        if (/^[\d]+/.exec(name) == null) {
-          //排除数字属性
-          if (isRoot && this.isMargin(name)) {
-            style += name + ': 0;' //最外层元素的 margin 必须为0，否则会因为偏移导致错位
+      var css = window.getComputedStyle($node)
+      var obj = this.parseCss(css,isRoot);
 
-          } else if (isRoot && this.isPosition(css) && (['top', 'bottom', 'left', 'right'].includes(name))) {
-            style += name + ': 0;' //最外层元素为绝对定位或者固定定位时，top、bottom、left、right 必须为0，否则会因为定位偏移导致错位
+      var style = obj.style;
+      var inlineCssText = obj.inlineCssText;
 
-          } else if (name == 'font-family') {
-            //处理字体资源
-            var font = css.getPropertyValue(name)
-            inlineCssText = this.inlineFont(font, inlineCssText)
-            style += name + ':' + css.getPropertyValue(name) + ';'
-
-          } else if (name == 'background-image') {
-            //处理图片资源
-            var img = css.getPropertyValue(name)
-            URL_REGEX.lastIndex = 0 //重置正则对象
-            var matches = URL_REGEX.exec(img) //匹配url值
-            if (matches != null) {
-              var url = matches[1]
-              var origin = window.location.origin
-              var no = url.indexOf(origin)
-              if (no != -1) {
-                url = url.substring(no + origin.length, url.length)
-              }
-              img = this.getResource(url)
-            }
-            style += name + ':' + img + ';'
-
-          } else if (this.ignoreProperty.includes(name)) {
-            //部分属性不处理
-          } else {
-            style += name + ':' + css.getPropertyValue(name) + ';'
-          }
-        }
-      }
       if (inlineCssText != '') {
         var inlineStyle = document.createElement('style')
         inlineStyle.appendChild(document.createTextNode(inlineCssText))
