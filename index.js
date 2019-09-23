@@ -53,9 +53,10 @@
    * 处理元素伪类
    */
   SimpleForeignObject.prototype.pseudoClass = function ($node, type) {
+    var nodeType = $node.nodeType;
     var $dom = document.createElement('div');
     $dom.style.display = 'none';
-    if ([':before', '::before', ':after', '::after'].includes(type)) {
+    if ([':before', '::before', ':after', '::after'].includes(type) && nodeType == Node.ELEMENT_NODE) {
       var css = window.getComputedStyle($node, type);
       var content = css.getPropertyValue('content');
       if (content != 'none') {
