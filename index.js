@@ -385,7 +385,7 @@
       name: 'opacity',
       value: 1,
     }, {
-      name: dashTransform,
+      name: dashTransform, //因为是给子元素截图，父元素的 transform-origin 等属性可以不考虑
       value: '',
     }, {
       name: 'filter',
@@ -445,11 +445,13 @@
     for (var i = 0; i < parentCss.length; i++) {
       var property = parentCss[i];
       property.value = property.value == null ? '' : (property.value + '').trim();
+      if (property.name == dashTransform) {
+        property.value += ' scale(' + this.devicePixelRatio + ');' //考虑设备像素比
+      }
       if (property.value != '') {
         svg += property.name + ' : ' + property.value + ' ;';
       }
     }
-    svg += dashTransform + ':scale(' + this.devicePixelRatio + ');'; //额外加入容器并通过放大解决设备像素比问题
     svg += dashOrigin + ':0 0;">'
     svg += html;
     svg += '</div>';
