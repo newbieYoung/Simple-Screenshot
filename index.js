@@ -57,8 +57,11 @@
     $dom.style.display = 'none';
     if ([':before', '::before', ':after', '::after'].includes(type)) {
       var css = window.getComputedStyle($node, type);
-      if (css.getPropertyValue('content') != 'none') {
-        var $dom = document.createElement('div');
+      var content = css.getPropertyValue('content');
+      if (content != 'none') {
+        var $dom = document.createElement('span');
+        $dom.style.display = 'block';
+        $dom.innerText = content.substring(1, content.length - 1); //去掉首页默认双引号字符
         $dom.style = css.cssText;
       }
     }
