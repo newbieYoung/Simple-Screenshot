@@ -15,7 +15,7 @@
 
 <img src="https://raw.githubusercontent.com/newbieYoung/NewbieWebArticles/master/images/simple-foreignobject-0.jpg">
 
-而`dom-to-image`虽说在 GITHUB 上 star 数很多，但是由于缺乏维护以及作者的一些实现并不合理，导致其问题很多；
+而`dom-to-image`虽说在 Github 上 star 数很多，但是由于缺乏维护以及作者的一些实现并不合理，导致其问题很多；
 
 耳听为虚，眼见为实！以下将给出一些简单的示例比较来进行说明。
 
