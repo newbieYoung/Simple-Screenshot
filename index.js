@@ -11,6 +11,33 @@
     window.SimpleForeignObject = factory(window.Prefix)
   }
 })(function (Prefix) {
+  //includes方法兼容
+  if (!Array.prototype.includes) {
+    Object.defineProperty(Array.prototype, 'includes', {
+      value: function (valueToFind, fromIndex) {
+        var o = Object(this);
+        var len = o.length >>> 0;
+        if (len === 0) {
+          return false;
+        }
+
+        var n = fromIndex | 0;
+        var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+        function sameValueZero(x, y) {
+          return x === y || (typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y));
+        }
+        while (k < len) {
+          if (sameValueZero(o[k], valueToFind)) {
+            return true;
+          }
+          k++;
+        }
+        return false;
+      }
+    });
+  }
+
   var dashTransform = Prefix.dash('transform')
   var dashOrigin = Prefix.dash('transformOrigin')
   var URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g
