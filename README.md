@@ -149,7 +149,7 @@
 
 <img src="https://raw.githubusercontent.com/newbieYoung/NewbieWebArticles/master/images/simple-foreignobject-5.jpg">
 
-示例五使用了一些特殊的属性，比如 opacity、transform、filter；这些属性特殊的地方在于`如果设置在父元素上虽然不会被子元素继承但是却会对子元素造成影响`，因此这个例子主要是为了测试当对子元素截图时是否考虑了父元素上的这些特殊属性的影响；从截图结果来看 dom-to-image 和 html2canvas 均为考虑，但是 simple-foreignobject 正常。
+示例五使用了一些特殊的属性，比如 opacity、transform、filter；这些属性特殊的地方在于`如果设置在父元素上虽然不会被子元素继承但是却会对子元素造成影响`，因此这个例子主要是为了测试当对子元素截图时是否考虑了父元素上的这些特殊属性的影响；从截图结果来看 dom-to-image 和 html2canvas 均未考虑，但是 simple-foreignobject 正常。
 
 上述所有示例的完整代码在 [https://newbieyoung.github.io/Simple-ForeignObject/test/text.html](https://newbieyoung.github.io/Simple-ForeignObject/test/text.html)
 
