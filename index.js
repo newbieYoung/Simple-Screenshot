@@ -258,7 +258,9 @@
       console.log('load ' + url + ' timeout') //超时
     }
     xhr.onload = function () {
-      console.log('load ' + url + ' success')
+      if (self.debug) {
+        console.log('load ' + url + ' success')
+      }
       var reader = new FileReader()
       reader.onload = function () {
         func(reader.result)
@@ -317,7 +319,9 @@
     var finished = 0
     self.resource = []
     var cssRules = self.getAllCssRules()
-    console.log(cssRules);
+    if (self.debug) {
+      console.log(cssRules);
+    }
     for (var i = 0; i < cssRules.length; i++) {
       var rule = cssRules[i]
       if (rule.type == CSSRule.FONT_FACE_RULE) {
