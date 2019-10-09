@@ -311,17 +311,14 @@
   }
 
   /**
-   * 解析 styleSheets
+   * 解析 cssRules
    */
-  SimpleForeignObject.prototype.parseStyleSheets = function () {
+  SimpleForeignObject.prototype.parseCSSRules = function (cssRules) {
     var self = this
     var count = 0
     var finished = 0
     self.resource = []
-    var cssRules = self.getAllCssRules()
-    if (self.debug) {
-      console.log(cssRules);
-    }
+
     for (var i = 0; i < cssRules.length; i++) {
       var rule = cssRules[i]
       if (rule.type == CSSRule.FONT_FACE_RULE) {
@@ -392,18 +389,64 @@
   }
 
   /**
+   * 解析 styleSheets
+   */
+  SimpleForeignObject.prototype.parseStyleSheets = function () {
+    var self = this;
+    self.getAllCssRules(function (cssRules) {
+      self.parseCSSRules(cssRules);
+    }, true)
+  }
+
+  /**
    * 从 document.styleSheets 中获取全部 cssRule
    */
-  SimpleForeignObject.prototype.getAllCssRules = function () {
+  SimpleForeignObject.prototype.getAllCssRules = function (callback, isAgain) {
+    var crossOriginCss = [];
     var styleSheets = document.styleSheets
     var cssRules = []
     for (var i = 0; i < styleSheets.length; i++) {
-      var list = styleSheets[i].cssRules
+      try {
+        var list = styleSheets[i].cssRules
+      } catch (e) {
+        //css 跨域时直接获取 cssRules 属性报错
+        crossOriginCss.push(styleSheets[i].href);
+      }
       for (var j = 0; j < list.length; j++) {
         cssRules.push(list[j])
       }
     }
-    return cssRules
+
+    if (crossOriginCss.length <= 0 || !isAgain) {
+      if (this.debug) {
+        console.log(cssRules);
+      }
+      callback(cssRules);
+    } else {
+      //把跨域 css 当成外部文件加载，然后转换成 本地加载 dataurl（资源文件需要设置为可以跨域）
+      var self = this;
+      var count = 0;
+      for (var i = 0; i < crossOriginCss.length; i++) {
+        (function (href) {
+          self.loadResource(href, function (dataurl) {
+            var $head = document.getElementsByTagName('head')[0];
+            var $link = document.createElement('link');
+            $link.rel = 'stylesheet';
+            $link.type = 'text/css';
+            $link.href = dataurl;
+            $head.appendChild($link);
+            $link.onload = function () {
+              count++;
+              if (count == crossOriginCss.length) {
+                self.getAllCssRules(callback, false)
+              }
+            }
+          })
+        })(crossOriginCss[i])
+      }
+    }
+
+
   }
 
   /**
