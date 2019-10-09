@@ -164,7 +164,7 @@ Simple-ForeignObject 的兼容性可以简单理解和 SVG ForeignObject 的兼�
 ## 安装和使用
 
 ```bash
-npm install simple-foreignobjec
+npm install simple-foreignobject
 ```
 
 ```javascript
