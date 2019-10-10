@@ -543,6 +543,7 @@
     var svg = 'data:image/svg+xml;charset=utf-8,' + this.toSvg($node)
     var img = new Image()
     img.src = svg
+    img.setAttribute('crossorigin', 'anonymous');
     img.onload = function () {
       var canvas = document.createElement('canvas')
       canvas.width = img.width
