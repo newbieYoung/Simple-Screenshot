@@ -591,10 +591,11 @@
     var tag = 'style="'
     var start = html.indexOf(tag)
     var style = ''
+    var forceProperty = ['background-clip'];
 
     for (var i = 0; i < css.length; i++) {
       var name = css[i]
-      if (!this.ignoreProperty.includes(name)) {
+      if (forceProperty.includes(name)) {
         var v1 = css.getPropertyValue(name)
         var v2 = $clone.style[Prefix.prefix(name)]
         if (v1 != v2) {
