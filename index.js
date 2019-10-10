@@ -51,6 +51,7 @@
 
     this.ready =
       function () {
+        console.log('--- simple-foreignobject ready ---')
         if (this.debug) {
           console.log(this.resource)
         }
@@ -325,7 +326,6 @@
         //字体样式
         var fontFamily = rule.style.getPropertyValue('font-family')
         var src = rule.style.getPropertyValue('src')
-        src = 'url("../font/TTTGB-Medium.ttf")'
         URL_REGEX.lastIndex = 0 //重置正则对象
         var matches = URL_REGEX.exec(src) //匹配url值
         if (matches != null) {
@@ -341,7 +341,6 @@
                   src: 'url("' + dataurl + '")'
                 })
                 if (finished == count) {
-                  console.log('--- simple-foreignobject ready ---')
                   self.ready()
                 }
               })
@@ -372,7 +371,6 @@
                     src: 'url("' + dataurl + '")'
                   })
                   if (finished == count) {
-                    console.log('--- simple-foreignobject ready ---')
                     self.ready()
                   }
                 })
@@ -408,12 +406,12 @@
     for (var i = 0; i < styleSheets.length; i++) {
       try {
         var list = styleSheets[i].cssRules
+        for (var j = 0; j < list.length; j++) {
+          cssRules.push(list[j])
+        }
       } catch (e) {
         //css 跨域时直接获取 cssRules 属性报错
         crossOriginCss.push(styleSheets[i].href);
-      }
-      for (var j = 0; j < list.length; j++) {
-        cssRules.push(list[j])
       }
     }
 
