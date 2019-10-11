@@ -95,7 +95,7 @@
       var css = window.getComputedStyle($node, type);
       var content = css.getPropertyValue('content');
       if (content != 'none') {
-        var obj = this.parseCss(css, false);
+        var obj = this.parseCss(css, false, $dom);
 
         var style = obj.style;
         var inlineCssText = obj.inlineCssText;
@@ -121,7 +121,7 @@
   /**
    * 解析 Css
    */
-  SimpleForeignObject.prototype.parseCss = function (css, isRoot) {
+  SimpleForeignObject.prototype.parseCss = function (css, isRoot, $node) {
     this._illegalCssValueProperty = []; //清空不合法 css 值属性列表
     var style = ''
     var inlineCssText = ''
@@ -176,7 +176,7 @@
     }
 
     if (isRoot) { //以最外层元素的css属性充当公共css属性，防止结构复杂时重复样式代码过多导致体积太大。
-      inlineCssText += '*{' + style + '}';
+      inlineCssText += $node.id + '>*:not(style){' + style + '}';
     }
 
     return {
@@ -206,11 +206,14 @@
     //解析自身
     var html = ''
     var $clone = $node.cloneNode(false) //浅克隆
+    if (isRoot) {
+      $clone.id = 'simple-foreignobject-' + new Date().getTime(); //唯一id
+    }
     var nodeType = $clone.nodeType
     if (nodeType == Node.ELEMENT_NODE) { //元素
       var tagName = $clone.tagName.toLowerCase()
       var css = window.getComputedStyle($node)
-      var obj = this.parseCss(css, isRoot);
+      var obj = this.parseCss(css, isRoot, $clone);
 
       var style = obj.style;
       var inlineCssText = obj.inlineCssText;
