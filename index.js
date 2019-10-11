@@ -65,11 +65,10 @@
 
     /**
      * 忽略部分属性，比如：
-     * -webkit-locale 会导致生成图片异常
      * font-family 外部资源需要单独处理
      * background-image 外部资源需要单独处理
      */
-    this.ignoreProperty = ['-webkit-locale', 'font-family', 'background-image']
+    this.ignoreProperty = ['font-family', 'background-image']
 
 
     /**
@@ -77,7 +76,8 @@
      */
     this.rootOffsetProperty = ['margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right', 'top', 'bottom', 'left', 'right'];
 
-    this._rootCss = null; //当前最外层元素css属性列表
+    this._rootCss = null; //当前最外层元素css属性
+    this._illegalCssValueProperty = []; //不合法的css值属性列表
 
     this.resource = [] //资源列表
     this.parseStyleSheets()
@@ -122,6 +122,7 @@
    * 解析 Css
    */
   SimpleForeignObject.prototype.parseCss = function (css, isRoot) {
+    this._illegalCssValueProperty = []; //清空不合法 css 值属性列表
     var style = ''
     var inlineCssText = ''
     if (isRoot) {
@@ -130,6 +131,9 @@
     for (var i = 0; i < css.length; i++) {
       var name = css[i]
       var value = css.getPropertyValue(name);
+      if (!this.isLegalCssValue(name, value)) { //css 属性值不合法忽略该属性
+        continue;
+      }
       if (!isRoot) {
         var _rcValue = this._rootCss.getPropertyValue(name);
         if (_rcValue == value) { //属性相同值相等为重复样式代码
@@ -259,6 +263,20 @@
     }
 
     return inlineCssText
+  }
+
+  /**
+   * 是否是合法的 css 属性值
+   * 通过 getPropertyValue 获取某些 css 属性的值时有肯能会出现不合法的值；
+   * 比如 -webkit-locale 的值 可能为 “en” 存在双引号，导致拼接异常；
+   * 遇到这种情况暂时忽略该 css 属性
+   */
+  SimpleForeignObject.prototype.isLegalCssValue = function (name, value) {
+    if (value.indexOf('"') != -1 || value.indexOf("'") != -1) {
+      this._illegalCssValueProperty.push(name);
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -547,7 +565,7 @@
       var property = parentCss[i];
       property.value = property.value == null ? '' : (property.value + '').trim();
       if (property.name == dashTransform) {
-        property.value += ' scale(' + this.devicePixelRatio + ');' //考虑设备像素比
+        property.value += ' scale(' + this.devicePixelRatio + ')' //考虑设备像素比
       }
       if (property.value != '') {
         svg += property.name + ' : ' + property.value + ' ;';
@@ -625,7 +643,7 @@
 
     for (var i = 0; i < css.length; i++) {
       var name = css[i]
-      if (!this.rootOffsetProperty.includes(name)) { //因为最外层元素位置偏移问题重置过的属性可以排除
+      if (!this.rootOffsetProperty.includes(name) && !this._illegalCssValueProperty.includes(name)) { //因为最外层元素位置偏移问题重置过的属性可以排除
         var v1 = css.getPropertyValue(name)
         var v2 = $clone.style[Prefix.prefix(name)]
         if (v1 != v2) {
