@@ -96,6 +96,7 @@
         var obj = this.parseCss(css, false, $dom, $test);
         var style = obj.style;
         var inlineCssText = obj.inlineCssText;
+        var prefixStyle = obj.prefixStyle;
 
         if (inlineCssText != '') {
           var inlineStyle = document.createElement('style')
@@ -105,6 +106,12 @@
         $dom.style = style;
         $dom.innerText = content.substring(1, content.length - 1); //去掉首页默认双引号字符
         html += new XMLSerializer().serializeToString($dom);
+
+        //处理内联样式中的兼容性问题
+        var styleTag = 'style="';
+        var start = html.indexOf(styleTag);
+        var insertNo = start + styleTag.length;
+        html = html.substring(0, insertNo) + prefixStyle + html.substring(insertNo, html.length)
 
         return html
       }
@@ -117,6 +124,7 @@
    * 解析 Css
    */
   SimpleForeignObject.prototype.parseCss = function (css, isRoot, $test, $root) {
+    var prefixStyle = '';
     var style = ''
     var inlineCssText = ''
     for (var i = 0; i < css.length; i++) {
@@ -158,8 +166,12 @@
         } else {
           style += name + ':' + value + ';'
           var list = this.forcePrefix(name, value, $test);
-          for (var j = 0; j < list.length; j++) {
-            style += list[j] + ':' + value + ';'
+          if (list.length > 0) {
+            prefixStyle += name + ':' + value + ';'
+            for (var j = 0; j < list.length; j++) {
+              style += list[j] + ':' + value + ';'
+              prefixStyle += list[j] + ':' + value + ';'
+            }
           }
         }
       }
@@ -170,6 +182,7 @@
     }
 
     return {
+      prefixStyle: prefixStyle,
       style: style,
       inlineCssText: inlineCssText
     }
@@ -208,6 +221,7 @@
 
       var style = obj.style;
       var inlineCssText = obj.inlineCssText;
+      var prefixStyle = obj.prefixStyle;
 
       if (inlineCssText != '') {
         var inlineStyle = document.createElement('style')
@@ -218,6 +232,14 @@
         $clone.style = style;
       }
       html = new XMLSerializer().serializeToString($clone)
+
+      //处理内联样式中的兼容性问题
+      if (!isRoot) {
+        var styleTag = 'style="';
+        var start = html.indexOf(styleTag);
+        var insertNo = start + styleTag.length;
+        html = html.substring(0, insertNo) + prefixStyle + html.substring(insertNo, html.length)
+      }
 
       var end = '</' + tagName + '>'
       var no = html.indexOf(end)
