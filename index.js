@@ -131,6 +131,7 @@
       value = this.clearCssValueComma(value);
       if (!isRoot) {
         var _rcValue = this._rootCss.getPropertyValue(name);
+        _rcValue = this.clearCssValueComma(_rcValue);
         if (_rcValue == value) { //属性相同值相等为重复样式代码
           continue;
         }
