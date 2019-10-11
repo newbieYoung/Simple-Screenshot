@@ -70,6 +70,13 @@
      * background-image 外部资源需要单独处理
      */
     this.ignoreProperty = ['-webkit-locale', 'font-family', 'background-image']
+
+
+    /**
+     * 最外层元素 margin 以及 当为绝对定位或者固定定位时 top、bottom、left、right 必须为0，否则会因为偏移导致错位
+     */
+    this.rootOffsetProperty = ['margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right', 'top', 'bottom', 'left', 'right'];
+
     this.resource = [] //资源列表
     this.parseStyleSheets()
   }
