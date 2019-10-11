@@ -70,7 +70,6 @@
      */
     this.ignoreProperty = ['font-family', 'background-image']
 
-
     /**
      * 最外层元素 margin 以及 当为绝对定位或者固定定位时 top、bottom、left、right 必须为0，否则会因为偏移导致错位
      */
@@ -134,20 +133,17 @@
           continue;
         }
       }
-      if (/^[\d]+/.exec(name) == null) {
-        //排除数字属性
+      if (/^[\d]+/.exec(name) == null) { //排除数字属性
         if (isRoot && this.isMargin(name)) {
           style += name + ': 0;' //最外层元素的 margin 必须为0，否则会因为偏移导致错位
 
         } else if (isRoot && this.isPosition(css) && (['top', 'bottom', 'left', 'right'].includes(name))) {
           style += name + ': 0;' //最外层元素为绝对定位或者固定定位时，top、bottom、left、right 必须为0，否则会因为定位偏移导致错位
 
-        } else if (name == 'font-family') {
-          //处理字体资源
+        } else if (name == 'font-family') { //处理字体资源
           inlineCssText = this.inlineFont(value, inlineCssText)
           style += name + ':' + value + ';'
-        } else if (name == 'background-image') {
-          //处理图片资源
+        } else if (name == 'background-image') { //处理图片资源
           URL_REGEX.lastIndex = 0 //重置正则对象
           var matches = URL_REGEX.exec(value) //匹配url值
           if (matches != null) {
@@ -332,26 +328,20 @@
    * 拼接路径
    */
   SimpleForeignObject.prototype.pathJoin = function (array) {
-    // Split the inputs into a list of path commands.
+    //根据反斜杠拆分路径
     var parts = []
     for (var i = 0, l = array.length; i < l; i++) {
       parts = parts.concat(array[i].split('/'))
     }
-    // Interpret the path commands to get the new resolved path.
+    //整理新路径
     var newParts = []
     for (i = 0, l = parts.length; i < l; i++) {
       var part = parts[i]
-      // Remove leading and trailing slashes
-      // Also remove "." segments
-      if (!part || part === '.') continue
-      // Interpret ".." to pop the last segment
-      if (part === '..') newParts.pop()
-      // Push new path segments.
-      else newParts.push(part)
+      if (!part || part === '.') continue // .符号表示当前目录，忽略
+      if (part === '..') newParts.pop() // ..符号表示上一级目录，目录数组中的最后一个元素表示当前目录，需要删除掉
+      else newParts.push(part) //当前目录更新
     }
-    // Preserve the initial slash if there was one.
     if (parts[0] === '') newParts.unshift('')
-    // Turn back into a single string path.
     return newParts.join('/') || (newParts.length ? '/' : '.')
   }
 
@@ -366,16 +356,14 @@
 
     for (var i = 0; i < cssRules.length; i++) {
       var rule = cssRules[i]
-      if (rule.type == CSSRule.FONT_FACE_RULE) {
-        //字体样式
+      if (rule.type == CSSRule.FONT_FACE_RULE) { //字体样式
         var fontFamily = rule.style.getPropertyValue('font-family')
         var src = rule.style.getPropertyValue('src')
         URL_REGEX.lastIndex = 0 //重置正则对象
         var matches = URL_REGEX.exec(src) //匹配url值
         if (matches != null) {
           var url = matches[1]
-          if (url.search(/^(data:)/) == -1) {
-            //非 dataurl
+          if (url.search(/^(data:)/) == -1) { //非 dataurl
             count++;
             (function (key) {
               self.loadResource(url, function (dataurl) {
@@ -405,8 +393,7 @@
             var url = matches[j]
             URL_REGEX.lastIndex = 0
             var value = URL_REGEX.exec(url)[1] //匹配url值
-            if (value.search(/^(data:)/) == -1) {
-              //非 dataurl
+            if (value.search(/^(data:)/) == -1) { //非 dataurl
               count++;
               (function (key) {
                 self.loadResource(value, function (dataurl) {
@@ -496,7 +483,6 @@
   /**
    * 父元素的部分属性对子元素有影响，但是并不会被子元素继承，比如：
    * opacity、transform、filter
-   * 
    */
   SimpleForeignObject.prototype.calcParentProperty = function ($node) {
     var list = [{
