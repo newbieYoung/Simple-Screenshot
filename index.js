@@ -172,7 +172,7 @@
     }
 
     if (isRoot) { //以最外层元素的css属性充当公共css属性，防止结构复杂时重复样式代码过多导致体积太大。
-      inlineCssText += $node.id + '>*:not(style){' + style + '}';
+      inlineCssText += $node.id + ' *:not(style){' + style + '}';
     }
 
     return {
