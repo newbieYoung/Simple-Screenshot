@@ -344,11 +344,12 @@
             count++;
             (function (key) {
               self.loadResource(url, function (dataurl) {
-                finished++
                 self.resource.push({
                   key: key,
                   src: 'url("' + dataurl + '")'
                 })
+              }, function () {
+                finished++
                 if (finished == count) {
                   self.ready()
                 }
@@ -374,11 +375,12 @@
               count++;
               (function (key) {
                 self.loadResource(value, function (dataurl) {
-                  finished++
                   self.resource.push({
                     key: self.pathJoin([self.pagePath, key.trim()]),
                     src: 'url("' + dataurl + '")'
                   })
+                }, function () {
+                  finished++
                   if (finished == count) {
                     self.ready()
                   }
