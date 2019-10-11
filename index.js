@@ -108,7 +108,7 @@
         $dom.innerText = content.substring(1, content.length - 1); //去掉首页默认双引号字符
 
         html += new XMLSerializer().serializeToString($dom);
-        html = this.forcePrefix(html, css, $dom)
+        //html = this.forcePrefix(html, css, $dom)
 
         return html
       }
@@ -160,7 +160,6 @@
             value = this.getResource(url)
           }
           style += name + ':' + value + ';'
-
         } else if (this.ignoreProperty.includes(name)) {
           //部分属性不处理
         } else {
@@ -170,7 +169,7 @@
     }
 
     if (isRoot) { //以最外层元素的css属性充当公共css属性，防止结构复杂时重复样式代码过多导致体积太大。
-      inlineCssText += $node.id + ' *:not(style){' + style + '}';
+      inlineCssText += '#' + $node.id + ',#' + $node.id + ' *:not(style){' + style + '}';
     }
 
     return {
@@ -218,11 +217,11 @@
         inlineStyle.appendChild(document.createTextNode(inlineCssText))
         $clone.appendChild(inlineStyle)
       }
-      $clone.style = style;
-      console.log(style);
-      //html = new XMLSerializer().serializeToString($clone)
-      html = '<' + tagName + ' style="' + style + '"></' + tagName + '>'
-      html = this.forcePrefix(html, css, $clone)
+      if (!isRoot) {
+        $clone.style = style;
+      }
+      html = new XMLSerializer().serializeToString($clone)
+      //html = this.forcePrefix(html, css, $clone)
       var end = '</' + tagName + '>'
       var no = html.indexOf(end)
       html = html.substring(0, no) + inner + html.substring(no, html.length)
