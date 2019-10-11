@@ -125,9 +125,6 @@
     this._illegalCssValueProperty = []; //清空不合法 css 值属性列表
     var style = ''
     var inlineCssText = ''
-    if (isRoot) {
-      this._rootCss = css;
-    }
     for (var i = 0; i < css.length; i++) {
       var name = css[i]
       var value = css.getPropertyValue(name);
@@ -190,6 +187,12 @@
    */
   SimpleForeignObject.prototype.toHtml = function ($node, isRoot) {
     var inner = ''
+    var html = ''
+    var $clone = $node.cloneNode(false) //浅克隆
+    if (isRoot) {
+      this._rootCss = window.getComputedStyle($node);
+      $clone.id = 'simple-foreignobject-' + new Date().getTime(); //唯一id
+    }
 
     //处理before伪类
     inner += this.pseudoClass($node, ':before');
@@ -204,11 +207,6 @@
     inner += this.pseudoClass($node, ':after');
 
     //解析自身
-    var html = ''
-    var $clone = $node.cloneNode(false) //浅克隆
-    if (isRoot) {
-      $clone.id = 'simple-foreignobject-' + new Date().getTime(); //唯一id
-    }
     var nodeType = $clone.nodeType
     if (nodeType == Node.ELEMENT_NODE) { //元素
       var tagName = $clone.tagName.toLowerCase()
