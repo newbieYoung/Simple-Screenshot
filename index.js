@@ -128,9 +128,7 @@
     for (var i = 0; i < css.length; i++) {
       var name = css[i]
       var value = css.getPropertyValue(name);
-      if (!this.isLegalCssValue(name, value)) { //css 属性值不合法忽略该属性
-        continue;
-      }
+      value = this.clearCssValueComma(value);
       if (!isRoot) {
         var _rcValue = this._rootCss.getPropertyValue(name);
         if (_rcValue == value) { //属性相同值相等为重复样式代码
@@ -267,17 +265,17 @@
   }
 
   /**
-   * 是否是合法的 css 属性值
-   * 通过 getPropertyValue 获取某些 css 属性的值时有肯能会出现不合法的值；
-   * 比如 -webkit-locale 的值 可能为 “en” 存在双引号，导致拼接异常；
-   * 遇到这种情况暂时忽略该 css 属性
+   * 清除 css 属性值中的单引号和双引号；
+   * 比如 -webkit-locale 的值 可能为 “en” 存在双引号，导致样式代码拼接异常；
    */
-  SimpleForeignObject.prototype.isLegalCssValue = function (name, value) {
-    if (value.indexOf('"') != -1 || value.indexOf("'") != -1) {
-      this._illegalCssValueProperty.push(name);
-      return false;
+  SimpleForeignObject.prototype.clearCssValueComma = function (value) {
+    if (value.indexOf("'") != -1) { //存在单引号
+      value = value.replace(/'/g, '');
     }
-    return true;
+    if (value.indexOf('"') != -1) { //存在双引号
+      value = value.replace(/"/g, '');
+    }
+    return value;
   }
 
   /**
@@ -644,9 +642,11 @@
 
     for (var i = 0; i < css.length; i++) {
       var name = css[i]
-      if (!this.rootOffsetProperty.includes(name) && !this._illegalCssValueProperty.includes(name)) { //因为最外层元素位置偏移问题重置过的属性可以排除
+      if (!this.rootOffsetProperty.includes(name)) { //因为最外层元素位置偏移问题重置过的属性可以排除
         var v1 = css.getPropertyValue(name)
+        v1 = this.clearCssValueComma(v1);
         var v2 = $clone.style[Prefix.prefix(name)]
+        v2 = this.clearCssValueComma(v2);
         if (v1 != v2) {
           style += name + ':' + v1 + ';'
           if (!this.isContainPrefix(name)) {
