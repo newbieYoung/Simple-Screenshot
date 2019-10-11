@@ -625,7 +625,11 @@
     $test.style[Prefix.prefix(name)] = value;
     var newValue = this.clearCssValueComma($test.style[Prefix.prefix(name)]);
     if (newValue !== value) {
-      return ['-o-' + name, '-ms-' + name, '-moz-' + name, '-webkit-' + name];
+      if (this.isContainPrefix(name)) {
+        //如果存在前缀还出现丢失的情况，应该算是浏览器的 bug 了，这里暂时不处理。
+      } else {
+        return ['-o-' + name, '-ms-' + name, '-moz-' + name, '-webkit-' + name];
+      }
     }
     return [];
   }
