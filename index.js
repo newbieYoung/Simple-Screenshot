@@ -77,6 +77,11 @@
      */
     this.rootOffsetProperty = ['margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right', 'top', 'bottom', 'left', 'right'];
 
+    /**
+     * 使用 $dom.style = style 赋值时会出现因为兼容性问题丢失部分css属性的情况，比如 background-clip
+     */
+    this.forcePrefixProperty = ['background-clip'];
+
     this.resource = [] //资源列表
     this.parseStyleSheets()
   }
@@ -190,8 +195,7 @@
     var html = ''
     var $clone = $node.cloneNode(false) //浅克隆
     var nodeType = $clone.nodeType
-    if (nodeType == Node.ELEMENT_NODE) {
-      //元素
+    if (nodeType == Node.ELEMENT_NODE) { //元素
       var tagName = $clone.tagName.toLowerCase()
       var css = window.getComputedStyle($node)
       var obj = this.parseCss(css, isRoot);
@@ -204,14 +208,13 @@
         inlineStyle.appendChild(document.createTextNode(inlineCssText))
         $clone.appendChild(inlineStyle)
       }
-      $clone.style = style
+      $clone.style = style //forcePrefixProperty
       html = new XMLSerializer().serializeToString($clone)
       html = this.forcePrefix(html, css, $clone)
       var end = '</' + tagName + '>'
       var no = html.indexOf(end)
       html = html.substring(0, no) + inner + html.substring(no, html.length)
-    } else if (nodeType == Node.TEXT_NODE) {
-      //文字
+    } else if (nodeType == Node.TEXT_NODE) { //文字
       html = $node.wholeText
     }
 
