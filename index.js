@@ -77,11 +77,6 @@
      */
     this.rootOffsetProperty = ['margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right', 'top', 'bottom', 'left', 'right'];
 
-    /**
-     * 使用 $dom.style = style 赋值时会出现因为兼容性问题丢失部分css属性的情况，比如 background-clip
-     */
-    this.forcePrefixProperty = ['background-clip'];
-
     this.resource = [] //资源列表
     this.parseStyleSheets()
   }
@@ -208,7 +203,7 @@
         inlineStyle.appendChild(document.createTextNode(inlineCssText))
         $clone.appendChild(inlineStyle)
       }
-      $clone.style = style //forcePrefixProperty
+      $clone.style = style
       html = new XMLSerializer().serializeToString($clone)
       html = this.forcePrefix(html, css, $clone)
       var end = '</' + tagName + '>'
@@ -605,19 +600,19 @@
   }
 
   /**
-   * 某些属性再赋值时会出现丢失的情况，因此需要强行补充，而且补充时还需要考虑全部浏览器前缀，比如：
-   * background-clip
+   * $clone.style = style 赋值时会出现因为兼容性问题丢失部分css属性的情况；
+   * 比如：background-clip 等
+   * 因此需要强行补充，而且补充时还需要考虑全部浏览器前缀。
    */
   SimpleForeignObject.prototype.forcePrefix = function (html, css, $clone) {
     var prefixes = ['-o-', '-ms-', '-moz-', '-webkit-']
     var tag = 'style="'
     var start = html.indexOf(tag)
     var style = ''
-    var forceProperty = ['background-clip'];
 
     for (var i = 0; i < css.length; i++) {
       var name = css[i]
-      if (forceProperty.includes(name)) {
+      if (!this.rootOffsetProperty.includes(name)) { //因为最外层元素位置偏移问题重置过的属性可以排除
         var v1 = css.getPropertyValue(name)
         var v2 = $clone.style[Prefix.prefix(name)]
         if (v1 != v2) {
