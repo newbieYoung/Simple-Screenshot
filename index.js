@@ -77,7 +77,6 @@
     this.rootOffsetProperty = ['margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right', 'top', 'bottom', 'left', 'right'];
 
     this._rootCss = null; //当前最外层元素css属性
-    this._illegalCssValueProperty = []; //不合法的css值属性列表
 
     this.resource = [] //资源列表
     this.parseStyleSheets()
@@ -122,7 +121,6 @@
    * 解析 Css
    */
   SimpleForeignObject.prototype.parseCss = function (css, isRoot, $node) {
-    this._illegalCssValueProperty = []; //清空不合法 css 值属性列表
     var style = ''
     var inlineCssText = ''
     for (var i = 0; i < css.length; i++) {
