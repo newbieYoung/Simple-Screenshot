@@ -77,6 +77,8 @@
      */
     this.rootOffsetProperty = ['margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right', 'top', 'bottom', 'left', 'right'];
 
+    this._rootCss = null; //当前最外层元素css属性列表
+
     this.resource = [] //资源列表
     this.parseStyleSheets()
   }
@@ -122,8 +124,18 @@
   SimpleForeignObject.prototype.parseCss = function (css, isRoot) {
     var style = ''
     var inlineCssText = ''
+    if (isRoot) {
+      this._rootCss = css;
+    }
     for (var i = 0; i < css.length; i++) {
       var name = css[i]
+      var value = css.getPropertyValue(name);
+      if (!isRoot) {
+        var _rcValue = this._rootCss.getPropertyValue(name);
+        if (_rcValue == value) { //属性相同值相等为重复样式代码
+          continue;
+        }
+      }
       if (/^[\d]+/.exec(name) == null) {
         //排除数字属性
         if (isRoot && this.isMargin(name)) {
@@ -134,15 +146,12 @@
 
         } else if (name == 'font-family') {
           //处理字体资源
-          var font = css.getPropertyValue(name)
-          inlineCssText = this.inlineFont(font, inlineCssText)
-          style += name + ':' + font + ';'
-
+          inlineCssText = this.inlineFont(value, inlineCssText)
+          style += name + ':' + value + ';'
         } else if (name == 'background-image') {
           //处理图片资源
-          var img = css.getPropertyValue(name)
           URL_REGEX.lastIndex = 0 //重置正则对象
-          var matches = URL_REGEX.exec(img) //匹配url值
+          var matches = URL_REGEX.exec(value) //匹配url值
           if (matches != null) {
             var url = matches[1]
             var origin = window.location.origin
@@ -150,16 +159,20 @@
             if (no != -1) {
               url = url.substring(no + origin.length, url.length)
             }
-            img = this.getResource(url)
+            value = this.getResource(url)
           }
-          style += name + ':' + img + ';'
+          style += name + ':' + value + ';'
 
         } else if (this.ignoreProperty.includes(name)) {
           //部分属性不处理
         } else {
-          style += name + ':' + css.getPropertyValue(name) + ';'
+          style += name + ':' + value + ';'
         }
       }
+    }
+
+    if (isRoot) { //以最外层元素的css属性充当公共css属性，防止结构复杂时重复样式代码过多导致体积太大。
+      inlineCssText += '*{' + style + '}';
     }
 
     return {
