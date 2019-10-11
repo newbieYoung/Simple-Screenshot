@@ -246,7 +246,7 @@
   /**
    * 加载外部资源
    */
-  SimpleForeignObject.prototype.loadResource = function (url, func) {
+  SimpleForeignObject.prototype.loadResource = function (url, success, error) {
     var self = this
     var xhr = new XMLHttpRequest()
     xhr.responseType = 'blob'
@@ -254,9 +254,15 @@
     xhr.open('GET', url, true)
     xhr.onerror = function () {
       console.log('load ' + url + ' error') //异常
+      if (error) {
+        error();
+      }
     }
     xhr.ontimeout = function () {
       console.log('load ' + url + ' timeout') //超时
+      if (error) {
+        error();
+      }
     }
     xhr.onload = function () {
       if (self.debug) {
@@ -264,7 +270,7 @@
       }
       var reader = new FileReader()
       reader.onload = function () {
-        func(reader.result)
+        success(reader.result)
       }
       reader.readAsDataURL(xhr.response)
     }
