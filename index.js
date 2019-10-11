@@ -129,7 +129,7 @@
           //处理字体资源
           var font = css.getPropertyValue(name)
           inlineCssText = this.inlineFont(font, inlineCssText)
-          style += name + ':' + css.getPropertyValue(name) + ';'
+          style += name + ':' + font + ';'
 
         } else if (name == 'background-image') {
           //处理图片资源
