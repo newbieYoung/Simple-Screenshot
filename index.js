@@ -84,7 +84,7 @@
   /**
    * 处理元素伪类
    */
-  SimpleForeignObject.prototype.pseudoClass = function ($node, type) {
+  SimpleForeignObject.prototype.pseudoClass = function ($node, type, $test) {
     var html = '';
     var nodeType = $node.nodeType;
     var $dom = document.createElement('span');
@@ -93,8 +93,7 @@
       var css = window.getComputedStyle($node, type);
       var content = css.getPropertyValue('content');
       if (content != 'none') {
-        var obj = this.parseCss(css, false, $dom);
-
+        var obj = this.parseCss(css, false, $dom, $test);
         var style = obj.style;
         var inlineCssText = obj.inlineCssText;
 
@@ -105,9 +104,7 @@
         }
         $dom.style = style;
         $dom.innerText = content.substring(1, content.length - 1); //去掉首页默认双引号字符
-
         html += new XMLSerializer().serializeToString($dom);
-        //html = this.forcePrefix(html, css, $dom)
 
         return html
       }
@@ -119,7 +116,7 @@
   /**
    * 解析 Css
    */
-  SimpleForeignObject.prototype.parseCss = function (css, isRoot, $node) {
+  SimpleForeignObject.prototype.parseCss = function (css, isRoot, $test, $root) {
     var style = ''
     var inlineCssText = ''
     for (var i = 0; i < css.length; i++) {
@@ -160,12 +157,16 @@
           //部分属性不处理
         } else {
           style += name + ':' + value + ';'
+          var list = this.forcePrefix(name, value, $test);
+          for (var j = 0; j < list.length; j++) {
+            style += list[j] + ':' + value + ';'
+          }
         }
       }
     }
 
-    if (isRoot) { //以最外层元素的css属性充当公共css属性，防止结构复杂时重复样式代码过多导致体积太大。
-      inlineCssText += '#' + $node.id + ',#' + $node.id + ' *:not(style){' + style + '}';
+    if (isRoot && $root) { //以最外层元素的css属性充当公共css属性，防止结构复杂时重复样式代码过多导致体积太大。
+      inlineCssText += '#' + $root.id + ',#' + $root.id + ' *:not(style){' + style + '}';
     }
 
     return {
@@ -177,7 +178,7 @@
   /**
    * dom节点转换为html代码
    */
-  SimpleForeignObject.prototype.toHtml = function ($node, isRoot) {
+  SimpleForeignObject.prototype.toHtml = function ($node, isRoot, $test) {
     var inner = ''
     var html = ''
     var $clone = $node.cloneNode(false) //浅克隆
@@ -187,23 +188,23 @@
     }
 
     //处理before伪类
-    inner += this.pseudoClass($node, ':before');
+    inner += this.pseudoClass($node, ':before', $test);
 
     //解析子元素
     var childs = $node.childNodes
     for (var i = 0; i < childs.length; i++) {
-      inner += this.toHtml(childs[i], false)
+      inner += this.toHtml(childs[i], false, $test)
     }
 
     //处理after伪类
-    inner += this.pseudoClass($node, ':after');
+    inner += this.pseudoClass($node, ':after', $test);
 
     //解析自身
     var nodeType = $clone.nodeType
     if (nodeType == Node.ELEMENT_NODE) { //元素
       var tagName = $clone.tagName.toLowerCase()
       var css = window.getComputedStyle($node)
-      var obj = this.parseCss(css, isRoot, $clone);
+      var obj = this.parseCss(css, isRoot, $test, $clone);
 
       var style = obj.style;
       var inlineCssText = obj.inlineCssText;
@@ -217,7 +218,7 @@
         $clone.style = style;
       }
       html = new XMLSerializer().serializeToString($clone)
-      //html = this.forcePrefix(html, css, $clone)
+
       var end = '</' + tagName + '>'
       var no = html.indexOf(end)
       html = html.substring(0, no) + inner + html.substring(no, html.length)
@@ -261,8 +262,8 @@
   }
 
   /**
-   * 清除 css 属性值中的单引号和双引号；
-   * 比如 -webkit-locale 的值 可能为 “en” 存在双引号，导致样式代码拼接异常；
+   * 清除 css 属性值中的单引号和双引号，
+   * 比如 -webkit-locale 的值 可能为 “en” 存在双引号，导致样式代码拼接异常。
    */
   SimpleForeignObject.prototype.clearCssValueComma = function (value) {
     if (value.indexOf("'") != -1) { //存在单引号
@@ -532,7 +533,8 @@
     var rect = $node.getBoundingClientRect($node)
     var width = rect.width * this.devicePixelRatio
     var height = rect.height * this.devicePixelRatio
-    var html = this.toHtml($node, true)
+    var $test = document.createElement('div'); //兼容性测试元素
+    var html = this.toHtml($node, true, $test)
     var css = window.getComputedStyle($node);
     var parentCss = this.calcParentProperty($node);
 
@@ -615,38 +617,17 @@
   }
 
   /**
-   * $clone.style = style 赋值时会出现因为兼容性问题丢失部分css属性的情况；
-   * 比如：background-clip 等
-   * 因此需要强行补充，而且补充时还需要考虑全部浏览器前缀。
+   * 遍历 css 属性列表时某些属性可能会出现丢失前缀的情况，
+   * 比如：background-clip 等；
+   * 需要强制补上。
    */
-  SimpleForeignObject.prototype.forcePrefix = function (html, css, $clone) {
-    var prefixes = ['-o-', '-ms-', '-moz-', '-webkit-']
-    var tag = 'style="'
-    var start = html.indexOf(tag)
-    var style = ''
-
-    for (var i = 0; i < css.length; i++) {
-      var name = css[i]
-      if (!this.rootOffsetProperty.includes(name)) { //因为最外层元素位置偏移问题重置过的属性可以排除
-        var v1 = css.getPropertyValue(name)
-        v1 = this.clearCssValueComma(v1);
-        var v2 = $clone.style[Prefix.prefix(name)]
-        v2 = this.clearCssValueComma(v2);
-        if (v1 != v2) {
-          style += name + ':' + v1 + ';'
-          if (!this.isContainPrefix(name)) {
-            //不包含浏览器前缀
-            for (var j = 0; j < prefixes.length; j++) {
-              style += prefixes[j] + name + ':' + v1 + ';'
-            }
-          }
-        }
-      }
+  SimpleForeignObject.prototype.forcePrefix = function (name, value, $test) {
+    $test.style[Prefix.prefix(name)] = value;
+    var newValue = this.clearCssValueComma($test.style[Prefix.prefix(name)]);
+    if (newValue !== value) {
+      return ['-o-' + name, '-ms-' + name, '-moz-' + name, '-webkit-' + name];
     }
-
-    var no = start + tag.length
-    html = html.substring(0, no) + style + html.substring(no, html.length)
-    return html
+    return [];
   }
 
   /**
