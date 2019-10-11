@@ -220,8 +220,10 @@
         inlineStyle.appendChild(document.createTextNode(inlineCssText))
         $clone.appendChild(inlineStyle)
       }
-      $clone.style = style
-      html = new XMLSerializer().serializeToString($clone)
+      $clone.style = style;
+      console.log(style);
+      //html = new XMLSerializer().serializeToString($clone)
+      html = '<' + tagName + ' style="' + style + '"></' + tagName + '>'
       html = this.forcePrefix(html, css, $clone)
       var end = '</' + tagName + '>'
       var no = html.indexOf(end)
