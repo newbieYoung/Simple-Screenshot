@@ -586,10 +586,9 @@
    * dom节点转换为canvas
    */
   SimpleForeignObject.prototype.toCanvas = function ($node, func) {
-    var svg = 'data:image/svg+xml;charset=utf-8,' + this.toSvg($node)
+    var svg = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(this.toSvg($node)) //需要使用 encodeURIComponent 进行编码，否则可能会出现 onload 函数不触发的情况
     var img = new Image()
-    img.src = svg
-    img.setAttribute('crossorigin', 'anonymous');
+    img.src = svg;
     img.onload = function () {
       var canvas = document.createElement('canvas')
       canvas.width = img.width
