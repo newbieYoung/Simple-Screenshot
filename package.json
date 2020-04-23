@@ -1,7 +1,7 @@
 {
   "name": "simple-screenshot",
   "version": "1.0.0",
-  "description": "`Simple-ForeignObject` [https://github.com/newbieYoung/Simple-ForeignObject](https://github.com/newbieYoung/Simple-ForeignObject) 是基于 SVG ForeignObject 的网页截图组件，部分实现参考了 `dom-to-image` [https://github.com/tsayen/dom-to-image](https://github.com/tsayen/dom-to-image)；",
+  "description": "",
   "main": "index.js",
   "directories": {
     "lib": "lib",
