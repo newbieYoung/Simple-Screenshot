@@ -1,24 +1,25 @@
 {
-  "name": "simple-foreignobject",
-  "version": "1.0.11",
-  "description": "",
+  "name": "simple-screenshot",
+  "version": "1.0.0",
+  "description": "`Simple-ForeignObject` [https://github.com/newbieYoung/Simple-ForeignObject](https://github.com/newbieYoung/Simple-ForeignObject) 是基于 SVG ForeignObject 的网页截图组件，部分实现参考了 `dom-to-image` [https://github.com/tsayen/dom-to-image](https://github.com/tsayen/dom-to-image)；",
   "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/newbieYoung/Simple-ForeignObject.git"
+    "url": "git+https://github.com/newbieYoung/Simple-Screenshot.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/newbieYoung/Simple-ForeignObject/issues"
+    "url": "https://github.com/newbieYoung/Simple-Screenshot/issues"
   },
-  "homepage": "https://github.com/newbieYoung/Simple-ForeignObject#readme",
-  "dependencies": {
-    "dom-to-image": "^2.6.0",
-    "html2canvas": "^1.0.0-rc.4",
-    "prefix-umd": "^1.0.0"
-  }
+  "homepage": "https://github.com/newbieYoung/Simple-Screenshot#readme"
 }
