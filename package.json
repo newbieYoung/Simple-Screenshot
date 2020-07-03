@@ -4,22 +4,15 @@
   "description": "",
   "main": "index.js",
   "directories": {
-    "lib": "lib",
-    "test": "test"
+    "example": "examples"
   },
-  "dependencies": {},
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/newbieYoung/Simple-Screenshot.git"
+    "url": "http://git.code.oa.com/newyoungli/Simple-Screenshot.git"
   },
   "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/newbieYoung/Simple-Screenshot/issues"
-  },
-  "homepage": "https://github.com/newbieYoung/Simple-Screenshot#readme"
+  "license": "ISC"
 }

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>格式化 xml</title>
+</head>
+
+<body>
+  <textarea id="input" cols="30" rows="10" placeholder="请输入xml"></textarea>
+  <input type="text" id="selector" placeholder="screenshot">
+  <button id="format">格式化</button>
+  <xmp id="output"></xmp>
+  <script>
+    window.onload = function () {
+      let $input = document.querySelector('#input');
+      let $output = document.querySelector('#output');
+      let $selector = document.querySelector('#selector');
+      let $btn = document.querySelector('#format');
+      let parser = new DOMParser();
+      let screenshotClass = 'screenshot'; //默认为 screenshot
+
+      $btn.addEventListener('click', function () {
+        if ($selector.value != '') {
+          screenshotClass = $selector.value;
+        }
+        let xml = $input.value;
+        let xmlDoc = parser.parseFromString(xml, "text/xml");
+        format(xmlDoc.childNodes[0], 0);
+        $output.innerHTML = xmlDoc.childNodes[0].outerHTML.replace(/&quot;/g, "'");
+      });
+
+      /**
+       * nodeType
+       * 1 元素节点
+       * 3 文本节点
+       */
+      function format(node, level) {
+        if (node.nodeType != 1) { //只考虑 element
+          return;
+        }
+        if (node.nodeName == 'image' || node.nodeName == 'img') {
+          node.setAttribute('data-src', node.getAttribute('src'));
+        }
+        node.classList.add(screenshotClass);
+        node.setAttribute('data-name', node.nodeName);
+        node.setAttribute('data-level', level);
+        let childs = node.childNodes;
+        let textNodes = [];
+        if (!childs || childs.length == 0) { //没有子节点
+          node.setAttribute('data-len', 0);
+        } else {
+          let no = 0;
+          for (let i = 0; i < childs.length; i++) {
+            let child = childs[i];
+            let cType = child.nodeType;
+            let newLevel = level + '-' + no;
+            if (cType == 3) { //文字子节点
+              if (child.nodeValue.trim() != '') {
+                textNodes.push({
+                  level: newLevel,
+                  text: child.nodeValue
+                });
+              } else {
+                no--; //空文字子节点忽略
+              }
+            } else {
+              format(child, newLevel);
+            }
+            no++;
+          }
+          node.setAttribute('data-len', no);
+          if (textNodes.length > 0) {
+            node.setAttribute('data-texts', JSON.stringify(textNodes));
+          }
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
