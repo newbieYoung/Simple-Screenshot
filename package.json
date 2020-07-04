@@ -1,18 +1,23 @@
 {
-  "name": "simple-screenshot",
+  "name": "simple-screenimage",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "基于 SVG 的小程序、H5 图片生成组件。",
+  "main": "index-qq.js",
   "directories": {
-    "example": "examples"
+    "example": "examples",
+    "test": "test"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "http://git.code.oa.com/newyoungli/Simple-Screenshot.git"
+    "url": "git+https://github.com/newbieYoung/Simple-Screenimage.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/newbieYoung/Simple-Screenimage/issues"
+  },
+  "homepage": "https://github.com/newbieYoung/Simple-Screenimage#readme"
 }
