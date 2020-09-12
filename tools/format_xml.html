@@ -5,11 +5,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>格式化 xml</title>
+  <style>
+    #format {
+      margin-top: 8px;
+    }
+  </style>
 </head>
 
 <body>
   <textarea id="input" cols="30" rows="10" placeholder="请输入xml"></textarea>
-  <input type="text" id="selector" placeholder="screenshot">
+  <div>class: <input type="text" id="selector" placeholder="screenshot"></div>
+  <div>data-level: <input type="checkbox" id="data-level" checked></div>
+  <div>data-src: <input type="checkbox" id="data-src" checked></div>
+  <div>data-name: <input type="checkbox" id="data-name" checked></div>
+  <div>data-len: <input type="checkbox" id="data-len" checked></div>
+  <div>data-texts: <input type="checkbox" id="data-texts" checked></div>
   <button id="format">格式化</button>
   <xmp id="output"></xmp>
   <script>
@@ -18,16 +28,28 @@
       let $output = document.querySelector('#output');
       let $selector = document.querySelector('#selector');
       let $btn = document.querySelector('#format');
+      let $level = document.querySelector('#data-level');
+      let $src = document.querySelector('#data-src');
+      let $name = document.querySelector('#data-name');
+      let $len = document.querySelector('#data-len');
+      let $texts = document.querySelector('#data-texts');
       let parser = new DOMParser();
       let screenshotClass = 'screenshot'; //默认为 screenshot
 
       $btn.addEventListener('click', function () {
+        let config = {
+          dataLevel: $level.checked,
+          dataSrc: $src.checked,
+          dataName: $name.checked,
+          dataLen: $len.checked,
+          dataTexts: $texts.checked
+        }
         if ($selector.value != '') {
           screenshotClass = $selector.value;
         }
         let xml = $input.value;
         let xmlDoc = parser.parseFromString(xml, "text/xml");
-        format(xmlDoc.childNodes[0], 0);
+        format(xmlDoc.childNodes[0], 0, config);
         $output.innerHTML = xmlDoc.childNodes[0].outerHTML.replace(/&quot;/g, "'");
       });
 
@@ -36,20 +58,25 @@
        * 1 元素节点
        * 3 文本节点
        */
-      function format(node, level) {
+      function format(node, level, config) {
         if (node.nodeType != 1) { //只考虑 element
           return;
         }
         if (node.nodeName == 'image' || node.nodeName == 'img') {
-          node.setAttribute('data-src', node.getAttribute('src'));
+          config.dataSrc && node.setAttribute('data-src', node.getAttribute('src'));
         }
         node.classList.add(screenshotClass);
-        node.setAttribute('data-name', node.nodeName);
-        node.setAttribute('data-level', level);
+        config.dataName && node.setAttribute('data-name', node.nodeName);
+        config.dataLevel && node.setAttribute('data-level', level);
         let childs = node.childNodes;
         let textNodes = [];
         if (!childs || childs.length == 0) { //没有子节点
-          node.setAttribute('data-len', 0);
+          config.dataLen && node.setAttribute('data-len', 0);
+          /**
+           * 没有子节点的元素转换为 xml 格式时，结束标签会变成非标准形式（<div></div>  <div/>），在某些浏览器中会有问题；
+           * 解决方案是加入空格字符。
+           */
+          node.innerHTML = ' ';
         } else {
           let no = 0;
           for (let i = 0; i < childs.length; i++) {
@@ -66,13 +93,13 @@
                 no--; //空文字子节点忽略
               }
             } else {
-              format(child, newLevel);
+              format(child, newLevel, config);
             }
             no++;
           }
-          node.setAttribute('data-len', no);
+          config.dataLen && node.setAttribute('data-len', no);
           if (textNodes.length > 0) {
-            node.setAttribute('data-texts', JSON.stringify(textNodes));
+            config.dataTexts && node.setAttribute('data-texts', JSON.stringify(textNodes));
           }
         }
       }

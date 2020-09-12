@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试 svg foreignobject 是否可以直接使用 class</title>
+  <style>
+    /**
+     * svg foreignobject 是可以直接使用 class 样式的，但是 simple-screenshot 中却并没有这么使用，主要是因为截图的场景可能是局部的，如果直接使用样式，当截图根元素存在多个父节点时没办法处理；
+     * 而且生成图片时脱离了上下文环境 class 也会失效。
+     */
+    .test {
+      font-weight: 700;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'>
+    <foreignObject width='100%' height='100%'>
+      <!-- 而且 svg foreignobject 根节点元素的百分比数值会无效 -->
+      <div class='test' xmlns='http://www.w3.org/1999/xhtml' style='width:100px;height:100px;background-color:red;'>1
+      </div>
+    </foreignObject>
+  </svg>
+  <script>
+    window.onload = function () {
+      let svg = "";
+      svg += "<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' >";
+      svg += "<foreignObject width='100%' height='100%'>";
+      svg +=
+        "<div class='test' xmlns='http://www.w3.org/1999/xhtml' style='width:100px;height:100px;background-color:red;'>1</div>";
+      svg += "</foreignObject>";
+      svg += "</svg>"
+
+      let self = this;
+      let img = new Image();
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      img.onload = function () {
+        let canvas = document.createElement('canvas');
+        canvas.width = 100;
+        canvas.height = 100;
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        document.body.appendChild(canvas);
+      }
+    }
+  </script>
+</body>
+
+</html>

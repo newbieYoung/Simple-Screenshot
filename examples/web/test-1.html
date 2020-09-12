@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>H5 测试页面</title>
+  <link rel="stylesheet" href="./test-1.css" />
+  <script src="https://pub.idqqimg.com/qqmobile/qqapi.wk.js"></script>
+  <script>
+    (function (win, doc) {
+      var docEl = document.documentElement;
+
+      function setFont() {
+        var cliWidth = docEl.clientWidth;
+        if (cliWidth > 750) {
+          cliWidth = 750;
+        }
+        docEl.style.fontSize = 100 * (cliWidth / 750) + "px";
+      }
+      win.addEventListener("resize", setFont, false);
+      setFont();
+    })(window, document);
+  </script>
+</head>
+
+<body>
+  <div class="mp-share">
+    <div class="mps-content">
+      <div class="mps-info">
+        <div class="mpsi-img"
+          style="background-image:url(https://pic2.zhimg.com/80/v2-c73649b7f792be2e8d3b3bfe7c6360fd_720w.jpeg);"></div>
+        <div class="mpsi-text">
+          <div>newbieyoung</div>
+          <div>分享3个大宝贝给你</div>
+        </div>
+      </div>
+      <div class="mp-list no-btns">
+        <div class="mpl-item ">
+          <div class="mpl-img">
+            <img src="https://pic2.zhimg.com/80/v2-615d289fede62d4e714a35210397e184_720w.png" />
+          </div>
+          <div class="mpl-detail">
+            <div class="mpl-title">
+              <div class="mpl-tag">Simple-Crop</div>支持裁剪图片任意角度旋转全平台图片裁剪组件
+            </div>
+            <div class="mpl-features">
+              <div class="mpl-sales">全网唯一</div>
+              <div>交互体验媲美原生客户端</div>
+            </div>
+            <div class="mpl-info">
+              <div class="mpl-save">star<div>180</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mpl-item ">
+          <div class="mpl-img">
+            <img src="https://pic4.zhimg.com/80/v2-b01d271772cccd9dcd2f139b32abd09e_720w.jpeg" />
+          </div>
+          <div class="mpl-detail">
+            <div class="mpl-title">
+              <div class="mpl-tag">叮当魔方</div>魔方新手自研，准备包含 N 多辅助功能的基础魔方
+            </div>
+            <div class="mpl-features">
+              <div class="mpl-sales">注册用户5k</div>
+              <div>掘金小册包教包会</div>
+            </div>
+            <div class="mpl-info">
+              <div class="mpl-save">star<div>111</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mpl-item ">
+          <div class="mpl-img">
+            <img src="https://pic1.zhimg.com/80/v2-738c26db234dbcb4c076b2103e2534df_720w.png" />
+          </div>
+          <div class="mpl-detail">
+            <div class="mpl-title">
+              <div class="mpl-tag">掘金小册</div>基于 ThreeJS 框架的魔方微信小游戏实践
+            </div>
+            <div class="mpl-features">
+              <div class="mpl-sales">从0到1</div>
+              <div>实现炫酷魔方微信小游戏</div>
+            </div>
+            <div class="mpl-info">
+              <div class="mpl-save">已售<div>1000</div>
+              </div>
+              <div class="mpl-text">¥9.9</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mps-end">
+        <div class="mpse-qrcode">
+          <img src="https://pic1.zhimg.com/80/v2-29a530f8c148668b9a2b746c7a5783ba_720w.png" />
+        </div>
+        <div class="mpse-text">
+          <div>
+            <div class="mpse-no">1</div>保存图片到相册
+          </div>
+          <div>
+            <div class="mpse-no">2</div>手机扫一扫即可看见
+          </div>
+        </div>
+        <div class="mpse-logo">
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mps-btns">
+      <button id="shareImgBtn">分享到</button>
+      <div id="saveImgBtn">保存图片</div>
+    </div>
+  </div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.3.4/vconsole.min.js"></script>
+  <script src="../../build/index-web.min.js"></script>
+  <script>
+    window.onload = function () {
+      let screenshotRes = null;
+      let timestamps = [];
+
+      mqq.device.isMobileQQ(function (isMobileQQ) {
+        let vConsole = new VConsole();
+        let search = window.location.search;
+
+        if (!isMobileQQ) {
+          window.location.href =
+            `https://qzs.qzone.qq.com/qzone/hybrid/page/jumpQQ.html?url=${encodeURIComponent(window.location.href)}`;
+        } else {
+          let screenshot = new SimpleScreenshot({
+            debug: true, // 调试模式，组件代码中会执行 log 函数
+            //puppeteerServer: 'http://127.0.0.1:8000/simple-screenshot', // 本地截屏服务
+            puppeteerServer: 'http://dom2img.lione.me/simple-screenshot',
+            puppeteerGlobalFont: "PingFang", // puppeteer 截屏服务全局字体
+            forceScreenshotType: "server", //强制使用 puppeteer 截屏服务
+            devicePixelRatio: window.devicePixelRatio, // 设备像素比
+            //fontList: ["TTTGB"], // 字体列表
+            //全局内联字体
+            //globalInlineFont: "@font-face{ font-family:'TTTGB'; src:url(data:application/x-font-ttf;charset=utf-8;base64,AAEAAAAKAIAAAwAgT1MvMloffpAAAACsAAAAYGNtYXDH80kJAAABDAAAAWpnbHlm8YJt4AAAAngAAAdMaGVhZBec14UAAAnEAAAANmhoZWEH4gKEAAAJ/AAAACRobXR4Jb8BowAACiAAAABAbG9jYQzuC2YAAApgAAAAIm1heHAAGgBSAAAKhAAAACBuYW1l3F/elAAACqQAAAE4cG9zdFX8f0oAAAvcAAAAUgAEAnIB9AAFAAACigK8AAAAjAKKArwAAAHgADEBAgAAAgAGAwAAAAAAAKAAAr8QAAAAAAIAFgAAAABQZkVkAAAALo0tAyD/OABaA9wBOSAWAATAEgAAAAAAAAAAACAAAAAAAAMAAAADAAAAHAABAAAAAABkAAMAAQAAABwABABIAAAADgAIAAIABgAuADkAUQClYOCNLf//AAAALgAwAFEApWDgjS3////T/9L/u/9qny5y4AABAAAAAAAAAAAAAAAAAAAAAAEGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQACAwQFBgcICQoLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAL/84AsQBbAAMAABc3MwcLGowaMo2NAAAAAAIAJv/HAoMCyQAWACoAABciJjU0NxM2NzY7ATIWFRQHAw4BBwYjJzMyNj8BNjU0JisBIgYPAQYVFBbtal0ONhY6LWFza10PNgwjIC1hQDM6Kg0lFDNDNDkpDiYUNDlDUi9MAS9+Jx5CUyJY/tBDTRUebTVO2nQYJxg0T9lwHScYAAAAAAEARv/OAcQCwwAHAAABMwMjEwYHJwFIfIV8bS+GNQLD/QsCbyFIYgABABH/zgI/AsMAJQAAATIWFRQPAQ4BDwEOAQ8BIQchNz4FPwE+AT8BNjU0JisBJwGtVD4NEgomPqM8GggSAVQu/kwnBwkWETIoLnApGAUNBhsp5hQCwyUvJUdlOyYSLhEZK2tv3iUpJxIXDQ0gDBUdSiQHEwtuAAABAA//zgINAsMAKwAAATIWFRQPAQYHFhUUDwEGBwYrASczMjY/ATY1NCYrASczMjY/ATY1NCYrAScBSW9VCAkQXFcLCg81K2jZE+U4JwoHCSIteBKGOCgIBwUkN7cTAsMsQyMzNVoUFEwPRztXJh9rJzUnLRQZDWocLCkeEB0PawAAAAABABz/zgJhAsMADgAAAQcjByM3ITcBMwEzNzMHAmEsSCZ6Jv6pDwENhf720yt6KwEPa9bWWwHE/kz29gABABz/zgIlAsMAHAAAATIWFRQPAQYHBisBJzMyNj8BNjU0JisBEyEHIQcBZFhDDhARMi1m3RLnOSULCwgiLOVFAZQs/vMfAaUuOixOWVojH2omNzooGBoNAY1rswAAAAACACb/xwI/AsMAHgAwAAABMhYVFA8BDgQrASImNTQ3EzY3NjsBByMiBg8BFzY1NCYrAQcGFRQeATsBMjY3AWFyUQ4TBxgfOTYvOmpdDjUWOi1h+C/DOioNDc0IHCyfBRUbJiwtLR4IAYkkPCNNbSUxHQ4EQ1IvTAEpfyYebzVOSMoqExcLHHYhGRgEGSsAAAABACr/zgJHAsMABgAAAQcBIwEhNwJHEf6DjwF9/powAsNc/WcChm8AAwAd/84CYQLDACMANwBLAAABMhYVFA8BBgcWFRQPAQYHBisBIiY1ND8BPgE3JjU0PwE+ATMHBhUUFjsBMjY/ATY1NCYrASIGBxM2NTQmKwEiBg8BBhUUFjsBMjY3AaZlVgcKEk9FCwsPNCtojFVKBwwMOjZDBgoOUFtGAyEpPDElCAgEIS8+LiAItQQlNTg7JAoHByEsRjkmCQLDM0ggJDVdFBVIHzk/WCUfO0EhJERERQsSTRojOVI15hIPHRIcLCkUEyATGyv+tRUTIRMjOCgoEB0SIzIAAgA7/84CQgLJABsALwAAATIWFRQHAwYHBisBJzMyNj8BIyImNTQ/AT4BMwMzNzY1NCYrASIGDwEGFRQeAwF5clcNOBY5LWHSE906KQ4KoVpUBxIRW2AYlBcJJT0zNCIJDQQHChkSAsk7TCpL/sR+Jh9vNU82QEcZKmVeRf6ZgDgTIA4hNUoVFQ4SCgQBAAAAAgAj/w8CswLJABkALQAAATIWFRQHAwYHBgcWFwcnIyImNTQ3EzY3NjMTNjU0JisBIgYPAQYVFBY7ATI2NwHsal0ONhY6HDEhR1iwR2tdDzUWOi1h0xQ0Q2A6KQ4mEzNDYTkpDgLJQ1InU/7QfyYUBxZHXrhDUilSAS9+Jx7+xWwhJxg0T9VvHicYNE8AAAAABP/r/3sDvgL/ABcAJQA2AEUAAAEyFgcCByMnMzYTNiYrAQYHNz4BNzMGByUDIxMhMhYHAyMTNiYjAzMWFyMmJwYHIz4BNzY3MwIlBgczJiczFhcjJwcjNjcDfCkZBT0hxhyHIy4BBwbVRWkVLzsaaRIY/j1JZFgBHiwZB0tkSAIFCXdNFkhxKxoqYXNXcBYOFlkfAX4oS2kED1YKImMJGuJlOQKEHSn+G95Y4AFpBgx0MH8ddmNBOg3+GAI9GSz+CAHXCgf99FCvf2Nej2nQekzO/sXCfbwci2OlSj3QvQAJ//P/fAPIAwAAJQArAC8AMwA3AD0AQwBJAE8AAAEhBzMyFg8BIQc+ATcuASczFhcjJwQFNxY/ASETITchNyE3MwchByMHMzc2BSMHMxczNwcFMzcHARYXIyYnDwEhByE3BTMWFyMmJTMGByM2A7z+mQXZLRgHIv7hBxtyHAUPAm4vSH8e/pr+qQzxdwj+5iwBGAb+mQwBZgdsBwFo3KcFtQQB/t+tBq1dswe0/uGsBqwBDxYleRkRNyMBYhr+NjgBmWspQIEw/ZlzMkZ9UwJ4KiAv7jgBAwEHGQNGUyoOA1cCAjgBPStQODjHKxwPASt3LgEuLgH+7DlHQz0LmFfvDlZqZlVcYW4AAAAAAQAr/84CjQLDABYAAAkBMwcjBzMHIwcjNyM3MzcjNzMDMxsBAo3+/3YRkw2UEZQRhBGREZENkhF2dolayQLD/nNgSGBgYGBIYAGN/sQBPAABAAAAAQAAdSlexV8PPPUAKwPoAAAAANofmJoAAAAA2or79//r/w8DyAMAAAAACAACAAAAAAAAAAEAAAPS/swAWgPo/+v/vwPIAAEAAAAAAAAAAAAAAAAAAAAQAQQAAAEUAAsClAAmAcUARgJTABECKQAPAocAHAI4ABwCUAAmAh4AKgJ0AB0CUQA7AsIAIwPo/+sD6P/zAkwAKwAAAAAADgBQAGQAoADiAQABMAF4AYwB+AJAAogC+AN+A6YAAAABAAAAEABQAAkAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAACABmAAEAAAAAAAIABgAAAAEAAAAAAAMAKQAGAAEAAAAAAAUACwAvAAEAAAAAAAYADAA6AAMAAQQJAAIADABGAAMAAQQJAAMAUgBSAAMAAQQJAAUAFgCkAAMAAQQJAAYAGAC6TWVkaXVtRm9udEZvcmdlIDIuMCA6IFRUVEdCLU1lZGl1bSA6IDE4LTEyLTIwMTlWZXJzaW9uIDEuMFRUVEdCLU1lZGl1bQBNAGUAZABpAHUAbQBGAG8AbgB0AEYAbwByAGcAZQAgADIALgAwACAAOgAgAFQAVABUAEcAQgAtAE0AZQBkAGkAdQBtACAAOgAgADEAOAAtADEAMgAtADIAMAAxADkAVgBlAHIAcwBpAG8AbgAgADEALgAwAFQAVABUAEcAQgAtAE0AZQBkAGkAdQBtAAIAAAAAAAD/gwAyAAAAAAAAAAAAAAAAAAAAAAAAABAAEAAAABEAEwAUABUAFgAXABgAGQAaABsAHAA0AQIBAwCWB3VuaThEMkQHdW5pNjBFMAAA); }",
+            log: function (msg) {
+              console.log(msg);
+            },
+            error: function (err) {
+              console.log(err);
+            },
+          });
+
+          // 分享图片
+          let $shareImgBtn = document.querySelector('#shareImgBtn');
+          $shareImgBtn.addEventListener('click', function () {
+            timestamps = [];
+            timestamps.push(window.performance.now());
+
+            if (screenshotRes && screenshotRes.base64) {
+              shareImg(screenshotRes.base64)
+            } else {
+              screenshot.toIMG(".mps-content", function (img) {
+                screenshotRes = img;
+                shareImg(screenshotRes.base64)
+              });
+            }
+          })
+
+          // 保存图片
+          let $saveImgBtn = document.querySelector('#saveImgBtn');
+          $saveImgBtn.addEventListener('click', function () {
+            timestamps = [];
+            timestamps.push(window.performance.now());
+
+            if (search == '?dev') { //dev
+              if (screenshotRes && screenshotRes.canvas) {
+                downloadCanvas(screenshotRes.canvas, 'demo')
+              } else {
+                screenshot.toIMG(".mps-content", function (img) {
+                  screenshotRes = img;
+                  downloadCanvas(screenshotRes.canvas, 'demo')
+                });
+              }
+            } else {
+              if (screenshotRes && screenshotRes.base64) {
+                saveImg(screenshotRes.base64)
+              } else {
+                screenshot.toIMG(".mps-content", function (img) {
+                  screenshotRes = img;
+                  saveImg(screenshotRes.base64)
+                });
+              }
+            }
+          })
+        }
+      })
+
+      //保存图片
+      function saveImg(base64) {
+        timestamps.push(window.performance.now());
+        console.log(timestamps[1] - timestamps[0]);
+
+        if (window.mqq) {
+          mqq.media.saveImage({
+            content: base64
+          }, function (res) {
+            alert('保存成功')
+          })
+        }
+      }
+
+      //分享图片
+      function shareImg(base64) {
+        timestamps.push(window.performance.now());
+        console.log(timestamps[1] - timestamps[0]);
+
+        if (window.mqq) {
+          mqq.ui.showShareMenu();
+          mqq.ui.setOnShareHandler(function (type) {
+            mqq.invoke(
+              'Qzone',
+              'sharePicture', { // 分享图片
+                type: String(type || 0), // 参数说明：0:qq、1:qzone、2:微信、3:朋友圈
+                base64: base64 // base64
+              },
+              function (res) {
+                console.log(res);
+              }
+            );
+          });
+        }
+      }
+
+      //下载 canvas
+      function downloadCanvas($canvas, name) {
+        timestamps.push(window.performance.now());
+        console.log(timestamps[1] - timestamps[0]);
+
+        let url = $canvas.toDataURL("image/png");
+        let a = document.createElement("a");
+        let event = new MouseEvent("click");
+        a.download = name;
+        a.href = url;
+        a.dispatchEvent(event);
+      }
+    };
+  </script>
+</body>
+
+</html>

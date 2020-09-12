@@ -1,29 +1,29 @@
 /* global define module qq */
 (function (factory) {
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === "function" && define.amd) {
     // AMD. Register as an anonymous module.
     define([], factory);
-  } else if (typeof module === 'object' && module.exports) {
+  } else if (typeof module === "object" && module.exports) {
     // Node/CommonJS
     module.exports = factory();
   } else {
     // Browser globals
     window.SimpleScreenshot = factory();
   }
-}(function () {
-
+})(function () {
   /**
    * 小程序目前无法处理以下情况：
    * 1、after、before 等伪类元素；
    * 2、加载项目内资源文件；
    */
 
-  let URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g
+  let URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
   let RESOURCE_NAME = [];
   let RESOURCE_DATA = [];
 
-  function isFunction(obj) { // 判断对象是否是function
-    return obj && {}.toString.call(obj) === '[object Function]';
+  function isFunction(obj) {
+    // 判断对象是否是function
+    return obj && {}.toString.call(obj) === "[object Function]";
   }
 
   /**
@@ -299,32 +299,45 @@
     "rx",
     "ry",
     "caret-color",
-    "line-break"
+    "line-break",
   ];
 
   function SimpleScreenshot(params) {
     this.devicePixelRatio = params.devicePixelRatio || 1;
     this.isLoading = false;
-    this.error = params.error || function () {}
+    this.error = params.error || function () {};
     this.log = params.log || console.log;
+    this.puppeteerServer = params.puppeteerServer; // puppeteer 截屏服务
+    this.puppeteerGlobalFont = params.puppeteerGlobalFont; // puppeteer 截屏服务全局字体
+    this.pupServerCanModifyFont = params.pupServerCanModifyFont ? params.pupServerCanModifyFont : true; // puppeteer 截屏服务是否支持配置字体
+    this.imgType = params.imgType || 'jpeg'; //图片类型
+    this.imgQuality = parseInt(params.imgQuality) || 80; //图片质量
+    this.distWidth = params.distWidth; //目标尺寸
+    this.distHeight = params.distHeight;
+    this.debug = !params.debug ? false : true; // 调试模式
 
+    //小程序目前并不支持客户端渲染 svg foreignobject
+    this.supportForeignObject = false;
+    this.forceScreenshotType = 'server';
+
+    this._wholeTexts = ""; // 全部文字
     this.fontList = []; //字体列表
     let fontList = params.fontList || [];
     for (let i = 0; i < fontList.length; i++) {
       this.fontList.push({
         name: fontList[i],
-        texts: ''
-      })
+        texts: "",
+      });
     }
 
-    this.globalInlineFont = params.globalInlineFont || '';
+    this.globalInlineFont = params.globalInlineFont || "";
 
     //预加载资源
     this.preLoadResource = params.preLoadResource || [];
     for (let i = 0; i < this.preLoadResource.length; i++) {
       let name = this.preLoadResource[i].name;
       let data = this.preLoadResource[i].data;
-      if (data && data != '') {
+      if (data && data != "") {
         RESOURCE_NAME.push(name);
         RESOURCE_DATA.push(data);
       }
@@ -334,16 +347,20 @@
      * 父元素的部分属性对子元素有影响，但是并不会被子元素继承，比如：opacity、transform、filter；
      * 但是小程序中没办法获取父节点元素，目前的解决办法是手动计算，然后通过参数传递。
      */
-    this.parentCSS = params.parentCSS || [{
-      name: "opacity",
-      value: 1
-    }, {
-      name: "transform", // 因为是给子元素截图，父元素的 transform-origin 等属性可以不考虑
-      value: ""
-    }, {
-      name: "filter",
-      value: ""
-    }];
+    this.parentCSS = params.parentCSS || [
+      {
+        name: "opacity",
+        value: 1,
+      },
+      {
+        name: "transform", // 因为是给子元素截图，父元素的 transform-origin 等属性可以不考虑
+        value: "",
+      },
+      {
+        name: "filter",
+        value: "",
+      },
+    ];
 
     //自定义 css 解析过滤器
     this.parseCSSFilter = params.parseCSSFilter || [];
@@ -353,61 +370,100 @@
      * autoRenderWidth 自适应渲染宽度，在小程序中因为字体原因，某些文字元素 fields size 并不精确，导致文字超出容器，从而溢出换行。
      */
     this.rules = {
-      autoRenderWidth: false
-    }
+      autoRenderWidth: false,
+    };
   }
 
   SimpleScreenshot.prototype.toSVG = function (selector, callback) {
     let self = this;
-    qq.createSelectorQuery().selectAll(selector).fields({
-      dataset: true,
-      size: true,
-      computedStyle: COMPUTED_STYLE,
-    }, function (nodes) {
-      self.nodes = nodes;
-      self.parseCSSRules(function () {
-        self.root = self.getNodeByLevel("0");
-        let width = parseFloat(self.root.width) * self.devicePixelRatio;
-        let height = parseFloat(self.root.height) * self.devicePixelRatio;
-        let html = self.toHTML(self.root, true);
+    self._wholeTexts = "";
+    qq.createSelectorQuery()
+      .selectAll(selector)
+      .fields(
+        {
+          dataset: true,
+          size: true,
+          computedStyle: COMPUTED_STYLE,
+        },
+        function (nodes) {
+          self.nodes = nodes;
+          self.parseCSSRules(function () {
+            self.root = self.getNodeByLevel("0");
+            let width = parseFloat(self.root.width) * self.devicePixelRatio;
+            let height = parseFloat(self.root.height) * self.devicePixelRatio;
+            let html = self.toHTML(self.root, true);
 
-        let svg = "";
-        svg += "<svg xmlns='http://www.w3.org/2000/svg'";
-        svg += " width='" + width + "'";
-        svg += " height='" + height + "'";
-        svg += ">";
-        svg += "<foreignObject width='100%' height='100%'>";
-        svg += "<div xmlns='http://www.w3.org/1999/xhtml' style='";
-        if (self.root.display == "inline-block") { // 防止行内元素的布局被空白字符挤乱
-          svg += "font-size : 0 ;"
+            let svg = "";
+            svg += "<svg xmlns='http://www.w3.org/2000/svg'";
+            svg += " width='" + width + "'";
+            svg += " height='" + height + "'";
+            svg += ">";
+            svg += "<foreignObject width='100%' height='100%'>";
+            svg += "<div xmlns='http://www.w3.org/1999/xhtml' style='";
+            if (self.root.display == "inline-block") {
+              // 防止行内元素的布局被空白字符挤乱
+              svg += "font-size : 0 ;";
+            }
+
+            for (let i = 0; i < self.parentCSS.length; i++) {
+              let pCSS = self.parentCSS[i];
+              pCSS.value = pCSS.value == null ? "" : (pCSS.value + "").trim();
+              if (pCSS.name == "transform") {
+                pCSS.value += " scale(" + self.devicePixelRatio + ")"; //考虑设备像素比
+              }
+              if (pCSS.value != "") {
+                svg += pCSS.name + " : " + pCSS.value + " ;";
+              }
+            }
+
+            svg += "transform-origin:0 0;'>";
+            svg += html;
+            svg += "</div>";
+            svg += "</foreignObject>";
+            svg += "</svg>";
+
+            callback({
+              svg: svg,
+              width: self.root.width,
+              height: self.root.height,
+              fonts: self.fontList,
+              devicePixelRatio: self.devicePixelRatio,
+              distWidth: self.distWidth ? self.distWidth : self.root.width * 2, // 默认两倍图
+              distHeight: self.distHeight ? self.distHeight : self.root.height * 2,
+              imgType: self.imgType,
+              imgQuality: self.imgQuality
+            });
+          });
         }
+      )
+      .exec();
+  };
 
-        for (let i = 0; i < self.parentCSS.length; i++) {
-          let pCSS = self.parentCSS[i];
-          pCSS.value = pCSS.value == null ? "" : (pCSS.value + "").trim();
-          if (pCSS.name == "transform") {
-            pCSS.value += " scale(" + self.devicePixelRatio + ")" //考虑设备像素比
-          }
-          if (pCSS.value != "") {
-            svg += pCSS.name + " : " + pCSS.value + " ;";
-          }
+  SimpleScreenshot.prototype.toIMG = function (selector, callback) {
+    let self = this;
+    self.toSVG(selector, function (svg) {
+      if (self.puppeteerGlobalFont) {
+        if (!self.pupServerCanModifyFont) {
+          self.fontList.push({
+            name: self.puppeteerGlobalFont,
+            texts: self._wholeTexts
+          })
         }
-
-        svg += "transform-origin:0 0;'>";
-        svg += html;
-        svg += "</div>";
-        svg += "</foreignObject>";
-        svg += "</svg>"
-
-        callback({
-          svg: svg,
-          width: self.root.width,
-          height: self.root.height,
-          fonts: self.fontList,
-          devicePixelRatio: self.devicePixelRatio
-        });
-      });
-    }).exec();
+        svg.globalFont = self.puppeteerGlobalFont; // 全局字体
+      }
+      self.debug && self.log(svg) // log
+      qq.request({
+        url: self.puppeteerServer,
+        method: 'post',
+        data: svg,
+        success(res) {
+          callback(res.data);
+        },
+        fail(err){
+          self.error(err)
+        }
+      })
+    })
   }
 
   //元素转换为 html 代码
@@ -428,28 +484,40 @@
     let textChilds = [];
     try {
       if (node.dataset.texts != null) {
-        textChilds = JSON.parse(node.dataset.texts.replace(/'/g, '"'))
+        textChilds = JSON.parse(node.dataset.texts.replace(/'/g, '"'));
+      }
+      /**
+       * 拼接 xml 时如果文本节点中存在条件分割符 & 应该写成 &amp; 否则会报错 EntityRef: expecting ';'
+       */
+      for (let m = 0; m < textChilds.length; m++) {
+        textChilds[m].text = textChilds[m].text.replace(/&/g, "&amp;");
       }
     } catch (err) {
       self.log({
         msg: `${node.dataset.texts} json parse error`,
-        err: err
-      })
+        err: err,
+      });
     }
     for (let i = 0; i < childLen; i++) {
       let childLevel = curLevel + "-" + i;
       let isText = false;
       for (let j = 0; j < textChilds.length; j++) {
         if (childLevel == textChilds[j].level) {
-          let fontFamily = node['font-family'];
+          let fontFamily = node["font-family"];
           for (let z = 0; z < this.fontList.length; z++) {
             let fontItem = this.fontList[z];
             if (fontFamily.includes(fontItem.name)) {
-              for (let k = 0; k < textChilds[j].text.length; k++) { //文字去重
+              for (let k = 0; k < textChilds[j].text.length; k++) {
+                //文字去重
                 if (!fontItem.texts.includes(textChilds[j].text[k])) {
                   fontItem.texts += textChilds[j].text[k];
                 }
               }
+            }
+          }
+          for (let k = 0; k < textChilds[j].text.length; k++) { //全部文字
+            if (!this._wholeTexts.includes(textChilds[j].text[k])) {
+              this._wholeTexts += textChilds[j].text[k];
             }
           }
           inner += textChilds[j].text;
@@ -480,52 +548,71 @@
     } else {
       html += " id='simple-screenshot'>";
       html += "<style>";
-      html += "#simple-screenshot,#simple-screenshot *:not(style){" + style + "} " + this.globalInlineFont;
+      html +=
+        "#simple-screenshot,#simple-screenshot *:not(style){" +
+        style +
+        "} " +
+        this.globalInlineFont;
       html += "</style>";
     }
     html += inner;
     html += "</" + tagName + ">";
 
     return html;
-  }
+  };
 
   //解析 css
   SimpleScreenshot.prototype.parseCSS = function (node, isRoot) {
     let style = "";
 
     node._rules = {
-      autoRenderWidth: this.rules.autoRenderWidth
-    }
+      autoRenderWidth: this.rules.autoRenderWidth,
+    };
 
-    for (let i = 0; i < this.parseCSSFilter.length; i++) { //自定义 css 解析过滤器
+    for (let i = 0; i < this.parseCSSFilter.length; i++) {
+      //自定义 css 解析过滤器
       let filter = this.parseCSSFilter[i];
       if (isFunction(filter)) {
-        filter(node)
+        filter(node);
       }
     }
 
     let matches = null;
     for (let i = 0; i < COMPUTED_STYLE.length; i++) {
       let name = COMPUTED_STYLE[i];
-      if (isRoot) { //根节点
-        if (["margin-top", "margin-left", "margin-bottom", "margin-right"].includes(name)) {
+      if (isRoot) {
+        //根节点
+        if (
+          [
+            "margin-top",
+            "margin-left",
+            "margin-bottom",
+            "margin-right",
+          ].includes(name)
+        ) {
           node[name] = 0; //最外层元素的 margin 必须为 0，否则会因为偏移导致错位
-        } else if ((node["position"] == "absolute" || node["position"] == "fixed") && ["top", "bottom", "left", "right"].includes(name)) {
+        } else if (
+          (node["position"] == "absolute" || node["position"] == "fixed") &&
+          ["top", "bottom", "left", "right"].includes(name)
+        ) {
           node[name] = 0; //最外层元素为绝对定位或者固定定位时，top、bottom、left、right 必须为 0，否则会因为定位偏移导致错位
         }
-      } else { //非根节点
+      } else {
+        //非根节点
         if (node[name] == this.root[name]) {
           continue;
         }
       }
 
-      if (name == "background-image") { //背景图片
+      if (name == "background-image") {
+        //背景图片
         let isReplaceResource = false;
-        URL_REGEX.lastIndex = 0 //重置正则对象
-        matches = URL_REGEX.exec(node[name]) //匹配url值
+        URL_REGEX.lastIndex = 0; //重置正则对象
+        matches = URL_REGEX.exec(node[name]); //匹配url值
         if (matches != null) {
           var url = matches[1];
-          if (node[name] && url && url.search(/^(data:)/) == -1) { //非dataurl
+          if (node[name] && url && url.search(/^(data:)/) == -1) {
+            //非dataurl
             var index = RESOURCE_NAME.indexOf(url);
             isReplaceResource = true;
             if (index != -1) {
@@ -552,10 +639,10 @@
     let realHeight = node.height;
 
     //微信小程序、QQ小程序中 fields size 包含 border、padding
-    let borderBottomWidth = parseFloat(node['border-bottom-width']);
-    let borderTopWidth = parseFloat(node['border-top-width']);
-    let borderLeftWidth = parseFloat(node['border-left-width']);
-    let borderRightWidth = parseFloat(node['border-right-width']);
+    let borderBottomWidth = parseFloat(node["border-bottom-width"]);
+    let borderTopWidth = parseFloat(node["border-top-width"]);
+    let borderLeftWidth = parseFloat(node["border-left-width"]);
+    let borderRightWidth = parseFloat(node["border-right-width"]);
     borderLeftWidth = borderLeftWidth >= 0 ? borderLeftWidth : 0; // 负数 border-width 无效
     borderRightWidth = borderRightWidth >= 0 ? borderRightWidth : 0;
     borderTopWidth = borderTopWidth >= 0 ? borderTopWidth : 0;
@@ -563,11 +650,12 @@
     realWidth -= borderLeftWidth + borderRightWidth;
     realHeight -= borderTopWidth + borderBottomWidth;
 
-    if (node['box-sizing'] != 'border-box') { //计算非 border-box 元素 width、height
-      let paddingTop = parseFloat(node['padding-top']);
-      let paddingLeft = parseFloat(node['padding-left']);
-      let paddingBottom = parseFloat(node['padding-bottom']);
-      let paddingRight = parseFloat(node['padding-right']);
+    if (node["box-sizing"] != "border-box") {
+      //计算非 border-box 元素 width、height
+      let paddingTop = parseFloat(node["padding-top"]);
+      let paddingLeft = parseFloat(node["padding-left"]);
+      let paddingBottom = parseFloat(node["padding-bottom"]);
+      let paddingRight = parseFloat(node["padding-right"]);
       paddingTop = paddingTop >= 0 ? paddingTop : 0; // 负数 padding 无效
       paddingLeft = paddingLeft >= 0 ? paddingLeft : 0;
       paddingBottom = paddingBottom >= 0 ? paddingBottom : 0;
@@ -577,14 +665,14 @@
     }
 
     if (node._rules.autoRenderWidth) {
-      style += "width: auto;"
+      style += "width: auto;";
     } else {
-      style += "width:" + realWidth + "px;"
+      style += "width:" + realWidth + "px;";
     }
     style += "height:" + realHeight + "px;";
 
-    return style
-  }
+    return style;
+  };
 
   //根据级别获取节点
   SimpleScreenshot.prototype.getNodeByLevel = function (level) {
@@ -594,7 +682,7 @@
       }
     }
     return null;
-  }
+  };
 
   //解析 cssRules
   SimpleScreenshot.prototype.parseCSSRules = function (finished) {
@@ -603,17 +691,22 @@
     let add = function () {
       self.isLoading = true;
       count++;
-    }
+    };
     let del = function () {
       count--;
       if (count == 0) {
         self.isLoading = true;
-        finished()
+        finished();
       }
-    }
+    };
     for (let i = 0; i < this.nodes.length; i++) {
       let node = this.nodes[i];
-      if (node.dataset.name == 'image' && node.dataset.canvasid && (node.dataset.src == "" || !node.dataset.src)) { //以 canvas 充当图片内容
+      if (
+        node.dataset.name == "image" &&
+        node.dataset.canvasid &&
+        (node.dataset.src == "" || !node.dataset.src)
+      ) {
+        //以 canvas 充当图片内容
         (function (node) {
           let canvasWidth = node.dataset.canvaswidth;
           let canvasHeight = node.dataset.canvasheight;
@@ -627,24 +720,27 @@
             canvasId: canvasId,
             success(res) {
               try {
-                let base64 = qq.getFileSystemManager().readFileSync(res.tempFilePath, 'base64');
-                node.dataset.src = 'data:image/png;base64,' + base64;
+                let base64 = qq
+                  .getFileSystemManager()
+                  .readFileSync(res.tempFilePath, "base64");
+                node.dataset.src = "data:image/png;base64," + base64;
                 del();
-              } catch (err) { //可能存在内存不足报错的情况
+              } catch (err) {
+                //可能存在内存不足报错的情况
                 self.error({
-                  msg: 'canvas to base64 error',
-                  err: err
+                  msg: "canvas to base64 error",
+                  err: err,
                 });
               }
             },
             fail(err) {
               self.error({
-                msg: 'canvas to tempfilepath fail',
-                err: err
+                msg: "canvas to tempfilepath fail",
+                err: err,
               });
-            }
-          })
-        })(node)
+            },
+          });
+        })(node);
       } else {
         if (node.src && node.src.length > 0) {
           this.loadResource("url(" + node.src + ")", add, del);
@@ -652,9 +748,9 @@
         if (node.dataset.src && node.dataset.src.length > 0) {
           this.loadResource("url(" + node.dataset.src + ")", add, del);
         }
-        let bgImg = node['background-image'];
-        if (bgImg && bgImg.length > 0 && bgImg != 'none') {
-          this.loadResource(node['background-image'], add, del);
+        let bgImg = node["background-image"];
+        if (bgImg && bgImg.length > 0 && bgImg != "none") {
+          this.loadResource(node["background-image"], add, del);
         }
       }
     }
@@ -662,16 +758,22 @@
     if (!this.isLoading) {
       finished();
     }
-  }
+  };
 
   //加载外部资源
   SimpleScreenshot.prototype.loadResource = function (resource, add, del) {
-    URL_REGEX.lastIndex = 0 //重置正则对象
-    let matches = URL_REGEX.exec(resource) //匹配url值
+    URL_REGEX.lastIndex = 0; //重置正则对象
+    let matches = URL_REGEX.exec(resource); //匹配url值
     let self = this;
     if (matches != null) {
       let url = matches[1];
-      if (resource && url && url.search(/^(data:)/) == -1 && !RESOURCE_NAME.includes(url)) { //非 dataurl
+      if (
+        resource &&
+        url &&
+        url.search(/^(data:)/) == -1 &&
+        !RESOURCE_NAME.includes(url)
+      ) {
+        //非 dataurl
         let type = this.getType(url);
         if (type != null) {
           RESOURCE_NAME.push(url);
@@ -686,24 +788,25 @@
                 let index = RESOURCE_NAME.indexOf(url);
                 RESOURCE_DATA[index] = "data:" + type + ";base64," + base64;
                 del();
-              } catch (err) { //可能存在内存不足报错的情况
+              } catch (err) {
+                //可能存在内存不足报错的情况
                 self.error({
                   msg: `${url} to base64 error`,
-                  err: err
-                })
+                  err: err,
+                });
               }
             },
             fail: function (err) {
               self.error({
                 msg: `${url} request fail`,
-                err: err
-              })
-            }
+                err: err,
+              });
+            },
           });
         }
       }
     }
-  }
+  };
 
   //小程序 nodeName 和 html dom nodeName 相互转换
   SimpleScreenshot.prototype.getNodeName = function (name) {
@@ -718,7 +821,7 @@
     }
 
     return nodeName;
-  }
+  };
 
   //根据 url 获取 data 名称
   SimpleScreenshot.prototype.getType = function (url) {
@@ -726,17 +829,17 @@
     let names = ["image/png", "image/jpg", "image/jpg"];
     for (let i = 0; i < types.length; i++) {
       if (url.lastIndexOf(types[i]) + types[i].length == url.length) {
-        return names[i]
+        return names[i];
       }
     }
     return names[0];
-  }
+  };
 
   //清空资源缓存
   SimpleScreenshot.prototype.clearResourceCache = function () {
     RESOURCE_NAME = [];
     RESOURCE_DATA = [];
-  }
+  };
 
   return SimpleScreenshot;
-}));
+});

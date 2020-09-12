@@ -1,7 +1,7 @@
 {
 	"projectid": "1108100302_sss-qqapp-demo",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
 		"postcss": false,
 		"minified": true,
@@ -22,7 +22,6 @@
 	"debugOptions": {
 		"hidedInDevtools": []
 	},
-	"cloudfunctionRoot": "functions/",
 	"qqappid": "1110645072",
 	"projectname": "simple-screenshot",
 	"scripts": {
@@ -30,6 +29,7 @@
 		"beforePreview": "",
 		"beforeUpload": ""
 	},
+	"cloudfunctionRoot": "functions/",
 	"condition": {
 		"search": {
 			"current": -1,

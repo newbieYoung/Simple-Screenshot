@@ -92,6 +92,7 @@
   height:80px;
   margin-right:12px;
   position:relative;
+  font-size:0;
 }
 
 .mp-share .mps-end .mpse-qrcode>image{

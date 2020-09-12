@@ -430,6 +430,12 @@
       if (node.dataset.texts != null) {
         textChilds = JSON.parse(node.dataset.texts.replace(/'/g, '"'))
       }
+      /**
+       * 拼接 xml 时如果文本节点中存在条件分割符 & 应该写成 &amp; 否则会报错 EntityRef: expecting ';'
+       */
+      for (let m = 0; m < textChilds.length; m++) {
+        textChilds[m].text = textChilds[m].text.replace(/&/g, '&amp;');
+      }
     } catch (err) {
       self.log({
         msg: `${node.dataset.texts} json parse error`,

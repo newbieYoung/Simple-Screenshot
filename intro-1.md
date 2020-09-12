@@ -10,9 +10,9 @@
 
 基于以上原因在 QQ 惠购中我采用了另外的方案，该方案主要依赖于 SVG foreignobject 元素，支持全部 CSS 属性，所见即所得，学习、使用成本低，另外当客户端支持 SVG 渲染时可以不依赖后台服务。
 
-项目地址如下：[SimpleScreenshot](https://git.code.oa.com/newyoungli/Simple-Screenshot)
+项目地址如下：[SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot)
 
-具体使用以[微信小程序 DEMO](https://git.code.oa.com/newyoungli/Simple-Screenshot/tree/master/examples/wechat-app) 为例：
+具体使用以[微信小程序 DEMO](https://github.com/newbieYoung/Simple-Screenshot/tree/master/examples/wechat-app) 为例：
 
 ![微信小程序示例](https://newbieyoung.github.io/images/simple-screenshot-0.jpg)
 
@@ -20,7 +20,7 @@
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-4.jpg)
 
-接着把小程序页面中需要生成图片的元素节点代码复制到 SimpleScreenshot 提供的[格式化工具](https://git.code.oa.com/newyoungli/Simple-Screenshot/blob/master/tools/format_xml.html)中进行格式化：
+接着把小程序页面中需要生成图片的元素节点代码复制到 SimpleScreenshot 提供的[格式化工具](https://github.com/newbieYoung/Simple-Screenshot/blob/master/tools/format_xml.html)中进行格式化：
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-5.jpg)
 
@@ -53,39 +53,4 @@
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-10.jpg)
 
-以上即是使用 SimpleScreenshot 的主要流程了，在使用过程中如果有问题，欢迎大家提 [issues](https://git.code.oa.com/newyoungli/Simple-Screenshot/issues)。
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+以上即是使用 SimpleScreenshot 的主要流程了，在使用过程中如果有问题，欢迎大家提 [issues](https://github.com/newbieYoung/Simple-Screenshot/issues)。

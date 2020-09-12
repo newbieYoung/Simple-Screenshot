@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试 svg foreignobject 完整 html 页面</title>
+</head>
+
+<body>
+  <svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'>
+    <foreignObject width='100%' height='100%'>
+      <html xmlns='http://www.w3.org/1999/xhtml'>
+
+      <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <title>测试 svg foreignobject 完整 html 页面</title>
+        <link rel='stylesheet' href='./test-2.css' />
+        <style></style>
+      </head>
+
+      <body>
+        <div class='test' style='width:100px;height:100px;background-color:red;'>1</div>
+      </body>
+
+      </html>
+    </foreignObject>
+  </svg>
+  <script>
+    window.onload = function () {
+      // svg foreignobject 完整 html 页面 生成图片异常
+      let svg = "";
+      svg += "<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' >";
+      svg += "<foreignObject width='100%' height='100%'>";
+      svg += "<html xmlns='http://www.w3.org/1999/xhtml'>";
+      svg += "<head>";
+      svg += "<meta charset='UTF-8'>";
+      svg += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+      svg += "<title>测试 svg foreignobject 完整 html 页面</title>";
+      svg += "<style></style>";
+      svg += "</head>";
+      svg += "<body>";
+      svg +=
+        "<div class='test' xmlns='http://www.w3.org/1999/xhtml' style='width:100px;height:100px;background-color:red;'>1</div>";
+      svg += "</body>";
+      svg += "</foreignObject>";
+      svg += "</svg>";
+
+      let self = this;
+      let img = new Image();
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      img.onload = function () {
+        let canvas = document.createElement('canvas');
+        canvas.width = 100;
+        canvas.height = 100;
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        document.body.appendChild(canvas);
+      }
+    }
+  </script>
+</body>
+
+</html>
