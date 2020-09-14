@@ -1,5 +1,5 @@
 <view class="mp-share">
-    <!--<view class="mps-content">
+    <!-- <view class="mps-content">
         <view class="mps-info">
             <view class="mpsi-img" style="background-image:url(https://pic2.zhimg.com/80/v2-c73649b7f792be2e8d3b3bfe7c6360fd_720w.jpeg);"></view>
             <view class="mpsi-text">
@@ -19,9 +19,7 @@
                         <view>交互体验媲美原生客户端</view>
                     </view>
                     <view class="mpl-info">
-                        <view class="mpl-save">star<view>155</view></view>
-                        <view class="mpl-text">fork 20</view>
-                        <view class="mpl-text">watch 5</view>
+                        <view class="mpl-save">star<view>224</view></view>
                     </view>
                 </view>
             </view>
@@ -36,9 +34,7 @@
                         <view>掘金小册包教包会</view>
                     </view>
                     <view class="mpl-info">
-                        <view class="mpl-save">star<view>107</view></view>
-                        <view class="mpl-text">fork 37</view>
-                        <view class="mpl-text">watch 6</view>
+                        <view class="mpl-save">star<view>112</view></view>
                     </view>
                 </view>
             </view>
@@ -53,7 +49,7 @@
                         <view>实现炫酷魔方微信小游戏</view>
                     </view>
                     <view class="mpl-info">
-                        <view class="mpl-save">已售<view>930</view></view>
+                        <view class="mpl-save">已售<view>1000</view></view>
                         <view class="mpl-text">¥9.9</view>
                     </view>
                 </view>
@@ -71,7 +67,7 @@
                 <view></view>
             </view>
         </view>
-    </view>-->
+    </view> -->
 
     <view class="mps-content screenshot" data-name="view" data-level="0" data-len="3">
         <view class="mps-info screenshot" data-name="view" data-level="0-0" data-len="2">
@@ -92,10 +88,8 @@
                         <view class="mpl-sales screenshot" data-name="view" data-level="0-1-0-1-1-0" data-len="1" data-texts="[{'level':'0-1-0-1-1-0-0','text':'全网唯一'}]">全网唯一</view>
                         <view class="screenshot" data-name="view" data-level="0-1-0-1-1-1" data-len="1" data-texts="[{'level':'0-1-0-1-1-1-0','text':'交互体验媲美原生客户端'}]">交互体验媲美原生客户端</view>
                     </view>
-                    <view class="mpl-info screenshot" data-name="view" data-level="0-1-0-1-2" data-len="3">
-                        <view class="mpl-save screenshot" data-name="view" data-level="0-1-0-1-2-0" data-len="2" data-texts="[{'level':'0-1-0-1-2-0-0','text':'star'}]">star<view class="screenshot" data-name="view" data-level="0-1-0-1-2-0-1" data-len="1" data-texts="[{'level':'0-1-0-1-2-0-1-0','text':'155'}]">155</view></view>
-                        <view class="mpl-text screenshot" data-name="view" data-level="0-1-0-1-2-1" data-len="1" data-texts="[{'level':'0-1-0-1-2-1-0','text':'fork 20'}]">fork 20</view>
-                        <view class="mpl-text screenshot" data-name="view" data-level="0-1-0-1-2-2" data-len="1" data-texts="[{'level':'0-1-0-1-2-2-0','text':'watch 5'}]">watch 5</view>
+                    <view class="mpl-info screenshot" data-name="view" data-level="0-1-0-1-2" data-len="1">
+                        <view class="mpl-save screenshot" data-name="view" data-level="0-1-0-1-2-0" data-len="2" data-texts="[{'level':'0-1-0-1-2-0-0','text':'star'}]">star<view class="screenshot" data-name="view" data-level="0-1-0-1-2-0-1" data-len="1" data-texts="[{'level':'0-1-0-1-2-0-1-0','text':'224'}]">224</view></view>
                     </view>
                 </view>
             </view>
@@ -109,10 +103,8 @@
                         <view class="mpl-sales screenshot" data-name="view" data-level="0-1-1-1-1-0" data-len="1" data-texts="[{'level':'0-1-1-1-1-0-0','text':'注册用户5k'}]">注册用户5k</view>
                         <view class="screenshot" data-name="view" data-level="0-1-1-1-1-1" data-len="1" data-texts="[{'level':'0-1-1-1-1-1-0','text':'掘金小册包教包会'}]">掘金小册包教包会</view>
                     </view>
-                    <view class="mpl-info screenshot" data-name="view" data-level="0-1-1-1-2" data-len="3">
-                        <view class="mpl-save screenshot" data-name="view" data-level="0-1-1-1-2-0" data-len="2" data-texts="[{'level':'0-1-1-1-2-0-0','text':'star'}]">star<view class="screenshot" data-name="view" data-level="0-1-1-1-2-0-1" data-len="1" data-texts="[{'level':'0-1-1-1-2-0-1-0','text':'107'}]">107</view></view>
-                        <view class="mpl-text screenshot" data-name="view" data-level="0-1-1-1-2-1" data-len="1" data-texts="[{'level':'0-1-1-1-2-1-0','text':'fork 37'}]">fork 37</view>
-                        <view class="mpl-text screenshot" data-name="view" data-level="0-1-1-1-2-2" data-len="1" data-texts="[{'level':'0-1-1-1-2-2-0','text':'watch 6'}]">watch 6</view>
+                    <view class="mpl-info screenshot" data-name="view" data-level="0-1-1-1-2" data-len="1">
+                        <view class="mpl-save screenshot" data-name="view" data-level="0-1-1-1-2-0" data-len="2" data-texts="[{'level':'0-1-1-1-2-0-0','text':'star'}]">star<view class="screenshot" data-name="view" data-level="0-1-1-1-2-0-1" data-len="1" data-texts="[{'level':'0-1-1-1-2-0-1-0','text':'112'}]">112</view></view>
                     </view>
                 </view>
             </view>
@@ -127,7 +119,7 @@
                         <view class="screenshot" data-name="view" data-level="0-1-2-1-1-1" data-len="1" data-texts="[{'level':'0-1-2-1-1-1-0','text':'实现炫酷魔方微信小游戏'}]">实现炫酷魔方微信小游戏</view>
                     </view>
                     <view class="mpl-info screenshot" data-name="view" data-level="0-1-2-1-2" data-len="2">
-                        <view class="mpl-save screenshot" data-name="view" data-level="0-1-2-1-2-0" data-len="2" data-texts="[{'level':'0-1-2-1-2-0-0','text':'已售'}]">已售<view class="screenshot" data-name="view" data-level="0-1-2-1-2-0-1" data-len="1" data-texts="[{'level':'0-1-2-1-2-0-1-0','text':'930'}]">930</view></view>
+                        <view class="mpl-save screenshot" data-name="view" data-level="0-1-2-1-2-0" data-len="2" data-texts="[{'level':'0-1-2-1-2-0-0','text':'已售'}]">已售<view class="screenshot" data-name="view" data-level="0-1-2-1-2-0-1" data-len="1" data-texts="[{'level':'0-1-2-1-2-0-1-0','text':'1000'}]">1000</view></view>
                         <view class="mpl-text screenshot" data-name="view" data-level="0-1-2-1-2-1" data-len="1" data-texts="[{'level':'0-1-2-1-2-1-0','text':'¥9.9'}]">¥9.9</view>
                     </view>
                 </view>

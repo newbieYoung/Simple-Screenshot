@@ -25,6 +25,11 @@ docker image build -t pup-shot-server .
 docker container run --rm -p 8000:3000 -it pup-shot-server
 ```
 
+- Docker Hub
+
+```
+```
+
 - 远程示例服务
 
 ```
