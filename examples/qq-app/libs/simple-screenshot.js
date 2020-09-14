@@ -457,7 +457,6 @@
         method: 'post',
         data: svg,
         success(res) {
-          console.log(res.data);
           callback(res.data);
         },
         fail(err){
