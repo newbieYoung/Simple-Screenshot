@@ -44,21 +44,28 @@ Page({
         console.log(msg);
       },
       error: function (err) {
+        qq.hideLoading();
         console.log(err);
       },
     });
   },
   saveImg: function () {
+    qq.showLoading({
+      title: '加载中...',
+      mask: true
+    });
     let self = this;
     if(this.customData.localFilePath){
       qq.saveImageToPhotosAlbum({
         filePath: this.customData.localFilePath,
         success: ()=>{
+          qq.hideLoading();
           qq.showToast({
             title: '保存成功'
           })
         },
         fail: (err)=>{
+          qq.hideLoading();
           console.log(err);
         }
       })
@@ -89,16 +96,19 @@ Page({
         qq.saveImageToPhotosAlbum({
           filePath: fPath,
           success: ()=>{
+            qq.hideLoading();
             qq.showToast({
               title: '保存成功'
             })
           },
           fail: (err)=>{
+            qq.hideLoading();
             console.log(err);
           }
         })
       },
       fail: (err)=>{
+        qq.hideLoading();
         console.log(err);
       }
     })
