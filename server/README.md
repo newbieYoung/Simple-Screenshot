@@ -21,13 +21,14 @@
 - 本地服务
 
 ```
-docker image build -t pup-shot-server .
-docker container run --rm -p 8000:3000 -it pup-shot-server
+docker image build -t newbieyoung/pup-shot-server:0.0.1 .
+docker container run --rm -p 8000:3000 -it newbieyoung/pup-shot-server:0.0.1
 ```
 
-- Docker Hub
+- [Docker Hub](https://hub.docker.com/repository/docker/newbieyoung/pup-shot-server)
 
 ```
+docker image push newbieyoung/pup-shot-server:0.0.1
 ```
 
 - 远程示例服务
