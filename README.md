@@ -12,11 +12,7 @@
 
 ### 微信小程序示例
 
-![微信小程序示例](https://newbieyoung.github.io/images/simple-screenshot-0.jpg)
-
 ### QQ小程序示例
-
-![QQ小程序示例](https://newbieyoung.github.io/images/simple-screenshot-1.gif)
 
 ## 目录
 
@@ -32,8 +28,6 @@
 
 ## 教程
 
-- [基于 SVG 的小程序图片生成方案](./intro-1.md)
-
 ## 应用
 
 <table style="word-break: normal;">
@@ -41,11 +35,6 @@
     <td>名称</td>
     <td>类型</td>
     <td>小程序码</td>
-  </tr>
-  <tr>
-    <td>QQ 惠购</td>
-    <td>QQ 小程序</td>
-    <td><img src="https://newbieyoung.github.io/images/simple-screenshot-2.jpg"></td>
   </tr>
 </table>
 
