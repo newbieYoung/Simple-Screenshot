@@ -128,7 +128,7 @@
         let search = window.location.search;
 
         let screenshot = new SimpleScreenshot({
-          debug: true, // 调试模式，组件代码中会执行 log 函数
+          debug: search == '?dev' ? true : false, // 调试模式，组件代码中会执行 log 函数
           //puppeteerServer: 'http://127.0.0.1:8000/simple-screenshot', // 本地截屏服务
           puppeteerServer: 'http://dom2img.lione.me/simple-screenshot',
           puppeteerGlobalFont: "PingFang", // puppeteer 截屏服务全局字体
