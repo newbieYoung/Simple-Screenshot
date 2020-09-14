@@ -1,6 +1,6 @@
 # SimpleScreenshot Puppeteer Server
 
-这是一个基于 [Koa](https://koa.bootcss.com/) 框架搭建的 SimpleScreenshot [Puppeteer](https://github.com/puppeteer/puppeteer) 截屏服务。
+这是一个基于 [Koa](https://koa.bootcss.com/) 框架搭建的 [SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot) [Puppeteer](https://github.com/puppeteer/puppeteer) 截屏服务。
 
 ## 目录
 
