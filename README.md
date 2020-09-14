@@ -1,6 +1,6 @@
 # SimpleScreenshot
 
-基于 SVG 的小程序、H5 图片生成组件。
+基于 [SVG foreignObject](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element/foreignObject) 和 [puppeteer](https://github.com/puppeteer/puppeteer) 的小程序、H5 图片生成组件。
 
 ## 特性及优势
 
