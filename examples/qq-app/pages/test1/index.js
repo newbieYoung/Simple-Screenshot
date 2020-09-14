@@ -13,7 +13,7 @@ Page({
   onLoad: function () {
     this.customData.sssComponent = new SimpleScreenshot({
       debug: true, // 调试模式，组件代码中会执行 log 函数
-      puppeteerServer: 'https://ue.qzone.qq.com/tool/dom2img/simple-screenshot', // docker puppeteer 截屏服务
+      puppeteerServer: 'https://dom2img.lione.me/simple-screenshot', // docker puppeteer 截屏服务
       puppeteerGlobalFont: "PingFang", // puppeteer 截屏服务全局字体
       forceScreenshotType: "server", //强制使用 puppeteer 截屏服务
       imgType: this.customData.imgType,
