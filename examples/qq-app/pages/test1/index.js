@@ -56,30 +56,37 @@ Page({
     });
     let self = this;
     if(this.customData.localFilePath){
-      qq.saveImageToPhotosAlbum({
-        filePath: this.customData.localFilePath,
-        success: ()=>{
-          qq.hideLoading();
-          qq.showToast({
-            title: '保存成功'
-          })
-        },
-        fail: (err)=>{
-          qq.hideLoading();
-          console.log(err);
-        }
-      })
+      self.saveImageToPhotosAlbum(this.customData.localFilePath);
     }else{
       let timestamp = [];
       timestamp.push(new Date().getTime());
       this.customData.sssComponent.toIMG('.screenshot', function (data) {
         timestamp.push(new Date().getTime());
         console.log(timestamp[1] - timestamp[0]);
-        self.saveBase64ToPhotosAlbum(data);
+        self.saveBase64ToFile(data);
       })
     }
   },
-  saveBase64ToPhotosAlbum: function(base64){
+  saveImageToPhotosAlbum: function(fPath){
+    qq.saveImageToPhotosAlbum({
+      filePath: fPath,
+      success: ()=>{
+        qq.showToast({
+          title: '保存成功'
+        })
+      },
+      fail: (err)=>{
+        console.log(err);
+        qq.showToast({
+          title: '保存失败'
+        })
+      },
+      complete: ()=>{
+        qq.hideLoading();
+      }
+    })
+  },
+  saveBase64ToFile: function(base64){
     let self = this;
     let fsm = qq.getFileSystemManager();
     let fName = `simplescreenshot-${new Date().getTime()}`;
@@ -93,19 +100,7 @@ Page({
       encoding:'base64',
       success: (res)=>{
         self.customData.localFilePath = fPath;
-        qq.saveImageToPhotosAlbum({
-          filePath: fPath,
-          success: ()=>{
-            qq.hideLoading();
-            qq.showToast({
-              title: '保存成功'
-            })
-          },
-          fail: (err)=>{
-            qq.hideLoading();
-            console.log(err);
-          }
-        })
+        self.saveImageToPhotosAlbum(fPath);
       },
       fail: (err)=>{
         qq.hideLoading();
