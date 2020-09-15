@@ -37,3 +37,5 @@ docker image push newbieyoung/pup-shot-server:0.0.1
 http://dom2img.lione.me/simple-screenshot
 https://dom2img.lione.me/simple-screenshot
 ```
+
+> 云服务配置较低，请勿用于生产环境。
