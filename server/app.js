@@ -21,10 +21,14 @@ app.use(
   cors({
     origin: function (ctx) {
       let reqOrigin = ctx.request.headers.origin;
-      if (config.cors.includes(reqOrigin)) {
-        return reqOrigin;
+      if(config.cors && config.cors.length > 0){
+        if (config.cors.includes(reqOrigin)) {
+          return reqOrigin;
+        }else{
+          return false; // 不允许跨域
+        }
       }
-      return false; // 不允许跨域
+      return '*';
     },
   })
 );
