@@ -128,8 +128,8 @@
 
       let screenshot = new SimpleScreenshot({
         debug: isPub ? false : true, // 调试模式，组件代码中会执行 log 函数
-        puppeteerServer: 'http://127.0.0.1:8000/simple-screenshot', // 本地截屏服务
-        //puppeteerServer: 'http://dom2img.lione.me/simple-screenshot',
+        //puppeteerServer: 'http://127.0.0.1:8000/simple-screenshot', // 本地截屏服务
+        puppeteerServer: 'http://dom2img.lione.me/simple-screenshot',
         puppeteerGlobalFont: "PingFang", // puppeteer 截屏服务全局字体
         forceScreenshotType: "server", //强制使用 puppeteer 截屏服务
         devicePixelRatio: window.devicePixelRatio, // 设备像素比
@@ -160,32 +160,32 @@
         }
       })
 
-        // 保存图片
-        let $saveImgBtn = document.querySelector('#saveImgBtn');
-        $saveImgBtn.addEventListener('click', function () {
-          timestamps = [];
-          timestamps.push(window.performance.now());
+      // 保存图片
+      let $saveImgBtn = document.querySelector('#saveImgBtn');
+      $saveImgBtn.addEventListener('click', function () {
+        timestamps = [];
+        timestamps.push(window.performance.now());
 
-          if (!isPub) { //dev
-            if (screenshotRes && screenshotRes.canvas) {
-              downloadCanvas(screenshotRes.canvas, 'demo')
-            } else {
-              screenshot.toIMG(".mps-content", function (img) {
-                screenshotRes = img;
-                downloadCanvas(screenshotRes.canvas, 'demo')
-              });
-            }
+        if (!isPub) { //dev
+          if (screenshotRes && screenshotRes.canvas) {
+            downloadCanvas(screenshotRes.canvas, 'demo')
           } else {
-            if (screenshotRes && screenshotRes.base64) {
-              saveImg(screenshotRes.base64)
-            } else {
-              screenshot.toIMG(".mps-content", function (img) {
-                screenshotRes = img;
-                saveImg(screenshotRes.base64)
-              });
-            }
+            screenshot.toIMG(".mps-content", function (img) {
+              screenshotRes = img;
+              downloadCanvas(screenshotRes.canvas, 'demo')
+            });
           }
-        })
+        } else {
+          if (screenshotRes && screenshotRes.base64) {
+            saveImg(screenshotRes.base64)
+          } else {
+            screenshot.toIMG(".mps-content", function (img) {
+              screenshotRes = img;
+              saveImg(screenshotRes.base64)
+            });
+          }
+        }
+      })
 
       //保存图片
       function saveImg(base64) {
@@ -198,7 +198,7 @@
           }, function (res) {
             alert('保存成功')
           })
-        }else{
+        } else {
           alert('请在微信中体验');
         }
       }
@@ -222,7 +222,7 @@
               }
             );
           });
-        }else{
+        } else {
           alert('请在微信中体验');
         }
       }
