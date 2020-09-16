@@ -28,7 +28,7 @@ app.use(
           return false; // 不允许跨域
         }
       }
-      return '*';
+      return '*'; //跨域列表为空，则表示所有域名均可跨域访问
     },
   })
 );
