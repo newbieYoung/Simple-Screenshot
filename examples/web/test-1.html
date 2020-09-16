@@ -30,7 +30,7 @@
         <div class="mpsi-img"
           style="background-image:url(https://pic2.zhimg.com/80/v2-c73649b7f792be2e8d3b3bfe7c6360fd_720w.jpeg);"></div>
         <div class="mpsi-text">
-          <div>newbieyoung</div>
+          <div>newbieyoung😀</div>
           <div>分享3个大宝贝给你</div>
         </div>
       </div>
@@ -118,18 +118,18 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.3.4/vconsole.min.js"></script>
   <script src="../../build/index-web.min.js"></script>
   <script>
-    // https://newbieyoung.github.io/Simple-Screenshot/examples/web/test-1.html?dev
+    // https://newbieyoung.github.io/Simple-Screenshot/examples/web/test-1.html?pub
     window.onload = function () {
       let screenshotRes = null;
       let timestamps = [];
 
       let vConsole = new VConsole();
-      let search = window.location.search;
+      let isPub = window.location.search.indexOf('?pub') == 0 ? true : false; //是否是 pub 模式
 
       let screenshot = new SimpleScreenshot({
-        debug: search == '?dev' ? true : false, // 调试模式，组件代码中会执行 log 函数
-        //puppeteerServer: 'http://127.0.0.1:8000/simple-screenshot', // 本地截屏服务
-        puppeteerServer: 'http://dom2img.lione.me/simple-screenshot',
+        debug: isPub ? false : true, // 调试模式，组件代码中会执行 log 函数
+        puppeteerServer: 'http://127.0.0.1:8000/simple-screenshot', // 本地截屏服务
+        //puppeteerServer: 'http://dom2img.lione.me/simple-screenshot',
         puppeteerGlobalFont: "PingFang", // puppeteer 截屏服务全局字体
         forceScreenshotType: "server", //强制使用 puppeteer 截屏服务
         devicePixelRatio: window.devicePixelRatio, // 设备像素比
@@ -166,7 +166,7 @@
           timestamps = [];
           timestamps.push(window.performance.now());
 
-          if (search == '?dev') { //dev
+          if (!isPub) { //dev
             if (screenshotRes && screenshotRes.canvas) {
               downloadCanvas(screenshotRes.canvas, 'demo')
             } else {
@@ -199,7 +199,7 @@
             alert('保存成功')
           })
         }else{
-          alert('请在手机QQ中体验');
+          alert('请在微信中体验');
         }
       }
 
@@ -223,7 +223,7 @@
             );
           });
         }else{
-          alert('请在手机QQ中体验');
+          alert('请在微信中体验');
         }
       }
 
