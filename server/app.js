@@ -7,7 +7,7 @@ const onerror = require("koa-onerror");
 const bodyparser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const cors = require("koa2-cors");
-const config = require("./public/javascripts/config");
+const config = require("./config/config");
 
 const index = require("./routes/index");
 const users = require("./routes/users");
