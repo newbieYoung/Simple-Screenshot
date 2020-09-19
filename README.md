@@ -5,14 +5,14 @@
 ## 特性及优势
 
 - 支持全部 CSS 属性；
-- 所见即所得，学习、使用成本低；
-- 当客户端支持 SVG 渲染时可以不依赖后台服务。
+- 所见即所得，简单方便；
+- 支持客户端、服务器两种渲染方式，成本低，兼容性高。
 
 ## 示例
 
 ### 微信小程序示例
 
-### QQ小程序示例
+### QQ 小程序示例
 
 ## 目录
 
@@ -38,9 +38,27 @@
   </tr>
 </table>
 
+## TodoList
 
-
-
-
-
-
+<table style="word-break: normal;">
+  <tr>
+    <td>类型</td>
+    <td>描述</td>
+    <td>状态</td>
+  </tr>
+  <tr>
+    <td>bug</td>
+    <td>【Web、QQ、Wechat】CSS 属性 默认继承和默认不继承</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>bug</td>
+    <td>拼接 xml 时如果文本节点中存在条件分割符 & 应该写成 &amp; 否则会报错 EntityRef: expecting ';'</td>
+    <td>fixed</td>
+  </tr>
+  <tr>
+    <td>feature</td>
+    <td>【Web】分析 document.styleSheets 筛选出那些未设置固定宽度的元素，自动应用 autoRenderWidth 规则，从而避免在初始化时通过参数设置该规则，降低使用门槛</td>
+    <td>done</td>
+  </tr>
+</table>
