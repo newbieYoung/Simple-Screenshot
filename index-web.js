@@ -787,7 +787,7 @@
       }
     }
 
-    if (node._rules.autoRenderWidth || !this._hasWidthNodes.includes(node.node)) {
+    if ((node._rules.autoRenderWidth || !this._hasWidthNodes.includes(node.node)) && !isRoot) {
       style += "width: auto;";
     }
 
