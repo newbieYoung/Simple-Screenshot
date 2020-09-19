@@ -549,8 +549,8 @@
         width: rect.width,
         height: rect.height,
         devicePixelRatio: self.devicePixelRatio,
-        distWidth: self.distWidth ? self.distWidth : rect.width * 2, // 默认两倍图
-        distHeight: self.distHeight ? self.distHeight : rect.height * 2,
+        distWidth: self.distWidth ? self.distWidth : rect.width * self.devicePixelRatio, // 默认显示尺寸乘以设备像素比
+        distHeight: self.distHeight ? self.distHeight : rect.height * self.devicePixelRatio,
         fonts: self.fontList,
         imgType: self.imgType,
         imgQuality: self.imgQuality
