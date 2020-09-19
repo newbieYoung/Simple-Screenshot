@@ -661,7 +661,7 @@
       realHeight -= paddingTop + paddingBottom;
     }
 
-    if (node._rules.autoRenderWidth) {
+    if (node._rules.autoRenderWidth && !isRoot) {
       style += "width: auto;";
     } else {
       style += "width:" + realWidth + "px;";
