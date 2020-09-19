@@ -937,7 +937,6 @@
           xhr.responseType = "blob";
           xhr.timeout = 3000;
           xhr.open("GET", url, true);
-          self.debug && self.log(`get url ${url}`);
           xhr.onerror = function (err) {
             self.error({
               msg: `${url} request error`,

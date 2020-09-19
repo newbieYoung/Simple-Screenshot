@@ -493,7 +493,7 @@
         textChilds[m].text = textChilds[m].text.replace(/&/g, "&amp;");
       }
     } catch (err) {
-      self.log({
+      self.debug && self.log({
         msg: `${node.dataset.texts} json parse error`,
         err: err,
       });
