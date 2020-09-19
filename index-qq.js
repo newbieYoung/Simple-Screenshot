@@ -347,8 +347,7 @@
      * 父元素的部分属性对子元素有影响，但是并不会被子元素继承，比如：opacity、transform、filter；
      * 但是小程序中没办法获取父节点元素，目前的解决办法是手动计算，然后通过参数传递。
      */
-    this.parentCSS = params.parentCSS || [
-      {
+    this.parentCSS = params.parentCSS || [{
         name: "opacity",
         value: 1,
       },
@@ -379,8 +378,7 @@
     self._wholeTexts = "";
     qq.createSelectorQuery()
       .selectAll(selector)
-      .fields(
-        {
+      .fields({
           dataset: true,
           size: true,
           computedStyle: COMPUTED_STYLE,
@@ -428,8 +426,8 @@
               height: self.root.height,
               fonts: self.fontList,
               devicePixelRatio: self.devicePixelRatio,
-              distWidth: self.distWidth ? self.distWidth : self.root.width * 2, // 默认两倍图
-              distHeight: self.distHeight ? self.distHeight : self.root.height * 2,
+              distWidth: self.distWidth ? self.distWidth : self.root.width * self.devicePixelRatio, // 默认两倍图
+              distHeight: self.distHeight ? self.distHeight : self.root.height * self.devicePixelRatio,
               imgType: self.imgType,
               imgQuality: self.imgQuality
             });
@@ -459,7 +457,7 @@
         success(res) {
           callback(res.data);
         },
-        fail(err){
+        fail(err) {
           self.error(err)
         }
       })
@@ -592,8 +590,7 @@
         ) {
           node[name] = 0; //最外层元素的 margin 必须为 0，否则会因为偏移导致错位
         } else if (
-          (node["position"] == "absolute" || node["position"] == "fixed") &&
-          ["top", "bottom", "left", "right"].includes(name)
+          (node["position"] == "absolute" || node["position"] == "fixed") && ["top", "bottom", "left", "right"].includes(name)
         ) {
           node[name] = 0; //最外层元素为绝对定位或者固定定位时，top、bottom、left、right 必须为 0，否则会因为定位偏移导致错位
         }
