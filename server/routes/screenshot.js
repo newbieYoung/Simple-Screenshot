@@ -55,7 +55,7 @@ router.post("/", async (ctx, next) => {
     type: event.imgType,
     encoding: "base64"
   }
-  if(event.imgType != 'png'){ // options.quality is unsupported for the png screenshots
+  if (event.imgType != 'png') { // options.quality is unsupported for the png screenshots
     sParams.quality = event.imgQuality;
   }
   const screenshotBase64 = await page.screenshot(sParams);
