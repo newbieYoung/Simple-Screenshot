@@ -710,7 +710,11 @@
             this._wholeTexts += child.wholeText[k];
           }
         }
-        inner += child.wholeText.replace(/[\r\n]/g, ""); //去掉换行符
+
+        /**
+         * 拼接 xml 时如果文本节点中存在条件分割符 & 应该写成 &amp; 否则会报错 EntityRef: expecting ';'
+         */
+        inner += child.wholeText.replace(/[\r\n]/g, "").replace(/&/g, "&amp;"); //去掉换行符
       }
     }
 
