@@ -324,7 +324,6 @@
 
   function SimpleScreenshot(params) {
     this.devicePixelRatio = params.devicePixelRatio || 1;
-    this.isLoading = false;
     this.error = params.error || function () {};
     this.log = params.log || console.log;
     this.puppeteerServer = params.puppeteerServer; // puppeteer 截屏服务
@@ -340,8 +339,11 @@
     this.forceScreenshotType = params.forceScreenshotType; //强制截屏方式 server、client
     this.checkForeignObject();
 
+    this._isLoading = false; // 是否正在加载资源
     this._wholeTexts = ""; // 全部文字
-    this.fontList = []; //字体列表
+
+    //字体列表
+    this.fontList = [];
     let fontList = params.fontList || [];
     for (let i = 0; i < fontList.length; i++) {
       this.fontList.push({
@@ -853,14 +855,15 @@
   SimpleScreenshot.prototype.parseCSSRules = function (finished) {
     let count = 0;
     let self = this;
+    self._isLoading = false;
     let add = function () {
-      self.isLoading = true;
+      self._isLoading = true;
       count++;
     };
     let del = function () {
       count--;
       if (count == 0) {
-        self.isLoading = true;
+        self._isLoading = true;
         finished();
       }
     };
@@ -892,6 +895,10 @@
           this.loadResource(beforeImg, add, del);
         }
       }
+    }
+
+    if (count == 0) {
+      finished();
     }
   };
 
@@ -930,6 +937,7 @@
           xhr.responseType = "blob";
           xhr.timeout = 3000;
           xhr.open("GET", url, true);
+          self.debug && self.log(`get url ${url}`);
           xhr.onerror = function (err) {
             self.error({
               msg: `${url} request error`,
