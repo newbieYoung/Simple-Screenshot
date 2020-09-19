@@ -768,7 +768,13 @@
         }
       }
 
-      if (name == "background-image") { //背景图片
+      if (['width', 'height'].includes(name)) { // 尺寸
+        if (node._rules.autoRenderWidth || !this._hasWidthNodes.includes(node.node)) {
+          //
+        } else {
+          style += name + ":" + this.getNodeStyle(node, name) + ";";
+        }
+      } else if (name == "background-image") { //背景图片
         style += this.parseBackgroundImage(this.getNodeStyle(node, name));
         if (node.after) {
           after += this.parseBackgroundImage(node.after[name]);
@@ -785,10 +791,6 @@
           before += name + ":" + node.before[name] + ";";
         }
       }
-    }
-
-    if (node._rules.autoRenderWidth || !this._hasWidthNodes.includes(node.node)) {
-      style += "width: auto;";
     }
 
     return {
