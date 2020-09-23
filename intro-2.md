@@ -1,1 +1,1 @@
-# SimpleScreenshot 前端图片生成方案
+# SimpleScreenshot 前端“截屏”方案
