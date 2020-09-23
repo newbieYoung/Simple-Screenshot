@@ -17,11 +17,14 @@
 ## 目录
 
 ```
+├── build                    // 打包构建代码
 ├── examples                 // 示例项目
+│   ├── web
 │   ├── qq-app
 │   └── wechat-app
 ├── tools                    // 辅助工具
 │   └── format_xml.html
+├── index-web.js             // QQ 小程序 SimpleScreenshot 代码
 ├── index-qq.js              // QQ 小程序 SimpleScreenshot 代码
 └── index-wechat.js          // 微信小程序 SimpleScreenshot 代码
 ```
