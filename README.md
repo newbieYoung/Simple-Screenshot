@@ -102,7 +102,7 @@
   </tr>
   <tr>
     <td>bug</td>
-    <td>【Web、QQ、Wechat】拼接 xml 时如果文本节点中存在条件分割符 & 应该写成 &amp; 否则会报错 EntityRef: expecting ';'</td>
+    <td>【Web、QQ、Wechat】拼接 xml 时如果文本节点中存在条件分割符 & 应该写成 [& amp;](去掉空格)，否则会报错 EntityRef: expecting ';'</td>
     <td>fixed</td>
   </tr>
   <tr>
