@@ -44,20 +44,20 @@
   let URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
 
   // 根据 computedStyle 判断伪类是否存在，此外还可以通过遍历 styleSheets 来判断。
-  let contentExit = function(computedStyle){
+  let contentExit = function (computedStyle) {
     let content = computedStyle['content'];
     let display = computedStyle['display'];
     let exist = true;
-    if(content != null){
+    if (content != null) {
       content = content.trim();
-      if(content == 'none' || (content == '' && content == 'inline')){
+      if (content == 'none' || (content == '' && display == 'inline')) {
         exist = false;
       }
-    }else{
+    } else {
       exist = false;
     }
 
-    if(!display || display == 'none'){
+    if (!display || display == 'none') {
       exist = false;
     }
 
@@ -502,11 +502,11 @@
     $node.computedStyle = window.getComputedStyle(node);
     //伪类
     let after = window.getComputedStyle(node, ":after");
-    if(contentExit(after)){
+    if (contentExit(after)) {
       $node.after = after;
     }
     let before = window.getComputedStyle(node, ":before");
-    if(contentExit(before)){
+    if (contentExit(before)) {
       $node.before = before;
     }
     this.nodes.push($node);
