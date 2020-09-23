@@ -43,6 +43,27 @@
   let dashOrigin = Prefix.dash("transformOrigin");
   let URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
 
+  // 根据 computedStyle 判断伪类是否存在，此外还可以通过遍历 styleSheets 来判断。
+  let contentExit = function(computedStyle){
+    let content = computedStyle['content'];
+    let display = computedStyle['display'];
+    let exist = true;
+    if(content){
+      content = content.trim();
+      if(content == 'none' || (content == '' && content == 'inline')){
+        exist = false;
+      }
+    }else{
+      exist = false;
+    }
+
+    if(!display || display == 'none'){
+      exist = false;
+    }
+
+    return exist;
+  }
+
   let RESOURCE_NAME = [];
   let RESOURCE_DATA = [];
 
@@ -481,11 +502,11 @@
     $node.computedStyle = window.getComputedStyle(node);
     //伪类
     let after = window.getComputedStyle(node, ":after");
-    if (after["content"] != "none") {
+    if(contentExit(after)){
       $node.after = after;
     }
     let before = window.getComputedStyle(node, ":before");
-    if (before["content"] != "none") {
+    if(contentExit(before)){
       $node.before = before;
     }
     this.nodes.push($node);
