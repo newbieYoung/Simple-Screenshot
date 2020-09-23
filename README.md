@@ -42,16 +42,40 @@
 
 <table style="word-break: normal;">
   <tr>
+    <td>设备</td>
     <td>浏览器</td>
     <td>版本</td>
+    <td>结果</td>
   </tr>
   <tr>
+    <td>小米8</td>
     <td>Chrome</td>
-    <td>84</td>
+    <td>75.0.3770.101</td>
+    <td>DEMO 页面两种渲染模式均表现正常</td>
   </tr>
   <tr>
+    <td>小米8</td>
     <td>QQ浏览器</td>
-    <td>8.9.3</td>
+    <td>10.7.7</td>
+    <td>DEMO 页面两种渲染模式均表现正常</td>
+  </tr>
+  <tr>
+    <td>小米8</td>
+    <td>搜狗浏览器</td>
+    <td>5.30.11</td>
+    <td>DEMO 页面两种渲染模式均表现正常</td>
+  </tr>
+  <tr>
+    <td>小米8</td>
+    <td>UC浏览器</td>
+    <td>13.1.2.1092</td>
+    <td>DEMO 页面两种渲染模式均表现正常</td>
+  </tr>
+  <tr>
+    <td>小米8</td>
+    <td>Firefox</td>
+    <td>68.12.0</td>
+    <td>DEMO 页面两种渲染模式均表现正常</td>
   </tr>
 </table>
 
