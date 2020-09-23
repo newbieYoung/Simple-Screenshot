@@ -38,6 +38,23 @@
   </tr>
 </table>
 
+## 兼容性自测
+
+<table style="word-break: normal;">
+  <tr>
+    <td>浏览器</td>
+    <td>版本</td>
+  </tr>
+  <tr>
+    <td>Chrome</td>
+    <td>84</td>
+  </tr>
+  <tr>
+    <td>QQ浏览器</td>
+    <td>8.9.3</td>
+  </tr>
+</table>
+
 ## TodoList
 
 <table style="word-break: normal;">

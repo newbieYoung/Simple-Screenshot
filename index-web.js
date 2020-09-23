@@ -48,7 +48,7 @@
     let content = computedStyle['content'];
     let display = computedStyle['display'];
     let exist = true;
-    if(content){
+    if(content != null){
       content = content.trim();
       if(content == 'none' || (content == '' && content == 'inline')){
         exist = false;
