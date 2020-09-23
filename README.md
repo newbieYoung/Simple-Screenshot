@@ -95,7 +95,7 @@
   <tr>
     <td>bug</td>
     <td>【Web】QQ 浏览器中元素不存在伪类，但是 getComputedStyle 获取其伪类时 content 不为 none，导致伪类判断异常 </td>
-    <td></td>
+    <td>fixed</td>
   </tr>
   <tr>
     <td>bug</td>
