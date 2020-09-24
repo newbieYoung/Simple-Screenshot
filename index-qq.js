@@ -457,7 +457,10 @@
         method: 'post',
         data: svg,
         success(res) {
-          callback(res.data);
+          callback({
+            canvas: null,
+            base64: res.data
+          });
         },
         fail(err) {
           self.error(err)

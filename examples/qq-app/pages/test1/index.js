@@ -15,8 +15,8 @@ Page({
       debug: true, // 调试模式，组件代码中会执行 log 函数
       puppeteerServer: 'https://dom2img.lione.me/simple-screenshot', // docker puppeteer 截屏服务
       puppeteerGlobalFont: "PingFang", // puppeteer 截屏服务全局字体
-      forceScreenshotType: "server", //强制使用 puppeteer 截屏服务
-      imgType: this.customData.imgType,
+      forceScreenshotType: "server", //小程序目前并不支持渲染 svg foreignobject，因此强制使用 puppeteer 截屏服务
+      imgType: this.customData.imgType, // 图片类型
       parseCSSFilter: [
         function (node) {
           let level = node.dataset.level;
@@ -39,7 +39,7 @@ Page({
           }
         },
       ],
-      devicePixelRatio: sys.pixelRatio,
+      devicePixelRatio: sys.pixelRatio, // 设备像素比
       log: function (msg) {
         console.log(msg);
       },

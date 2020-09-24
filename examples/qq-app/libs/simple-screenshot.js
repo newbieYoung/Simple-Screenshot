@@ -304,7 +304,6 @@
 
   function SimpleScreenshot(params) {
     this.devicePixelRatio = params.devicePixelRatio || 1;
-    this.isLoading = false;
     this.error = params.error || function () {};
     this.log = params.log || console.log;
     this.puppeteerServer = params.puppeteerServer; // puppeteer 截屏服务
@@ -320,8 +319,11 @@
     this.supportForeignObject = false;
     this.forceScreenshotType = 'server';
 
+    this._isLoading = false; //是否正在加载资源
     this._wholeTexts = ""; // 全部文字
-    this.fontList = []; //字体列表
+
+    //字体列表
+    this.fontList = [];
     let fontList = params.fontList || [];
     for (let i = 0; i < fontList.length; i++) {
       this.fontList.push({
@@ -347,8 +349,7 @@
      * 父元素的部分属性对子元素有影响，但是并不会被子元素继承，比如：opacity、transform、filter；
      * 但是小程序中没办法获取父节点元素，目前的解决办法是手动计算，然后通过参数传递。
      */
-    this.parentCSS = params.parentCSS || [
-      {
+    this.parentCSS = params.parentCSS || [{
         name: "opacity",
         value: 1,
       },
@@ -379,8 +380,7 @@
     self._wholeTexts = "";
     qq.createSelectorQuery()
       .selectAll(selector)
-      .fields(
-        {
+      .fields({
           dataset: true,
           size: true,
           computedStyle: COMPUTED_STYLE,
@@ -428,8 +428,8 @@
               height: self.root.height,
               fonts: self.fontList,
               devicePixelRatio: self.devicePixelRatio,
-              distWidth: self.distWidth ? self.distWidth : self.root.width * 2, // 默认两倍图
-              distHeight: self.distHeight ? self.distHeight : self.root.height * 2,
+              distWidth: self.distWidth ? self.distWidth : self.root.width * self.devicePixelRatio, // 默认两倍图
+              distHeight: self.distHeight ? self.distHeight : self.root.height * self.devicePixelRatio,
               imgType: self.imgType,
               imgQuality: self.imgQuality
             });
@@ -457,9 +457,12 @@
         method: 'post',
         data: svg,
         success(res) {
-          callback(res.data);
+          callback({
+            canvas: null,
+            base64: res.data
+          });
         },
-        fail(err){
+        fail(err) {
           self.error(err)
         }
       })
@@ -493,7 +496,7 @@
         textChilds[m].text = textChilds[m].text.replace(/&/g, "&amp;");
       }
     } catch (err) {
-      self.log({
+      self.debug && self.log({
         msg: `${node.dataset.texts} json parse error`,
         err: err,
       });
@@ -592,8 +595,7 @@
         ) {
           node[name] = 0; //最外层元素的 margin 必须为 0，否则会因为偏移导致错位
         } else if (
-          (node["position"] == "absolute" || node["position"] == "fixed") &&
-          ["top", "bottom", "left", "right"].includes(name)
+          (node["position"] == "absolute" || node["position"] == "fixed") && ["top", "bottom", "left", "right"].includes(name)
         ) {
           node[name] = 0; //最外层元素为绝对定位或者固定定位时，top、bottom、left、right 必须为 0，否则会因为定位偏移导致错位
         }
@@ -664,7 +666,7 @@
       realHeight -= paddingTop + paddingBottom;
     }
 
-    if (node._rules.autoRenderWidth) {
+    if (node._rules.autoRenderWidth && !isRoot) {
       style += "width: auto;";
     } else {
       style += "width:" + realWidth + "px;";
@@ -688,14 +690,15 @@
   SimpleScreenshot.prototype.parseCSSRules = function (finished) {
     let count = 0;
     let self = this;
+    self._isLoading = false;
     let add = function () {
-      self.isLoading = true;
+      self._isLoading = true;
       count++;
     };
     let del = function () {
       count--;
       if (count == 0) {
-        self.isLoading = true;
+        self._isLoading = true;
         finished();
       }
     };
@@ -755,7 +758,7 @@
       }
     }
 
-    if (!this.isLoading) {
+    if (!self._isLoading) {
       finished();
     }
   };
