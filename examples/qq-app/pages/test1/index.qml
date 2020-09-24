@@ -89,7 +89,7 @@
                         <view class="screenshot" data-name="view" data-level="0-1-0-1-1-1" data-len="1" data-texts="[{'level':'0-1-0-1-1-1-0','text':'交互体验媲美原生客户端'}]">交互体验媲美原生客户端</view>
                     </view>
                     <view class="mpl-info screenshot" data-name="view" data-level="0-1-0-1-2" data-len="1">
-                        <view class="mpl-save screenshot" data-name="view" data-level="0-1-0-1-2-0" data-len="2" data-texts="[{'level':'0-1-0-1-2-0-0','text':'star'}]">star<view class="screenshot" data-name="view" data-level="0-1-0-1-2-0-1" data-len="1" data-texts="[{'level':'0-1-0-1-2-0-1-0','text':'224'}]">230</view></view>
+                        <view class="mpl-save screenshot" data-name="view" data-level="0-1-0-1-2-0" data-len="2" data-texts="[{'level':'0-1-0-1-2-0-0','text':'star'}]">star<view class="screenshot" data-name="view" data-level="0-1-0-1-2-0-1" data-len="1" data-texts="[{'level':'0-1-0-1-2-0-1-0','text':'230'}]">230</view></view>
                     </view>
                 </view>
             </view>
