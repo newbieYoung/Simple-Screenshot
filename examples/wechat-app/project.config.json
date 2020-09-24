@@ -22,7 +22,7 @@
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
     "useMultiFrameRuntime": false,
-    "useApiHook": false,
+    "useApiHook": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
@@ -36,8 +36,8 @@
   },
   "compileType": "miniprogram",
   "libVersion": "2.11.0",
-  "appid": "wxfcce852e811c996c",
-  "projectname": "miniprogram-2",
+  "appid": "wxdd0e379126c040ca",
+  "projectname": "SimpleScreenshot",
   "debugOptions": {
     "hidedInDevtools": []
   },
