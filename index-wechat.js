@@ -759,7 +759,7 @@
       }
     }
 
-    if (!this._isLoading) {
+    if (!self._isLoading) {
       finished();
     }
   };
