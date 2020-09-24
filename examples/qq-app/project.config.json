@@ -1,7 +1,7 @@
 {
 	"projectid": "1108100302_sss-qqapp-demo",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": false,
 		"minified": true,

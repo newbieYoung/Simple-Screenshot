@@ -60,10 +60,10 @@ Page({
     }else{
       let timestamp = [];
       timestamp.push(new Date().getTime());
-      this.customData.sssComponent.toIMG('.screenshot', function (data) {
+      this.customData.sssComponent.toIMG('.screenshot', function (img) {
         timestamp.push(new Date().getTime());
         console.log(timestamp[1] - timestamp[0]);
-        self.saveBase64ToFile(data);
+        self.saveBase64ToFile(img.base64);
       })
     }
   },
