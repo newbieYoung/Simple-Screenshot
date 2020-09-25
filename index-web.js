@@ -77,6 +77,7 @@
     "background-attachment",
     "background-blend-mode",
     "background-clip",
+    "-webkit-background-clip",
     "background-color",
     "background-image",
     "background-origin",
@@ -359,9 +360,9 @@
     this.supportForeignObject = false; //是否支持 svg foreignobject 渲染
     this.forceScreenshotType = params.forceScreenshotType; //强制截屏方式 server、client
 
-    if(this.forceScreenshotType == 'client'){ //强制 client 截屏
+    if (this.forceScreenshotType == 'client') { //强制 client 截屏
       this.supportForeignObject = true;
-    }else{
+    } else {
       this.checkForeignObject();
     }
 

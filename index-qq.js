@@ -36,6 +36,7 @@
     "background-attachment",
     "background-blend-mode",
     "background-clip",
+    "-webkit-background-clip",
     "background-color",
     "background-image",
     "background-origin",
