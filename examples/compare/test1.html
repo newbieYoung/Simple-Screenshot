@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>html2canvas 文件偏下</title>
+  <title>test1</title>
   <style>
     .demo1{
       font-size: 20px;
@@ -14,24 +14,53 @@
   </style>
 </head>
 <body>
-  <p class="demo1">demo1</p>
+  <p class="demo1">test1</p>
   <script src="./html2canvas.js"></script>
   <script src="./dom-to-image.js"></script>
+  <script src="../../build/index-web.min.js"></script>
   <script>
     window.onload = function(){
       let $ele = document.querySelector('.demo1');
 
-      $ele.innerHTML = 'html2canvas';
+      let t1 = window.performance.now();
       html2canvas($ele).then(function(canvas) {
+          console.log('html2canvas');
+          console.log(window.performance.now()-t1);
           document.body.appendChild(canvas);
       });
 
-      $ele.innerHTML = 'dom-to-img';
+      let t2 = window.performance.now();
       domtoimage.toPng($ele).then(function (dataUrl) {
+        console.log('dom-to-img');
+        console.log(window.performance.now()-t2);
         let img = new Image();
         img.src = dataUrl;
         document.body.appendChild(img);
       })
+
+      let imgType = "jpeg";
+      let screenshot = new SimpleScreenshot({
+        imgType: imgType, // 图片类型
+        forceScreenshotType: 'client',
+        puppeteerServer: "https://dom2img.lione.me/simple-screenshot",
+        puppeteerGlobalFont: "PingFang", // puppeteer 截屏服务全局字体
+        devicePixelRatio: window.devicePixelRatio, // 设备像素比
+        log: function (msg) {
+          console.log(msg);
+          console.log(msg.svg);
+        },
+        error: function (err) {
+          console.log(err);
+        },
+      });
+      let t3 = window.performance.now();
+      screenshot.toIMG(".demo1", function (img) {
+        console.log('simple-screenshot');
+        console.log(window.performance.now()-t3);
+        img.canvas.style.width = img.canvas.width / window.devicePixelRatio +'px';
+        img.canvas.style.height = img.canvas.height / window.devicePixelRatio +'px';
+        document.body.appendChild(img.canvas);
+      });
     }
   </script>
 </body>
