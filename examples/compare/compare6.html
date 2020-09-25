@@ -1,39 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>compare6 渐变</title>
+  <title>compare6 属性继承</title>
   <style>
     .compare6 {
       font-size: 20px;
-      color: #000;
-      background-image: -webkit-linear-gradient(top, blue, red);
-      margin:0;
+      color: blue;
+      background-color: lightgreen;
+      margin: 0;
+    }
+
+    .compare6-3 {
+      filter: grayscale(1);
+    }
+
+    .compare6-2 {
+      transform: scale(0.885);
+    }
+
+    .compare6-1 {
+      opacity: 0.5;
     }
   </style>
 </head>
+
 <body>
-  <p class="compare6">compare6 渐变</p>
+  <div class="compare6-3">
+    <div class="compare6-2">
+      <div class="compare6-1">
+        <p class="compare6">compare6 属性继承</p>
+      </div>
+    </div>
+  </div>
   <script src="./html2canvas.js"></script>
   <script src="./dom-to-image.js"></script>
   <script src="../../build/index-web.min.js"></script>
   <script>
-    window.onload = function(){
+    window.onload = function () {
       let $ele = document.querySelector('.compare6');
 
       let t1 = window.performance.now();
-      html2canvas($ele).then(function(canvas) {
-          console.log('html2canvas');
-          console.log(window.performance.now()-t1);
-          canvas.style.border = '2px solid red';
-          document.body.appendChild(canvas);
+      html2canvas($ele).then(function (canvas) {
+        console.log('html2canvas');
+        console.log(window.performance.now() - t1);
+        canvas.style.border = '2px solid red';
+        document.body.appendChild(canvas);
       });
 
       let t2 = window.performance.now();
       domtoimage.toPng($ele).then(function (dataUrl) {
         console.log('dom-to-img');
-        console.log(window.performance.now()-t2);
+        console.log(window.performance.now() - t2);
         let img = new Image();
         img.src = dataUrl;
         img.style.border = '2px solid blue';
@@ -58,13 +78,14 @@
       let t3 = window.performance.now();
       screenshot.toIMG(".compare6", function (img) {
         console.log('simple-screenshot');
-        console.log(window.performance.now()-t3);
-        img.canvas.style.width = img.canvas.width / window.devicePixelRatio +'px';
-        img.canvas.style.height = img.canvas.height / window.devicePixelRatio +'px';
+        console.log(window.performance.now() - t3);
+        img.canvas.style.width = img.canvas.width / window.devicePixelRatio + 'px';
+        img.canvas.style.height = img.canvas.height / window.devicePixelRatio + 'px';
         img.canvas.style.border = '2px solid yellow';
         document.body.appendChild(img.canvas);
       });
     }
   </script>
 </body>
+
 </html>
