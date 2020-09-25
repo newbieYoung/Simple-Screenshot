@@ -1,4 +1,4 @@
-# SimpleScreenshot 前端“截屏”方案
+# SimpleScreenshot 前端“截屏”终极方案
 
 “截屏”是指把小程序或者 H5 页面转换成图片，从而方便用户转发或者分享。截屏分享相对于普通的结构化分享（链接分享）具有更丰富的视觉表现、更多的信息承载等优势，在很多项目中均有应用，举例来说：
 
@@ -20,20 +20,26 @@
 
 然而当我们使用那些所谓已经支持的 CSS 属性时，html2canvas 的表现依然不容乐观。
 
-- 页面中的普通文字，html2canvas 截屏后存在偏移；
+- html2canvas 文字渲染存在偏移；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-4.jpg)
 
-上图中第一个为页面渲染效果，第三个被红框包裹的为 html2canvas 对元素截屏后的效果。
+[文字渲染 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare1.html)
+
+在上图中可以很明显的看到和原页面文字（图中第一个）相比 html2canvas 截屏后的文字（图中第三个被红框包裹）存在向下偏移。
 
 - html2canvas 不支持文字渐变；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-5.jpg)
 
-上图中第一个为页面渲染效果，第三个被红框包裹的为 html2canvas 对元素截屏后的效果。
+[文字渐变 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare5.html)
+
+上图中第一个为原页面文字渐变效果，第三个被红框包裹的为 html2canvas 对页面渐变文字截屏后的效果。
 
 - html2canvas 对部分 CSS 属性（transform、opacity、filter）的继承关系处理并不完善；
 
-![](https://newbieyoung.github.io/images/simple-screenshot-5.jpg)
+![](https://newbieyoung.github.io/images/simple-screenshot-6.jpg)
 
-上图中第一个为页面渲染效果，第三个被红框包裹的为 html2canvas 对元素截屏后的效果。
+[属性继承 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare6.html)
+
+页面中 p 元素 具有三个父元素，分别设置有 opacity、transform、filter 等属性，在这些父元素属性和 p 元素自身属性的共同作用下，最终渲染到页面效果如图中第一个所示；而 html2canvas 对 p 元素截屏后的效果为图中第三个，其效果仅仅考虑了 p 元素自身 CSS 属性的影响。
