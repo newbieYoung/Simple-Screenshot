@@ -3,26 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>compare3 盒模型</title>
+  <title>compare4 定位</title>
   <style>
-    .compare3 {
+    body{
+      margin:0;
+    }
+    .compare4 {
       font-size: 20px;
       color: #000;
-      background-color: gray;
-      border: 1px solid #000;
-      margin:0;
-      margin-top:10px;
+      background-color: lightblue;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top:100px;
     }
   </style>
 </head>
 <body>
-  <p class="compare3">compare3 盒模型</p>
+  <p class="compare4">compare4 定位</p>
   <script src="./html2canvas.js"></script>
   <script src="./dom-to-image.js"></script>
   <script src="../../build/index-web.min.js"></script>
   <script>
     window.onload = function(){
-      let $ele = document.querySelector('.compare3');
+      let $ele = document.querySelector('.compare4');
 
       let t1 = window.performance.now();
       html2canvas($ele).then(function(canvas) {
@@ -58,7 +62,7 @@
         },
       });
       let t3 = window.performance.now();
-      screenshot.toIMG(".compare3", function (img) {
+      screenshot.toIMG(".compare4", function (img) {
         console.log('simple-screenshot');
         console.log(window.performance.now()-t3);
         img.canvas.style.width = img.canvas.width / window.devicePixelRatio +'px';
