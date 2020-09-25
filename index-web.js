@@ -358,7 +358,12 @@
 
     this.supportForeignObject = false; //是否支持 svg foreignobject 渲染
     this.forceScreenshotType = params.forceScreenshotType; //强制截屏方式 server、client
-    this.checkForeignObject();
+
+    if(this.forceScreenshotType == 'client'){ //强制 client 截屏
+      this.supportForeignObject = true;
+    }else{
+      this.checkForeignObject();
+    }
 
     this._isLoading = false; // 是否正在加载资源
     this._wholeTexts = ""; // 全部文字
