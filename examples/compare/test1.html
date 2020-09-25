@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>html2canvas 文件偏下</title>
+  <style>
+    .demo1{
+      font-size: 20px;
+      color: #000;
+      background-color: gray;
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <p class="demo1">demo1</p>
+  <script src="./html2canvas.js"></script>
+  <script src="./dom-to-image.js"></script>
+  <script>
+    window.onload = function(){
+      let $ele = document.querySelector('.demo1');
+
+      $ele.innerHTML = 'html2canvas';
+      html2canvas($ele).then(function(canvas) {
+          document.body.appendChild(canvas);
+      });
+
+      $ele.innerHTML = 'dom-to-img';
+      domtoimage.toPng($ele).then(function (dataUrl) {
+        let img = new Image();
+        img.src = dataUrl;
+        document.body.appendChild(img);
+      })
+    }
+  </script>
+</body>
+</html>
