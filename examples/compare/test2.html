@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>test2</title>
+  <link rel="stylesheet" href="./test2.css" />
+  <script>
+    (function (win, doc) {
+      var docEl = document.documentElement;
+
+      function setFont() {
+        var cliWidth = docEl.clientWidth;
+        if (cliWidth > 750) {
+          cliWidth = 750;
+        }
+        docEl.style.fontSize = 100 * (cliWidth / 750) + "px";
+      }
+      win.addEventListener("resize", setFont, false);
+      setFont();
+    })(window, document);
+  </script>
+</head>
+
+<body>
+  <div class="mp-share">
+    <div class="mps-content">
+      <div class="mps-info">
+        <div class="mpsi-img" style="
+              background-image: url(https://pic2.zhimg.com/80/v2-c73649b7f792be2e8d3b3bfe7c6360fd_720w.jpeg);
+            "></div>
+        <div class="mpsi-text">
+          <div>newbieyoung😀</div>
+          <div>分享3个大宝贝给你</div>
+        </div>
+      </div>
+      <div class="mp-list no-btns">
+        <div class="mpl-item">
+          <div class="mpl-img">
+            <img src="https://pic2.zhimg.com/80/v2-615d289fede62d4e714a35210397e184_720w.png" />
+          </div>
+          <div class="mpl-detail">
+            <div class="mpl-title">
+              <div class="mpl-tag">Simple-Crop</div>
+              支持裁剪图片任意角度旋转全平台图片裁剪组件
+            </div>
+            <div class="mpl-features">
+              <div class="mpl-sales">任意角度旋转</div>
+              <div>体验媲美客户端</div>
+            </div>
+            <div class="mpl-info">
+              <div class="mpl-save">
+                star
+                <div>230</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mpl-item">
+          <div class="mpl-img">
+            <img src="https://pic4.zhimg.com/80/v2-b01d271772cccd9dcd2f139b32abd09e_720w.jpeg" />
+          </div>
+          <div class="mpl-detail">
+            <div class="mpl-title">
+              <div class="mpl-tag">叮当魔方</div>
+              魔方新手自研，准备包含 N 多辅助功能的基础魔方
+            </div>
+            <div class="mpl-features">
+              <div class="mpl-sales">注册用户5k</div>
+              <div>掘金小册包教包会</div>
+            </div>
+            <div class="mpl-info">
+              <div class="mpl-save">
+                star
+                <div>112</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mpl-item">
+          <div class="mpl-img">
+            <img src="https://pic1.zhimg.com/80/v2-738c26db234dbcb4c076b2103e2534df_720w.png" />
+          </div>
+          <div class="mpl-detail">
+            <div class="mpl-title">
+              <div class="mpl-tag">掘金小册</div>
+              基于 ThreeJS 框架的魔方微信小游戏实践
+            </div>
+            <div class="mpl-features">
+              <div class="mpl-sales">从0到1</div>
+              <div>实现炫酷魔方微信小游戏</div>
+            </div>
+            <div class="mpl-info">
+              <div class="mpl-save">
+                已售
+                <div>1000</div>
+              </div>
+              <div class="mpl-text">¥9.9</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mps-end">
+        <div class="mpse-qrcode">
+          <img src="https://pic1.zhimg.com/80/v2-29a530f8c148668b9a2b746c7a5783ba_720w.png" />
+        </div>
+        <div class="mpse-text">
+          <div>
+            <div class="mpse-no">1</div>
+            保存图片到相册
+          </div>
+          <div>
+            <div class="mpse-no">2</div>
+            手机扫一扫即可看见
+          </div>
+        </div>
+        <div class="mpse-logo">
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./html2canvas.js"></script>
+  <script src="./dom-to-image.js"></script>
+  <script src="../../build/index-web.min.js"></script>
+  <script>
+    window.onload = function () {
+      let $ele = document.querySelector('.mps-content');
+
+      let t1 = window.performance.now();
+      html2canvas($ele).then(function(canvas) {
+          console.log('html2canvas');
+          console.log(window.performance.now()-t1);
+          document.body.appendChild(canvas);
+      });
+
+      let t2 = window.performance.now();
+      domtoimage.toPng($ele).then(function (dataUrl) {
+        console.log('dom-to-img');
+        console.log(window.performance.now()-t2);
+        let img = new Image();
+        img.src = dataUrl;
+        document.body.appendChild(img);
+      })
+
+      let imgType = "jpeg";
+      let screenshot = new SimpleScreenshot({
+        imgType: imgType, // 图片类型
+        puppeteerServer: "https://dom2img.lione.me/simple-screenshot",
+        puppeteerGlobalFont: "PingFang", // puppeteer 截屏服务全局字体
+        devicePixelRatio: window.devicePixelRatio, // 设备像素比
+        log: function (msg) {
+          console.log(msg);
+          console.log(msg.svg);
+        },
+        error: function (err) {
+          console.log(err);
+        },
+      });
+      let t3 = window.performance.now();
+      screenshot.toIMG(".mps-content", function (img) {
+        console.log('simple-screenshot');
+        console.log(window.performance.now()-t3);
+        img.canvas.style.width = img.canvas.width / window.devicePixelRatio +'px';
+        img.canvas.style.height = img.canvas.height / window.devicePixelRatio +'px';
+        document.body.appendChild(img.canvas);
+      });
+    };
+  </script>
+</body>
+
+</html>
