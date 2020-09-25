@@ -9,7 +9,6 @@
       font-size: 20px;
       color: #000;
       background-color: gray;
-      border: 1px solid #000;
       margin:0;
     }
   </style>
@@ -27,6 +26,7 @@
       html2canvas($ele).then(function(canvas) {
           console.log('html2canvas');
           console.log(window.performance.now()-t1);
+          canvas.style.border = '2px solid red';
           document.body.appendChild(canvas);
       });
 
@@ -36,6 +36,7 @@
         console.log(window.performance.now()-t2);
         let img = new Image();
         img.src = dataUrl;
+        img.style.border = '2px solid blue';
         document.body.appendChild(img);
       })
 
@@ -60,6 +61,7 @@
         console.log(window.performance.now()-t3);
         img.canvas.style.width = img.canvas.width / window.devicePixelRatio +'px';
         img.canvas.style.height = img.canvas.height / window.devicePixelRatio +'px';
+        img.canvas.style.border = '2px solid yellow';
         document.body.appendChild(img.canvas);
       });
     }
