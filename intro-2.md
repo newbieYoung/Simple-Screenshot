@@ -18,4 +18,22 @@
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-3.jpg)
 
-然而当我们使用那些所谓已经支持的 CSS 属性时，html2canvas 的可靠程度依然是不乐观的。
+然而当我们使用那些所谓已经支持的 CSS 属性时，html2canvas 的表现依然不容乐观。
+
+- 页面中的普通文字，html2canvas 截屏后存在偏移；
+
+![](https://newbieyoung.github.io/images/simple-screenshot-4.jpg)
+
+上图中第一个为页面渲染效果，第三个被红框包裹的为 html2canvas 对元素截屏后的效果。
+
+- html2canvas 不支持文字渐变；
+
+![](https://newbieyoung.github.io/images/simple-screenshot-5.jpg)
+
+上图中第一个为页面渲染效果，第三个被红框包裹的为 html2canvas 对元素截屏后的效果。
+
+- html2canvas 对部分 CSS 属性（transform、opacity、filter）的继承关系处理并不完善；
+
+![](https://newbieyoung.github.io/images/simple-screenshot-5.jpg)
+
+上图中第一个为页面渲染效果，第三个被红框包裹的为 html2canvas 对元素截屏后的效果。
