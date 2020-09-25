@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,32 +11,33 @@
       color: #000;
       background-color: gray;
       border: 1px solid #000;
-      margin:0;
-      margin-top:10px;
+      margin: 0;
+      margin-top: 10px;
     }
   </style>
 </head>
+
 <body>
   <p class="compare3">compare3 盒模型</p>
   <script src="./html2canvas.js"></script>
   <script src="./dom-to-image.js"></script>
   <script src="../../build/index-web.min.js"></script>
   <script>
-    window.onload = function(){
+    window.onload = function () {
       let $ele = document.querySelector('.compare3');
 
       let t1 = window.performance.now();
-      html2canvas($ele).then(function(canvas) {
-          console.log('html2canvas');
-          console.log(window.performance.now()-t1);
-          canvas.style.border = '2px solid red';
-          document.body.appendChild(canvas);
+      html2canvas($ele).then(function (canvas) {
+        console.log('html2canvas');
+        console.log(window.performance.now() - t1);
+        canvas.style.border = '2px solid red';
+        document.body.appendChild(canvas);
       });
 
       let t2 = window.performance.now();
       domtoimage.toPng($ele).then(function (dataUrl) {
         console.log('dom-to-img');
-        console.log(window.performance.now()-t2);
+        console.log(window.performance.now() - t2);
         let img = new Image();
         img.src = dataUrl;
         img.style.border = '2px solid blue';
@@ -60,13 +62,14 @@
       let t3 = window.performance.now();
       screenshot.toIMG(".compare3", function (img) {
         console.log('simple-screenshot');
-        console.log(window.performance.now()-t3);
-        img.canvas.style.width = img.canvas.width / window.devicePixelRatio +'px';
-        img.canvas.style.height = img.canvas.height / window.devicePixelRatio +'px';
+        console.log(window.performance.now() - t3);
+        img.canvas.style.width = img.canvas.width / window.devicePixelRatio + 'px';
+        img.canvas.style.height = img.canvas.height / window.devicePixelRatio + 'px';
         img.canvas.style.border = '2px solid yellow';
         document.body.appendChild(img.canvas);
       });
     }
   </script>
 </body>
+
 </html>

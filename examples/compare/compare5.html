@@ -1,44 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>compare5 字体</title>
+  <title>compare5 文字渐变</title>
   <style>
     @font-face {
       font-family: 'TTTGB';
-      src: url(data:application/x-font-ttf;charset=utf-8;base64,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);
+      src: url('./TTTGB.ttf');
+      /* fontmin compare5文字渐变 */
     }
+
     .compare5 {
       font-size: 20px;
       color: #000;
       font-family: 'TTTGB';
-      background-color: gray;
-      margin:0;
+      background-image: -webkit-linear-gradient(top, blue, red);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
     }
   </style>
 </head>
+
 <body>
-  <p class="compare5">compare5 字体</p>
+  <p class="compare5">compare5 文字渐变</p>
   <script src="./html2canvas.js"></script>
   <script src="./dom-to-image.js"></script>
   <script src="../../build/index-web.min.js"></script>
   <script>
-    window.onload = function(){
+    window.onload = function () {
       let $ele = document.querySelector('.compare5');
 
       let t1 = window.performance.now();
-      html2canvas($ele).then(function(canvas) {
-          console.log('html2canvas');
-          console.log(window.performance.now()-t1);
-          canvas.style.border = '2px solid red';
-          document.body.appendChild(canvas);
+      html2canvas($ele).then(function (canvas) {
+        console.log('html2canvas');
+        console.log(window.performance.now() - t1);
+        canvas.style.border = '2px solid red';
+        document.body.appendChild(canvas);
       });
 
       let t2 = window.performance.now();
       domtoimage.toPng($ele).then(function (dataUrl) {
         console.log('dom-to-img');
-        console.log(window.performance.now()-t2);
+        console.log(window.performance.now() - t2);
         let img = new Image();
         img.src = dataUrl;
         img.style.border = '2px solid blue';
@@ -63,13 +70,14 @@
       let t3 = window.performance.now();
       screenshot.toIMG(".compare5", function (img) {
         console.log('simple-screenshot');
-        console.log(window.performance.now()-t3);
-        img.canvas.style.width = img.canvas.width / window.devicePixelRatio +'px';
-        img.canvas.style.height = img.canvas.height / window.devicePixelRatio +'px';
+        console.log(window.performance.now() - t3);
+        img.canvas.style.width = img.canvas.width / window.devicePixelRatio + 'px';
+        img.canvas.style.height = img.canvas.height / window.devicePixelRatio + 'px';
         img.canvas.style.border = '2px solid yellow';
         document.body.appendChild(img.canvas);
       });
     }
   </script>
 </body>
+
 </html>
