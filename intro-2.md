@@ -1,4 +1,4 @@
-# SimpleScreenshot 前端“截屏”终极方案
+# SimpleScreenshot 前端“截屏”方案
 
 ## 背景
 
@@ -49,9 +49,9 @@
 
 页面中 p 元素 具有三个父元素，分别设置有 opacity、transform、filter 等属性，在这些父元素属性和 p 元素自身属性的共同作用下，最终渲染到页面效果如图中第一个所示；而 html2canvas 对 p 元素截屏后的效果为图中第三个，其效果仅仅考虑了 p 元素自身 CSS 属性的影响。
 
-上面仅仅只是简单的举了一些例子，当我们真正去使用 html2canvas 时可能还会遇到更多坑点、更多的注意事项；可以说是 html2canvas 想要完全重新实现浏览器渲染过程这一思路所不能避免的问题；甚至随着 CSS 标准的更新而这种思路的组件跟不上进度，问题就会越来越多。
+上面仅仅只是简单的举了一些例子，当我们真正去使用 html2canvas 时可能还会遇到更多坑点；这也是 html2canvas 想要完全重新实现浏览器渲染过程这一思路很难避免的问题；甚至随着 CSS 标准的更新而这种思路的组件跟不上进度，问题就会越来越多。
 
-另外在小程序中有一套和浏览器类似的 Canvas API，但是一些不大的差异导致 html2canvas 并不能在小程序中使用；因此就有了小程序组件 [wxml-to-canvas](https://github.com/wechat-miniprogram/wxml-to-canvas)、[Painter](https://github.com/Kujiale-Mobile/Painter) 等；这些组件其实可以看成是弱化版 html2canvas 在小程序上的实现，支持的 CSS 属性更少，学习使用成本反而增加了不少。
+另外在小程序中有一套和浏览器类似的 Canvas API，但是一些不大的差异导致 html2canvas 并不能在小程序中使用；因此就有了小程序组件 [wxml-to-canvas](https://github.com/wechat-miniprogram/wxml-to-canvas)、[Painter](https://github.com/Kujiale-Mobile/Painter) 等；这些组件其实可以看成是弱化版 html2canvas 在小程序上的实现，支持的 CSS 属性更少，学习使用的成本反而增加了不少。
 
 ### dom-to-image
 
