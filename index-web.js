@@ -459,13 +459,9 @@
   //判断浏览器是否支持 foreignobject 渲染
   SimpleScreenshot.prototype.checkForeignObject = function () {
     let svg = "";
-    svg += "<svg xmlns='http://www.w3.org/2000/svg'";
-    svg += " width='1'";
-    svg += " height='1'";
-    svg += ">";
+    svg += "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'>";
     svg += "<foreignObject width='100%' height='100%'>";
-    svg += "<div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;background-color:red;' >";
-    svg += "</div>";
+    svg += "<div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;background-color:red;'></div>";
     svg += "</foreignObject>";
     svg += "</svg>"
 
