@@ -4,6 +4,8 @@
 
 “截屏”是指把小程序或者 H5 页面转换成图片，从而方便用户转发或者分享。截屏分享相对于普通的结构化分享（链接分享）具有更丰富的视觉表现、更多的信息承载等优势，在很多项目中均有应用，举例来说：
 
+![]()![]()
+
 ![](https://newbieyoung.github.io/images/simple-screenshot-0.gif)![](https://newbieyoung.github.io/images/simple-screenshot-1.gif)
 
 ## 相关技术
@@ -59,8 +61,33 @@
 
 答案是有的！
 
-首先得从 SVG 的命名空间开始说起：
+在 SVG 的 `foreignobject` 元素中可以嵌入使用其它 XML 命名空间的元素，这也就意味着我们只需要指定其内部元素的命名空间为 `http://www.w3.org/1999/xhtml` 就可以在 SVG 中使用 html+css 了，举个简单例子：
 
 ```
-<svg xmlns="http://www.w3.org/2000/svg"></svg>
+<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'>
+  <foreignObject width='100%' height='100%'>
+    <div class='test' xmlns='http://www.w3.org/1999/xhtml' style='width:100px;height:100px;background-color:red;'>1😁1</div>
+  </foreignObject>
+</svg>
 ```
+
+另外在浏览器中创建图片，然后指定其类型为 `svg+xml` 就可以直接通过 SVG 生成图片：
+
+```
+let svg = "";
+svg += "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'>";
+svg += "<foreignObject width='100%' height='100%'>";
+svg += "<div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;background-color:red;'></div>";
+svg += "</foreignObject>";
+svg += "</svg>"
+
+let self = this;
+let img = new Image();
+img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+```
+
+简单来说就是先把 html+css 转换为 SVG 然后再把 SVG 转换为图片，这样就间接的实现了通过 html+css 生成图片。
+
+整个方案最大的工作量就在于如何把页面中待截屏元素转换到 SVG 的 foreignobject 元素中去；理论上来说只要是这个转换过程没有问题，然后客户端支持 foreignobject，那么最终的截屏效果肯定和原页面效果一模一样。
+
+然而现实总是残酷的，目前该方案的代表 [dom-to-image](https://github.com/tsayen/dom-to-image) 的转换过程存在很多问题：
