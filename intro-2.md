@@ -20,7 +20,7 @@
 
 ### html2canvas
 
-以目前最流行的 [html2canvas](https://github.com/niklasvh/html2canvas) 组件为例（截止到 2020 年 9 月，该库在 Github 上有 21.6k star），
+以目前最流行的 [html2canvas](https://github.com/niklasvh/html2canvas) 组件为例（截止到 2020 年 9 月 在 Github 上有 21.6k star），
 其官网 [Features](https://html2canvas.hertzen.com/features) 上声明了目前并不支持的 CSS 属性如下：
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-3.jpg)
@@ -90,7 +90,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 整个方案最大的工作量就在于如何把页面中待截屏元素转换到 SVG 的 foreignobject 元素中去；理论上来说只要是这个转换过程没有问题，然后客户端支持 foreignobject，那么最终的截屏效果肯定和原页面效果一模一样。
 
-然而现实~~总是残酷的~~（有机可乘），就拿目前该方案的代表 [dom-to-image](https://github.com/tsayen/dom-to-image)（截止到 2020 年 9 月，该库在 Github 上有 6.5k star）组件来说，其转换过程存在很多问题；在上文中关于 html2canvas 问题说明的示例中，也展示了 dom-to-image 截屏效果（最后一个蓝框部分）；表现出以下问题：
+然而现实~~总是残酷的~~（有机可乘），就拿目前该方案的代表 [dom-to-image](https://github.com/tsayen/dom-to-image)（截止到 2020 年 9 月 在 Github 上有 6.5k star）组件来说，其转换过程存在很多问题；在上文中关于 html2canvas 问题说明的示例中，也展示了 dom-to-image 截屏效果（最后一个蓝框部分）；表现出以下问题：
 
 - 截屏效果模糊；
 - 和 html2canvas 一样不支持文字渐变；
