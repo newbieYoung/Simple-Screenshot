@@ -33,7 +33,7 @@
 
 [文字渲染 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare1.html)
 
-在上图中可以很明显的看到和原页面文字（图中第一个）相比 html2canvas 截屏后的文字（图中第三个被红框包裹）存在向下偏移。
+在上图中可以很明显的看到和原页面文字（图中第一个）相比 html2canvas 截屏后的文字（图中第三个红框部分）存在向下偏移。
 
 - html2canvas 不支持文字渐变；
 
@@ -41,7 +41,7 @@
 
 [文字渐变 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare5.html)
 
-上图中第一个为原页面文字渐变效果，第三个被红框包裹的为 html2canvas 对页面渐变文字截屏后的效果。
+上图中第一个为原页面文字渐变效果，第三个红框部分的为 html2canvas 对页面渐变文字截屏后的效果。
 
 - html2canvas 对部分 CSS 属性（transform、opacity、filter）的继承关系处理并不完善；
 
@@ -90,4 +90,14 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 整个方案最大的工作量就在于如何把页面中待截屏元素转换到 SVG 的 foreignobject 元素中去；理论上来说只要是这个转换过程没有问题，然后客户端支持 foreignobject，那么最终的截屏效果肯定和原页面效果一模一样。
 
-然而现实总是残酷的，目前该方案的代表 [dom-to-image](https://github.com/tsayen/dom-to-image) 的转换过程存在很多问题：
+然而现实总是残酷的，就拿目前该方案的代表 [dom-to-image](https://github.com/tsayen/dom-to-image) 组件来说，其转换过程存在很多问题；在上文中关于 html2canvas 问题说明的示例中，也展示了 dom-to-image 截屏效果（最后一个蓝框部分）；表现出以下问题：
+
+- 截屏效果模糊；
+- 不支持字体；
+- 和 html2canvas 一样部分 CSS 属性的继承关系没有处理好；
+
+更糟糕的是连 CSS 最基础的盒模型以及布局都有问题：
+
+![](https://newbieyoung.github.io/images/simple-screenshot-7.jpg)
+
+[盒模型 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare3.html)
