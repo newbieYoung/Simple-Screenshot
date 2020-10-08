@@ -71,18 +71,19 @@ Page({
     wx.saveImageToPhotosAlbum({
       filePath: fPath,
       success: ()=>{
+        wx.hideLoading(); // wx.showLoading 和 wx.showToast 同时只能显示一个
         wx.showToast({
+          icon: 'none',
           title: '保存成功'
         })
       },
       fail: (err)=>{
         console.log(err);
+        wx.hideLoading();
         wx.showToast({
+          icon: 'none',
           title: '保存失败'
         })
-      },
-      complete: ()=>{
-        wx.hideLoading();
       }
     })
   },
