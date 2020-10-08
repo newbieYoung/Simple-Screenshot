@@ -175,3 +175,19 @@ screenshot.toIMG(".mps-content", function (img) {
 [Web 示例](https://demo.lione.me/simple-screenshot/test-1.html?pub)
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-11.png)
+
+另外 SimpleScreenShot 还支持小程序截屏，使用方式和 Web 基本类似，唯一的区别在于编写完小程序页面代码之后还需要把待截屏元素的代码复制到 SimpleScreenshot 提供的[格式化工具](https://newbieyoung.github.io/Simple-Screenshot//tools/format_xml.html)中进行格式化：
+
+![](https://newbieyoung.github.io/images/simple-screenshot-12.png)
+
+小程序截屏之所以需要进行这一步操作，主要是因为小程序提供的 API 功能有限，通过选择器选取元素节点之后，没有办法获得该元素节点的类型、子节点信息以及部分关键属性（比如 image 元素的 src 属性、内联文本等）；这会导致生成的 svg 代码缺失关键信息，最终得到的截屏图片异常。
+
+为了解决上述问题，本技术方案提供了一个格式化工具，使用该工具可以对小程序页面代码进行解析，把生成 svg 代码所需要的相关信息提前设置到元素的自定义属性中，这样在运行代码时就可以直接获取了。
+
+其中 `data-name` 表示元素类型，`data-level` 表示元素级别（ 0 表示根节点、0-0 表示根节点的第一个子节点、0-1 表示根节点的第二个子节点以此类推 ），`data-len` 表示当前元素的子元素数量（ 包含内联文本 ），`data-texts` 表示当前元素内联文本信息（ 小程序中并没有内联文本的概念 ）；最后为了一次性选取全部生成图片的元素节点，还需要对每个元素节点加入特定的 class 类名进行标注。
+
+最后用格式化之后的代码替换原有代码即可。
+
+小程序示例：
+
+![](https://newbieyoung.github.io/images/simple-screenshot-11.png)
