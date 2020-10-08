@@ -1,4 +1,4 @@
-# SimpleScreenshot 前后端混合式“截屏”方案
+# 前后端混合式“截屏”方案
 
 ## 背景
 
@@ -116,9 +116,11 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-9.jpg)
 
-## SimpleScreenshot
+## 混合式截屏方案
 
-[SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot) 是一种`前后端混合式`的截屏方案，结合了前端截屏简单方便以及后端截屏稳定可靠的优点；具体流程如下：
+在上述相关技术中总结了服务端截屏、客户端截屏等各种方案的优缺点；基于`实现简单`、`使用方便`、`稳定可靠`的原则，不局限于单一技术，把服务端截屏和客户端 SVG 截屏方案结合起来，对于截屏这个问题，是可以得到一种`更完善`的解决方案的。
+
+具体实现如下：[SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot)。
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-10.jpg)
 
@@ -188,6 +190,6 @@ screenshot.toIMG(".mps-content", function (img) {
 
 最后用格式化之后的代码替换原有代码即可。
 
-小程序示例：
+[小程序示例](https://github.com/newbieYoung/Simple-Screenshot/tree/master/examples/wechat-app)
 
-![](https://newbieyoung.github.io/images/simple-screenshot-11.png)
+![](https://newbieyoung.github.io/images/simple-screenshot-13.jpg)
