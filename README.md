@@ -23,6 +23,7 @@
 │   ├── web
 │   ├── qq-app
 │   └── wechat-app
+├── server                   // 截屏服务
 ├── tools                    // 辅助工具
 │   └── format_xml.html
 ├── index-web.js             // Web SimpleScreenshot 代码

@@ -122,7 +122,25 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-10.jpg)
 
-其支持全部 CSS 属性，所见即所得，简单方便；开发人员只需要正常编写页面代码，然后进行简单的初始化即可：
+项目核心代码包括两部分：
+
+```
+├── build                    // 打包构建代码
+├── examples                 // 示例项目
+│   ├── web
+│   ├── qq-app
+│   └── wechat-app
+├── server                   // 截屏服务
+├── tools                    // 辅助工具
+│   └── format_xml.html
+├── index-web.js             // Web SimpleScreenshot 代码
+├── index-qq.js              // QQ 小程序 SimpleScreenshot 代码
+└── index-wechat.js          // 微信小程序 SimpleScreenshot 代码
+```
+
+`server` 目录为截屏服务需要单独部署（支持 Docker 镜像部署），`build` 目录为打包构建后的客户端代码，在实际项目中使用时需要引入。
+
+SimpleScreenshot 支持全部 CSS 属性，所见即所得，简单方便；开发人员只需要正常编写页面代码，然后进行简单的初始化即可：
 
 ```
 let screenshot = new SimpleScreenshot({
@@ -140,6 +158,23 @@ let screenshot = new SimpleScreenshot({
   },
 });
 ```
+
+> https://dom2img.lione.me/simple-screenshot 为部署在云上的示例服务，请不要在生产环境中使用！！！
+
+初始化完成之后，传入待截屏元素选择器执行组件的 `toIMG` 方法即可完成截屏：
+
+```
+screenshot.toIMG(".mps-content", function (img) {
+  // img.base64
+  // img.canvas
+});
+```
+
+截屏完成在回调函数中可以获得截屏结果，客户端截屏可以获得 base64 图片以及 canvas 元素，但是服务端截屏仅仅能获得 base64 图片。
+
+
+
+
 
 
 
