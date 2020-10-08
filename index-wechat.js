@@ -305,7 +305,6 @@
 
   function SimpleScreenshot(params) {
     this.devicePixelRatio = params.devicePixelRatio || 1;
-
     this.error = params.error || function () {};
     this.log = params.log || console.log;
     this.puppeteerServer = params.puppeteerServer; // puppeteer 截屏服务
@@ -316,6 +315,9 @@
     this.distWidth = params.distWidth; //目标尺寸
     this.distHeight = params.distHeight;
     this.debug = !params.debug ? false : true; // 调试模式
+    this.textDecode = params.textDecode ? params.textDecode : function (text) {
+      return text;
+    }
 
     //小程序目前并不支持客户端渲染 svg foreignobject
     this.supportForeignObject = false;
@@ -495,7 +497,7 @@
        * 拼接 xml 时如果文本节点中存在条件分割符 & 应该写成 &amp; 否则会报错 EntityRef: expecting ';'
        */
       for (let m = 0; m < textChilds.length; m++) {
-        textChilds[m].text = textChilds[m].text.replace(/&/g, "&amp;");
+        textChilds[m].text = this.textDecode(textChilds[m].text).replace(/&/g, "&amp;");
       }
     } catch (err) {
       self.debug && self.log({
