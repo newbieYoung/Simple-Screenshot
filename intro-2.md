@@ -4,8 +4,6 @@
 
 “截屏”是指把小程序或者 H5 页面转换成图片，从而方便用户转发或者分享。截屏分享相对于普通的结构化分享（链接分享）具有更丰富的视觉表现、更多的信息承载等优势，在很多项目中均有应用，举例来说：
 
-![]()![]()
-
 ![](https://newbieyoung.github.io/images/simple-screenshot-0.gif)![](https://newbieyoung.github.io/images/simple-screenshot-1.gif)
 
 ## 相关技术
@@ -123,6 +121,25 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 [SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot) 是一种`前后端混合式`的截屏方案，结合了前端截屏简单方便以及后端截屏稳定可靠的优点；具体流程如下：
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-10.jpg)
+
+其支持全部 CSS 属性，所见即所得，简单方便；开发人员只需要正常编写页面代码，然后进行简单的初始化即可：
+
+```
+let screenshot = new SimpleScreenshot({
+  debug: isPub ? false : true, // 调试模式，组件代码中会执行 log 函数
+  imgType: imgType, // 图片类型
+  puppeteerServer: "https://dom2img.lione.me/simple-screenshot",// 截屏服务
+  puppeteerGlobalFont: "PingFang", // 截屏服务全局字体
+  devicePixelRatio: window.devicePixelRatio, // 设备像素比
+  log: function (msg) {
+    console.log(msg);
+    console.log(msg.svg);
+  },
+  error: function (err) {
+    console.log(err);
+  },
+});
+```
 
 
 
