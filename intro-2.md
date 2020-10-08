@@ -159,7 +159,7 @@ let screenshot = new SimpleScreenshot({
 });
 ```
 
-> https://dom2img.lione.me/simple-screenshot 为部署在云上的示例服务，请不要在生产环境中使用！！！
+> https://dom2img.lione.me/simple-screenshot 为部署在云服务器上的示例服务，请不要在生产环境中使用！！！
 
 初始化完成之后，传入待截屏元素选择器执行组件的 `toIMG` 方法即可完成截屏：
 
@@ -172,15 +172,6 @@ screenshot.toIMG(".mps-content", function (img) {
 
 截屏完成在回调函数中可以获得截屏结果，客户端截屏可以获得 base64 图片以及 canvas 元素，但是服务端截屏仅仅能获得 base64 图片。
 
+[Web 示例](https://demo.lione.me/simple-screenshot/test-1.html?pub)
 
-
-
-
-
-
-
-
-
-
-
-
+![](https://newbieyoung.github.io/images/simple-screenshot-11.png)
