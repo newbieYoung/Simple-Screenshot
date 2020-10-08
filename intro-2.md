@@ -1,4 +1,4 @@
-# SimpleScreenshot 前端“截屏”方案
+# SimpleScreenshot 前后端混合式“截屏”方案
 
 ## 背景
 
@@ -113,6 +113,19 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 [布局 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare4.html)
 
 上图中第四个为原页面绝对定位布局效果，第三个蓝框部分为 dom-to-image 对绝对定位布局截屏后的效果，可以明显的看到截屏后的效果存在空白异常的情况。
+
+除了 dom-to-image 本身的实现问题以外，还存在一些方案本身的问题；比如 foreignobject 和 data:image/svg+xml 存在兼容性问题，某些情况下可能客户端并不支持这些特性（小程序以及部分浏览器）。
+
+![](https://newbieyoung.github.io/images/simple-screenshot-9.jpg)
+
+## SimpleScreenshot
+
+[SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot) 是一种`前后端混合式`的截屏方案，结合了前端截屏的简单方便以及后端截屏稳定可靠的优点；具体流程如下：
+
+![](https://newbieyoung.github.io/images/simple-screenshot-10.jpg)
+
+
+
 
 
 

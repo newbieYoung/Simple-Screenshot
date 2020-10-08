@@ -1,10 +1,11 @@
 # SimpleScreenshot
 
-基于 [foreignObject](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element/foreignObject) 和 [puppeteer](https://github.com/puppeteer/puppeteer) 的小程序、H5 截屏组件。
+前后端混合式“截屏”方案。
 
 ## 特性及优势
 
 - 支持全部 CSS 属性；
+- 支持小程序和浏览器；
 - 所见即所得，简单方便；
 - 支持客户端、服务器两种渲染方式，成本低，兼容性高。
 
