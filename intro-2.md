@@ -120,7 +120,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 ## SimpleScreenshot
 
-[SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot) 是一种`前后端混合式`的截屏方案，结合了前端截屏的简单方便以及后端截屏稳定可靠的优点；具体流程如下：
+[SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot) 是一种`前后端混合式`的截屏方案，结合了前端截屏简单方便以及后端截屏稳定可靠的优点；具体流程如下：
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-10.jpg)
 
