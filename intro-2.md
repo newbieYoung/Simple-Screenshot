@@ -98,6 +98,24 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 更糟糕的是连 CSS 最基础的盒模型以及布局都有问题：
 
+- dom-to-image 盒模型截屏异常；
+
 ![](https://newbieyoung.github.io/images/simple-screenshot-7.jpg)
 
 [盒模型 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare3.html)
+
+上图中第一个为原页面 margin 盒模型效果，第四个蓝框部分为 dom-to-image 对 margin 盒模型截屏后的效果，可以明显的看到截屏后的效果存在向下偏移。
+
+- dom-to-image 布局截屏异常；
+
+![](https://newbieyoung.github.io/images/simple-screenshot-8.jpg)
+
+[布局 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare4.html)
+
+上图中第四个为原页面绝对定位布局效果，第三个蓝框部分为 dom-to-image 对绝对定位布局截屏后的效果，可以明显的看到截屏后的效果存在空白异常的情况。
+
+
+
+
+
+
