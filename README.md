@@ -98,11 +98,6 @@
     <td></td>
   </tr>
   <tr>
-    <td>feature</td>
-    <td>【Web】全局字体</td>
-    <td></td>
-  </tr>
-  <tr>
     <td>bug</td>
     <td>【QQ、Wechat】文字单引号以及其它影响 JSON.parse 的字符</td>
     <td></td>
@@ -120,6 +115,11 @@
   <tr>
     <td>feature</td>
     <td>【Web】分析 document.styleSheets 筛选出那些未设置固定宽度的元素，自动应用 autoRenderWidth 规则，从而避免在初始化时通过参数设置该规则，降低使用门槛</td>
+    <td>done</td>
+  </tr>
+  <tr>
+    <td>feature</td>
+    <td>【Web】样式全局字体内联</td>
     <td>done</td>
   </tr>
 </table>
