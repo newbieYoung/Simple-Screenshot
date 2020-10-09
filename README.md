@@ -98,8 +98,8 @@
     <td></td>
   </tr>
   <tr>
-    <td>bug</td>
-    <td>【Web】移动端客户端截屏全局字体不生效</td>
+    <td>feature</td>
+    <td>【Web】全局字体</td>
     <td></td>
   </tr>
   <tr>
