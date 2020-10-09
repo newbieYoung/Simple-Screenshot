@@ -1025,7 +1025,7 @@
             xhr.onload = function () {
               let reader = new FileReader();
               reader.onload = function () {
-                self.log({
+                self.debug && self.log({
                   msg: `${url} request onload`,
                 });
 
