@@ -98,7 +98,7 @@
     <td></td>
   </tr>
   <tr>
-    <td>bug</td>
+    <td>lession</td>
     <td>【QQ、Wechat】文字单引号以及其它影响 JSON.parse 的字符</td>
     <td></td>
   </tr>
@@ -119,7 +119,7 @@
   </tr>
   <tr>
     <td>feature</td>
-    <td>【Web】样式全局字体内联</td>
+    <td>【Web】CSS 样式全局字体内联</td>
     <td>done</td>
   </tr>
 </table>
