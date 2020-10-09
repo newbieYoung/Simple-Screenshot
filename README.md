@@ -9,11 +9,17 @@
 - 所见即所得，简单方便；
 - 支持客户端、服务器两种渲染方式，成本低，兼容性高。
 
+[详细介绍](./INTRO.md)
+
 ## 示例
 
 ### 微信小程序示例
 
-### QQ 小程序示例
+![](https://newbieyoung.github.io/images/simple-screenshot-13.jpg)
+
+### Web 示例
+
+![](https://newbieyoung.github.io/images/simple-screenshot-11.png)
 
 ## 目录
 
@@ -103,6 +109,11 @@
     <td></td>
   </tr>
   <tr>
+    <td>feature</td>
+    <td>【Web】CSS 样式全局字体内联</td>
+    <td>doing（目前仅支持 ttf 字体文件）</td>
+  </tr>
+  <tr>
     <td>bug</td>
     <td>【Web】QQ 浏览器中元素不存在伪类，但是 getComputedStyle 获取其伪类时 content 不为 none，导致伪类判断异常 </td>
     <td>fixed</td>
@@ -115,11 +126,6 @@
   <tr>
     <td>feature</td>
     <td>【Web】分析 document.styleSheets 筛选出那些未设置固定宽度的元素，自动应用 autoRenderWidth 规则，从而避免在初始化时通过参数设置该规则，降低使用门槛</td>
-    <td>done</td>
-  </tr>
-  <tr>
-    <td>feature</td>
-    <td>【Web】CSS 样式全局字体内联</td>
     <td>done</td>
   </tr>
 </table>

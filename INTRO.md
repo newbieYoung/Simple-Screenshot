@@ -190,6 +190,6 @@ screenshot.toIMG(".mps-content", function (img) {
 
 最后用格式化之后的代码替换原有代码即可。
 
-[小程序示例](https://github.com/newbieYoung/Simple-Screenshot/tree/master/examples/wechat-app)
+[微信小程序示例](https://github.com/newbieYoung/Simple-Screenshot/tree/master/examples/wechat-app)
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-13.jpg)
