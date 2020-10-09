@@ -368,6 +368,11 @@
 
     this._isLoading = false; // 是否正在加载资源
     this._wholeTexts = ""; // 全部文字
+    this._globalInlineFont = {
+      list: [],
+      value: ""
+    }; //全局字体
+    this.globalInlineFont = params.globalInlineFont || "";
 
     //字体列表
     this.fontList = [];
@@ -378,7 +383,6 @@
         texts: "",
       });
     }
-    this.globalInlineFont = params.globalInlineFont || "";
 
     //预加载资源
     this.preLoadResource = params.preLoadResource || [];
@@ -449,7 +453,10 @@
           } else if (rule.type == 4) { // CSSMediaRule
             //
           } else if (rule.type == 5) { // CSSFontFaceRule
-            //
+            this.loadResource({
+              name: rule.style.fontFamily,
+              value: rule.style.src
+            }, function () {}, function () {})
           }
         }
       }
@@ -632,6 +639,9 @@
     let self = this;
     self.toSVG(selector, function (svg) {
       if (self.supportForeignObject && self.forceScreenshotType != 'server') {
+        // 插入本地全局字体
+        let index = svg.svg.indexOf("</style>");
+        svg.svg = svg.svg.substring(0, index) + self._globalInlineFont.value + svg.svg.substring(index, svg.svg.length);
         self.debug && self.log(svg) // log
         let base64 = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.svg);
         self.toCanvas(base64, svg, function (canvas) {
@@ -808,12 +818,38 @@
           before += this.parseBackgroundImage(node.before[name]);
         }
       } else {
-        style += name + ":" + this.getNodeStyle(node, name) + ";";
-        if (node.after) {
-          after += name + ":" + node.after[name] + ";";
+        let nodeV = this.getNodeStyle(node, name);
+        style += name + ":" + nodeV + ";";
+        if (name == "font-family") { //字体
+          let n1 = RESOURCE_NAME.indexOf(nodeV)
+          if (n1 != -1 && !this._globalInlineFont.list.includes(nodeV)) {
+            this._globalInlineFont.list.push(nodeV);
+            this._globalInlineFont.value += "@font-face {font-family: '" + nodeV + "';src: url(" + RESOURCE_DATA[n1] + ");}"
+          }
         }
+
+        if (node.after) {
+          let afterV = node.after[name];
+          after += name + ":" + afterV + ";";
+          if (name == "font-family") { //字体
+            let n2 = RESOURCE_NAME.indexOf(afterV)
+            if (n2 != -1 && !this._globalInlineFont.list.includes(afterV)) {
+              this._globalInlineFont.list.push(afterV);
+              this._globalInlineFont.value += "@font-face {font-family: '" + afterV + "';src: url(" + RESOURCE_DATA[n2] + ");}"
+            }
+          }
+        }
+
         if (node.before) {
-          before += name + ":" + node.before[name] + ";";
+          let beforeV = node.before[name];
+          before += name + ":" + beforeV + ";";
+          if (name == "font-family") { //字体
+            let n3 = RESOURCE_NAME.indexOf(beforeV)
+            if (n3 != -1 && !this._globalInlineFont.list.includes(beforeV)) {
+              this._globalInlineFont.list.push(beforeV);
+              this._globalInlineFont.value += "@font-face {font-family: '" + beforeV + "';src: url(" + RESOURCE_DATA[n3] + ");}"
+            }
+          }
         }
       }
     }
@@ -902,26 +938,34 @@
 
       // img src
       if (node.dataset.src && node.dataset.src.length > 0) {
-        this.loadResource("url(" + node.dataset.src + ")", add, del);
+        this.loadResource({
+          value: "url(" + node.dataset.src + ")"
+        }, add, del)
       }
 
       // background-image
       let bgImg = node.computedStyle['background-image'];
       if (bgImg && bgImg.length > 0 && bgImg != 'none') {
-        this.loadResource(bgImg, add, del);
+        this.loadResource({
+          value: bgImg
+        }, add, del);
       }
 
       if (node.after) {
         let afterImg = node.after['background-image']
         if (afterImg && afterImg.length > 0 && afterImg != 'none') {
-          this.loadResource(afterImg, add, del);
+          this.loadResource({
+            value: afterImg
+          }, add, del);
         }
       }
 
       if (node.before) {
         let beforeImg = node.before['background-image']
         if (beforeImg && beforeImg.length > 0 && beforeImg != 'none') {
-          this.loadResource(beforeImg, add, del);
+          this.loadResource({
+            value: beforeImg
+          }, add, del);
         }
       }
     }
@@ -931,10 +975,10 @@
     }
   };
 
-  //根据 url 获取 data 名称
+  //根据后缀获取 dataurl 类型
   SimpleScreenshot.prototype.getType = function (url) {
-    let types = [".png", ".jpg", ".jpeg"];
-    let names = ["image/png", "image/jpg", "image/jpg"];
+    let types = [".png", ".jpg", ".jpeg", ".ttf"];
+    let names = ["image/png", "image/jpg", "image/jpg", "application/x-font-ttf"];
     for (let i = 0; i < types.length; i++) {
       if (url.lastIndexOf(types[i]) + types[i].length == url.length) {
         return names[i]
@@ -946,48 +990,56 @@
   //加载外部资源
   SimpleScreenshot.prototype.loadResource = function (resource, add, del) {
     URL_REGEX.lastIndex = 0; //重置正则对象
-    let matches = URL_REGEX.exec(resource); //匹配url值
+    let matches = URL_REGEX.exec(resource.value); //匹配url值
     let self = this;
     if (matches != null) {
       let url = matches[1];
+      let name = resource.name ? resource.name : url;
       if (
-        resource &&
+        resource.value &&
         url &&
-        url.search(/^(data:)/) == -1 &&
-        !RESOURCE_NAME.includes(url)
+        !RESOURCE_NAME.includes(name) // 根据名称去重
       ) {
-        //非 dataurl
-        let type = this.getType(url);
+        let type = this.getType(url); // 检查类型
         if (type != null) {
-          RESOURCE_NAME.push(url);
-          add();
+          if (url.search(/^(data:)/) == -1) { // 非 dataurl
+            RESOURCE_NAME.push(name);
+            add();
 
-          let xhr = new XMLHttpRequest();
-          xhr.responseType = "blob";
-          xhr.timeout = 3000;
-          xhr.open("GET", url, true);
-          xhr.onerror = function (err) {
-            self.error({
-              msg: `${url} request error`,
-              err: err,
-            });
-          };
-          xhr.ontimeout = function (err) {
-            self.error({
-              msg: `${url} request timeout`,
-              err: err,
-            });
-          };
-          xhr.onload = function () {
-            let reader = new FileReader();
-            reader.onload = function () {
-              let index = RESOURCE_NAME.indexOf(url);
-              RESOURCE_DATA[index] = reader.result;
-              del();
+            let xhr = new XMLHttpRequest();
+            xhr.responseType = "blob";
+            xhr.timeout = 3000;
+            xhr.open("GET", url, true);
+            xhr.onerror = function (err) {
+              self.error({
+                msg: `${url} request error`,
+                err: err,
+              });
             };
-            reader.readAsDataURL(xhr.response);
-          };
-          xhr.send();
+            xhr.ontimeout = function (err) {
+              self.error({
+                msg: `${url} request timeout`,
+                err: err,
+              });
+            };
+            xhr.onload = function () {
+              let reader = new FileReader();
+              reader.onload = function () {
+                self.log({
+                  msg: `${url} request onload`,
+                });
+
+                let index = RESOURCE_NAME.indexOf(name);
+                RESOURCE_DATA[index] = reader.result;
+                del();
+              };
+              reader.readAsDataURL(xhr.response);
+            };
+            xhr.send();
+          } else if (resource.name) {
+            RESOURCE_NAME.push(name);
+            RESOURCE_DATA.push(url);
+          }
         }
       }
     }
