@@ -448,6 +448,8 @@
             //
           } else if (rule.type == 4) { // CSSMediaRule
             //
+          } else if (rule.type == 5) { // CSSFontFaceRule
+            //
           }
         }
       }
