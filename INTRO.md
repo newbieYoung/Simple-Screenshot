@@ -8,13 +8,13 @@
 
 ## 相关技术
 
-目前流行的“截屏”实现方案按生成图片的方式可以分为客户端截屏和服务端截屏两种。
+目前流行的“截屏”实现方案按生成图片的方式可以分为`客户端截屏`和`服务端截屏`两种。
 
-服务端截屏一般做法是使用 [Puppeteer](https://github.com/puppeteer/puppeteer) 或者其它 Headless 浏览器渲染页面生成图片，这种方式规避了目前繁多浏览器以及终端导致的前端兼容性问题，但是会消耗大量的服务器资源（启动 Headless 浏览器需要消耗系统资源，页面渲染需要加载外部资源），而且在弱网络环境中性能较低；另外如果采用由前端组织待渲染页面内容然后传输给服务器的方式，还可能存在一定的安全风险。
+`服务端截屏`一般做法是使用 [Puppeteer](https://github.com/puppeteer/puppeteer) 或者其它 Headless 浏览器渲染页面生成图片，这种方式规避了目前繁多浏览器以及终端导致的前端兼容性问题，但是会消耗大量的服务器资源（启动 Headless 浏览器需要消耗系统资源，页面渲染需要加载外部资源），而且在弱网络环境中性能较低；另外如果采用由前端组织待渲染页面内容然后传输给服务器的方式，还可能存在一定的安全风险。
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-2.jpg)
 
-客户端截屏一般是使用客户端提供的图形 API （Canvas、SVG 等）重新绘制页面生成图片，这种方式不需要依赖服务器，资源消耗较少；但是使用客户端提供的图形 API 重新绘制页面，相当于重新实现客户端的渲染过程，毫无疑问是比较复杂且麻烦的事情；因此当前的客户端截屏组件往往会选择仅支持部分 CSS 属性，从而降低复杂度同时尽可能避免目前繁多的浏览器和终端导致的兼容性问题。
+`客户端截屏`一般是使用客户端提供的图形 API （Canvas、SVG 等）重新绘制页面生成图片，这种方式不需要依赖服务器，资源消耗较少；但是使用客户端提供的图形 API 重新绘制页面，相当于重新实现客户端的渲染过程，毫无疑问是比较复杂且麻烦的事情；因此当前的客户端截屏组件往往会选择仅支持部分 CSS 属性，从而降低复杂度同时尽可能避免目前繁多的浏览器和终端导致的兼容性问题。
 
 ### html2canvas
 
@@ -25,7 +25,7 @@
 
 然而当我们使用那些所谓已经支持的 CSS 属性时，html2canvas 的表现依然不容乐观。
 
-- html2canvas 文字渲染存在偏移；
+- 文字渲染存在偏移；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-4.jpg)
 
@@ -33,7 +33,7 @@
 
 在上图中可以很明显的看到和原页面文字（图中第一个）相比 html2canvas 截屏后的文字（图中第三个红框部分）存在向下偏移。
 
-- html2canvas 不支持文字渐变；
+- 不支持文字渐变；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-5.jpg)
 
@@ -41,7 +41,7 @@
 
 上图中第一个为原页面文字渐变效果，第三个红框部分的为 html2canvas 对页面渐变文字截屏后的效果。
 
-- html2canvas 对部分 CSS 属性（transform、opacity、filter）的继承关系处理并不完善；
+- 部分 CSS 属性（transform、opacity、filter）的继承关系处理并不完善；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-6.jpg)
 
@@ -55,7 +55,7 @@
 
 ### dom-to-image
 
-那么客户端截屏有没有稍简单一点的思路呢？比如说要是浏览器提供 `html+css` 直接生成图片的方法就好了！
+那么客户端截屏有没有稍微简单一点的思路呢？比如说要是客户端提供 `html+css` 直接生成图片的能力就好了！
 
 答案是有的！
 
@@ -84,7 +84,7 @@ let img = new Image();
 img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 ```
 
-简单来说就是先把 html+css 转换为 SVG 然后再把 SVG 转换为图片，这样就间接的实现了通过 html+css 生成图片。
+简单来说就是先把 html+css 转换为 SVG 然后再把 SVG 转换为图片，这样就间接地实现了通过 html+css 生成图片。
 
 整个方案最大的工作量就在于如何把页面中待截屏元素转换到 SVG 的 foreignObject 元素中去；理论上来说只要是这个转换过程没有问题，然后客户端支持 foreignObject，那么最终的截屏效果肯定和原页面效果一模一样。
 
