@@ -91,12 +91,12 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 然而现实~~总是残酷的~~（有机可乘），就拿目前该方案的代表 [dom-to-image](https://github.com/tsayen/dom-to-image)（截止到 2020 年 9 月 在 Github 上有 6.5k star）组件来说，其转换过程存在很多问题；在上文中关于 html2canvas 问题说明的示例图中，也展示了 dom-to-image 截屏效果（最后一个蓝框部分）；表现出以下问题：
 
 - 截屏效果模糊；
-- 和 html2canvas 一样不支持文字渐变；
-- 和 html2canvas 一样部分 CSS 属性的继承关系没有处理好；
+- 不支持文字渐变；
+- 部分 CSS 属性的继承关系没有处理好；
 
 更糟糕的是连 CSS 最基础的盒模型以及布局都有问题：
 
-- dom-to-image 盒模型截屏异常；
+- 盒模型截屏异常；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-7.jpg)
 
@@ -104,7 +104,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 上图中第一个为原页面 margin 盒模型效果，第四个蓝框部分为 dom-to-image 对 margin 盒模型截屏后的效果，可以明显的看到截屏后的效果存在向下偏移。
 
-- dom-to-image 布局截屏异常；
+- 布局截屏异常；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-8.jpg)
 
