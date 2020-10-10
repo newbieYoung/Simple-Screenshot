@@ -118,7 +118,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 ## 混合式截屏方案
 
-在上文中总结了服务端截屏、客户端截屏等各种方案的优缺点；基于`实现简单`、`使用方便`、`稳定可靠`的原则，不局限于单一技术，把服务端截屏和客户端 SVG 截屏方案结合起来，对于截屏这个问题，是可以得到一种`更完善`的解决方案的。
+在上文中总结了服务端截屏、客户端截屏等各种方案的优缺点；基于`实现简单`、`使用方便`、`稳定可靠`的原则，不局限于单一技术，把服务端截屏和客户端 SVG 截屏方案结合起来，是可以得到一种`更完善`的解决方案的。
 
 具体实现如下：[SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot)。
 
@@ -142,7 +142,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 `server` 目录为截屏服务需要单独部署（支持 Docker 镜像部署），`build` 目录为打包构建后的客户端代码，在实际项目中使用时需要引入。
 
-SimpleScreenshot 支持全部 CSS 属性，所见即所得，简单方便；开发人员只需要正常编写页面代码，然后进行简单的初始化即可：
+`SimpleScreenshot 支持全部 CSS 属性，所见即所得，简单方便`；开发人员只需要正常编写页面代码，然后进行简单的初始化即可：
 
 ```
 let screenshot = new SimpleScreenshot({
@@ -163,7 +163,7 @@ let screenshot = new SimpleScreenshot({
 
 > https://dom2img.lione.me/simple-screenshot 为部署在云服务器上的示例服务，请不要在生产环境中使用！！！
 
-初始化完成之后，传入待截屏元素选择器执行组件的 `toIMG` 方法即可完成截屏：
+初始化完成之后，传入待截屏元素选择器执行 SimpleScreenshot 组件的 `toIMG` 方法即可完成截屏：
 
 ```
 screenshot.toIMG(".mps-content", function (img) {
@@ -172,19 +172,19 @@ screenshot.toIMG(".mps-content", function (img) {
 });
 ```
 
-截屏完成在回调函数中可以获得截屏结果，客户端截屏可以获得 base64 图片以及 canvas 元素，但是服务端截屏仅仅能获得 base64 图片。
+在回调函数中即可获得截屏结果（客户端截屏方式可以获得 base64 图片以及 Canvas 画布，但是服务端截屏仅仅能获得 base64 图片）。
 
 [Web 示例](https://demo.lione.me/simple-screenshot/test-1.html?pub)
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-11.png)
 
-另外 SimpleScreenShot 还支持小程序截屏，使用方式和 Web 基本类似，唯一的区别在于编写完小程序页面代码之后还需要把待截屏元素的代码复制到 SimpleScreenshot 提供的[格式化工具](https://newbieyoung.github.io/Simple-Screenshot//tools/format_xml.html)中进行格式化：
+另外 `SimpleScreenShot 还支持小程序截屏`，使用方式和 Web 基本类似，唯一的区别在于编写完小程序页面代码之后还需要把待截屏元素的代码复制到 SimpleScreenshot 提供的[格式化工具](https://newbieyoung.github.io/Simple-Screenshot//tools/format_xml.html)中进行格式化：
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-12.png)
 
-小程序截屏之所以需要进行这一步操作，主要是因为小程序提供的 API 功能有限，通过选择器选取元素节点之后，没有办法获得该元素节点的类型、子节点信息以及部分关键属性（比如 image 元素的 src 属性、内联文本等）；这会导致生成的 svg 代码缺失关键信息，最终得到的截屏图片异常。
+小程序截屏之所以需要进行上述操作，主要是因为小程序提供的 API 功能有限，通过选择器选取元素节点之后，没有办法获得该元素节点的类型、子节点信息以及部分关键属性（比如 image 元素的 src 属性、内联文本等）；这会导致生成的 SVG 代码缺失关键信息，最终得到的截屏图片异常。
 
-为了解决上述问题，本技术方案提供了一个格式化工具，使用该工具可以对小程序页面代码进行解析，把生成 svg 代码所需要的相关信息提前设置到元素的自定义属性中，这样在运行代码时就可以直接获取了。
+为了解决上述问题，本技术方案提供了一个格式化工具，使用该工具可以对小程序页面代码进行解析，把生成 SVG 代码所需要的相关信息提前设置到元素的自定义属性中，这样在运行代码时就可以直接获取了。
 
 其中 `data-name` 表示元素类型，`data-level` 表示元素级别（ 0 表示根节点、0-0 表示根节点的第一个子节点、0-1 表示根节点的第二个子节点以此类推 ），`data-len` 表示当前元素的子元素数量（ 包含内联文本 ），`data-texts` 表示当前元素内联文本信息（ 小程序中并没有内联文本的概念 ）；另外为了一次性选取全部生成图片的元素节点，还需要对每个元素节点加入特定的 class 类名进行标注。
 
