@@ -31,7 +31,7 @@
 
 [文字渲染 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare1.html)
 
-在上图中可以很明显的看到和原页面文字（图中第一个）相比 html2canvas 截屏后的文字（图中第三个红框部分）存在向下偏移。
+在上图中可以很明显地看到和原页面文字（图中第一个）相比 html2canvas 截屏后的文字（图中第三个红框部分）存在向下偏移。
 
 - 不支持文字渐变；
 
@@ -41,7 +41,7 @@
 
 上图中第一个为原页面文字渐变效果，第三个红框部分的为 html2canvas 对页面渐变文字截屏后的效果。
 
-- 部分 CSS 属性（transform、opacity、filter）的继承关系处理并不完善；
+- 部分 CSS 属性（transform、opacity、filter等）的继承关系处理并不完善；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-6.jpg)
 
@@ -102,7 +102,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 [盒模型 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare3.html)
 
-上图中第一个为原页面 margin 盒模型效果，第四个蓝框部分为 dom-to-image 对 margin 盒模型截屏后的效果，可以明显的看到截屏后的效果存在向下偏移。
+上图中第一个为原页面 margin 盒模型效果，第四个蓝框部分为 dom-to-image 对 margin 盒模型截屏后的效果，可以明显地看到截屏后的效果存在向下偏移。
 
 - 布局截屏异常；
 
@@ -110,7 +110,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 [布局 DEMO](https://newbieyoung.github.io/Simple-Screenshot/examples/compare/compare4.html)
 
-上图中第四个为原页面绝对定位布局效果，第三个蓝框部分为 dom-to-image 对绝对定位布局截屏后的效果，可以明显的看到截屏后的效果存在空白异常的情况。
+上图中第四个为原页面绝对定位布局效果，第三个蓝框部分为 dom-to-image 对绝对定位布局截屏后的效果，可以明显地看到截屏后的效果存在空白异常的情况。
 
 除了 dom-to-image 本身的实现问题以外，还存在一些方案本身的问题；比如 foreignObject 和 data:image/svg+xml 存在兼容性问题，某些情况下可能客户端并不支持这些特性（小程序以及部分浏览器）。
 
@@ -194,10 +194,10 @@ screenshot.toIMG(".mps-content", function (img) {
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-13.jpg)
 
+> 上文中 html2canvas、dom-to-image 问题说明的示例图中也展示了 SimpleScreenshot 的截屏效果（黄框部分）。
+
 ## 总结与展望
 
 本文提出并实现的前后端混合式截屏方案 SimpleScreenshot `采用相对简单的解决方案，在保证稳定可靠的前提下，充分利用了客户端的资源和能力；统一截屏需求在浏览器和小程序的实现方式，尽可能地减少学习和开发成本`。
 
-目前已在少数几个项目中进行了实践，但是应用场景较少，不排除还有其它没有发现的问题；个人精力有限，欢迎携手共建。
-
--
+该方案目前已在少数几个项目中进行了实践，但是应用场景较少，不排除还有其它没有发现的问题；个人精力有限，欢迎大家携手共建。
