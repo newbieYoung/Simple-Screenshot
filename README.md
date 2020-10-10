@@ -21,6 +21,12 @@
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-11.png)
 
+## 安装
+
+```
+npm i simple-screenshot
+```
+
 ## 目录
 
 ```
@@ -38,16 +44,6 @@
 ```
 
 ## 教程
-
-## 应用
-
-<table style="word-break: normal;">
-  <tr>
-    <td>名称</td>
-    <td>类型</td>
-    <td>小程序码</td>
-  </tr>
-</table>
 
 ## 兼容性自测
 
@@ -127,5 +123,19 @@
     <td>feature</td>
     <td>【Web】分析 document.styleSheets 筛选出那些未设置固定宽度的元素，自动应用 autoRenderWidth 规则，从而避免在初始化时通过参数设置该规则，降低使用门槛</td>
     <td>done</td>
+  </tr>
+</table>
+
+## 开源许可协议
+
+[MIT](./LICENSE) License.
+
+## 应用
+
+<table style="word-break: normal;">
+  <tr>
+    <td>名称</td>
+    <td>类型</td>
+    <td>小程序码</td>
   </tr>
 </table>
