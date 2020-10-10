@@ -128,7 +128,7 @@ npm i simple-screenshot
 
 ## 开源许可协议
 
-[MIT](./LICENSE) License.
+[MIT](https://opensource.org/licenses/MIT) License.
 
 ## 应用
 
