@@ -59,7 +59,7 @@
 
 答案是有的！
 
-在 SVG 的 `foreignobject` 元素中可以嵌入使用其它 XML 命名空间的元素，这也就意味着我们只需要指定其内部元素的命名空间为 `http://www.w3.org/1999/xhtml` 就可以在 SVG 中使用 html+css 了，举个简单例子：
+在 SVG 的 `foreignObject` 元素中可以嵌入使用其它 XML 命名空间的元素，这也就意味着我们只需要指定其内部元素的命名空间为 `http://www.w3.org/1999/xhtml` 就可以在 SVG 中使用 html+css 了，举个简单例子：
 
 ```
 <svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'>
@@ -86,7 +86,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 简单来说就是先把 html+css 转换为 SVG 然后再把 SVG 转换为图片，这样就间接的实现了通过 html+css 生成图片。
 
-整个方案最大的工作量就在于如何把页面中待截屏元素转换到 SVG 的 foreignobject 元素中去；理论上来说只要是这个转换过程没有问题，然后客户端支持 foreignobject，那么最终的截屏效果肯定和原页面效果一模一样。
+整个方案最大的工作量就在于如何把页面中待截屏元素转换到 SVG 的 foreignObject 元素中去；理论上来说只要是这个转换过程没有问题，然后客户端支持 foreignObject，那么最终的截屏效果肯定和原页面效果一模一样。
 
 然而现实~~总是残酷的~~（有机可乘），就拿目前该方案的代表 [dom-to-image](https://github.com/tsayen/dom-to-image)（截止到 2020 年 9 月 在 Github 上有 6.5k star）组件来说，其转换过程存在很多问题；在上文中关于 html2canvas 问题说明的示例图中，也展示了 dom-to-image 截屏效果（最后一个蓝框部分）；表现出以下问题：
 
@@ -112,13 +112,13 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 上图中第四个为原页面绝对定位布局效果，第三个蓝框部分为 dom-to-image 对绝对定位布局截屏后的效果，可以明显的看到截屏后的效果存在空白异常的情况。
 
-除了 dom-to-image 本身的实现问题以外，还存在一些方案本身的问题；比如 foreignobject 和 data:image/svg+xml 存在兼容性问题，某些情况下可能客户端并不支持这些特性（小程序以及部分浏览器）。
+除了 dom-to-image 本身的实现问题以外，还存在一些方案本身的问题；比如 foreignObject 和 data:image/svg+xml 存在兼容性问题，某些情况下可能客户端并不支持这些特性（小程序以及部分浏览器）。
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-9.jpg)
 
 ## 混合式截屏方案
 
-在上述相关技术中总结了服务端截屏、客户端截屏等各种方案的优缺点；基于`实现简单`、`使用方便`、`稳定可靠`的原则，不局限于单一技术，把服务端截屏和客户端 SVG 截屏方案结合起来，对于截屏这个问题，是可以得到一种`更完善`的解决方案的。
+在上文中总结了服务端截屏、客户端截屏等各种方案的优缺点；基于`实现简单`、`使用方便`、`稳定可靠`的原则，不局限于单一技术，把服务端截屏和客户端 SVG 截屏方案结合起来，对于截屏这个问题，是可以得到一种`更完善`的解决方案的。
 
 具体实现如下：[SimpleScreenshot](https://github.com/newbieYoung/Simple-Screenshot)。
 
@@ -193,3 +193,7 @@ screenshot.toIMG(".mps-content", function (img) {
 [微信小程序示例](https://github.com/newbieYoung/Simple-Screenshot/tree/master/examples/wechat-app)
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-13.jpg)
+
+## 总结与展望
+
+本文提出并实现的前后端混合式截屏方案
