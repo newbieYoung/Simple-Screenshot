@@ -20,7 +20,15 @@
 
 - 新增字体
 
+![](https://newbieyoung.github.io/images/simple-screenshot-14.jpg)
+
+在 `public/fonts` 目录中放入字体文件即可，比如 `NotoColorEmoji.ttf` 是 Google 开源的 Emoji 字体。
+
 - 设置域名跨域
+
+![](https://newbieyoung.github.io/images/simple-screenshot-15.jpg)
+
+在 `config/config.js` 文件中把允许跨域访问的域名加入到 cors 数组中即可；当数组为空时表示所有域名均可访问。
 
 ## 部署
 
