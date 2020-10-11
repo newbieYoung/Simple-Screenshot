@@ -7,10 +7,10 @@
 ```
 ├── bin
 │   └── www                  // 启动入口
+├── config
+│   └── config.js            // 跨域配置
 ├── public
 │   ├── fonts                // 自定义字体
-│   ├── javascripts
-│   │   └── config.js        // 配置参数（cors 跨域）
 │   └── stylesheets
 └── routes
     └── screenshot.js        // 截屏服务源代码
