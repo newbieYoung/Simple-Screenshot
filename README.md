@@ -105,6 +105,11 @@ npm i simple-screenshot
     <td></td>
   </tr>
   <tr>
+    <td>optimize</td>
+    <td>【QQ、Wechat】去掉手动配置 autoRenderWidthList</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>feature</td>
     <td>【Web】CSS 样式全局字体内联</td>
     <td>doing（目前仅支持 ttf 字体文件）</td>
