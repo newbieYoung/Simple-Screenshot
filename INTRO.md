@@ -1,4 +1,4 @@
-# 前后端混合式“截屏”方案
+# 前后端混合“截屏”方案
 
 ## 背景
 
@@ -41,7 +41,7 @@
 
 上图中第一个为原页面文字渐变效果，第三个红框部分的为 html2canvas 对页面渐变文字截屏后的效果。
 
-- 部分 CSS 属性（transform、opacity、filter等）的继承关系处理并不完善；
+- 部分 CSS 属性（transform、opacity、filter 等）的继承关系处理并不完善；
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-6.jpg)
 
@@ -116,7 +116,7 @@ img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 
 ![](https://newbieyoung.github.io/images/simple-screenshot-9.jpg)
 
-## 混合式截屏方案
+## 前后端混合截屏方案
 
 在上文中总结了服务端截屏、客户端截屏等各种方案的优缺点；基于`实现简单`、`使用方便`、`稳定可靠`的原则，不局限于单一技术，把服务端截屏和客户端 SVG 截屏方案结合起来，是可以得到一种`更完善`的解决方案的。
 
@@ -198,6 +198,6 @@ screenshot.toIMG(".mps-content", function (img) {
 
 ## 总结与展望
 
-本文提出并实现的前后端混合式截屏方案 SimpleScreenshot `采用相对简单的解决方案，在保证稳定可靠的前提下，充分利用了客户端的资源和能力；统一截屏需求在浏览器和小程序的实现方式，尽可能地减少学习和开发成本`。
+本文提出并实现的前后端混合截屏方案 SimpleScreenshot `采用相对简单的解决方案，在保证稳定可靠的前提下，充分利用了客户端的资源和能力；统一截屏需求在浏览器和小程序的实现方式，尽可能地减少学习和开发成本`。
 
 该方案目前已在少数几个项目中进行了实践，但是应用场景较少，不排除还有其它没有发现的问题；个人精力有限，欢迎大家携手共建。
