@@ -96,6 +96,11 @@ npm i simple-screenshot
   </tr>
   <tr>
     <td>bug</td>
+    <td>【Web】IOS 初次截屏 base64 图片等素材不显示</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>bug</td>
     <td>【Web、QQ、Wechat】CSS 属性 默认继承和默认不继承</td>
     <td></td>
   </tr>
